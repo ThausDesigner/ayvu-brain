@@ -271,7 +271,11 @@ function checkCliInstalled(name) {
   return { id: name, installed: !probe.error && probe.status === 0 && Boolean(first), path: first };
 }
 
-function runLocalCliAgent({ engine, prompt, cwd, continueSession = false }) {
+function stripAnsi(text) {
+  return String(text || '').replace(/\x1b\[[0-9;]*[A-Za-z]/g, '').replace(/\r/g, '\n');
+}
+
+function runLocalCliAgent({ engine, prompt, cwd, continueSession = false, onProgress = null }) {
   return new Promise((resolveRun, rejectRun) => {
     const cleanPrompt = String(prompt || '').trim();
     if (!cleanPrompt) { rejectRun(new Error('Prompt cannot be empty.')); return; }
@@ -297,6 +301,7 @@ function runLocalCliAgent({ engine, prompt, cwd, continueSession = false }) {
     }
 
     const started = Date.now();
+    onProgress?.({ type: 'stage', text: `Iniciando ${engine} em ${basename(cwd) || cwd}...`, elapsedMs: 0 });
     const child = spawn(cmd, args, {
       cwd,
       shell: false,
@@ -306,13 +311,29 @@ function runLocalCliAgent({ engine, prompt, cwd, continueSession = false }) {
 
     let stdout = '';
     let stderr = '';
+    const emitLines = (stream, chunkText) => {
+      if (!onProgress) return;
+      const lines = stripAnsi(chunkText).split('\n').map(l => l.trim()).filter(Boolean);
+      for (const line of lines.slice(-3)) {
+        onProgress({ type: 'activity', stream, text: line.slice(0, 180), elapsedMs: Date.now() - started });
+      }
+    };
+
     const timer = setTimeout(() => {
       child.kill();
       rejectRun(new Error(`Local ${engine} timed out after 180s.`));
     }, 180000);
 
-    child.stdout.on('data', chunk => { stdout += chunk.toString('utf8'); });
-    child.stderr.on('data', chunk => { stderr += chunk.toString('utf8'); });
+    child.stdout.on('data', chunk => {
+      const str = chunk.toString('utf8');
+      stdout += str;
+      emitLines('stdout', str);
+    });
+    child.stderr.on('data', chunk => {
+      const str = chunk.toString('utf8');
+      stderr += str;
+      emitLines('stderr', str);
+    });
     child.on('error', err => { clearTimeout(timer); rejectRun(new Error(`Could not start ${engine}: ${err.message}`)); });
     child.on('close', code => {
       clearTimeout(timer);
@@ -615,6 +636,37 @@ export async function startAyvuBrainServer({
         if (prefixes.length) {
           prompt = `${prefixes.join('\n\n')}\n\n${prompt}`;
         }
+        const wantsStream = String(req.headers.accept || '').includes('text/event-stream');
+        if (wantsStream) {
+          res.writeHead(200, {
+            'Content-Type': 'text/event-stream; charset=utf-8',
+            'Cache-Control': 'no-cache, no-transform',
+            Connection: 'keep-alive'
+          });
+          const sendEvent = (event, data) => {
+            if (!res.writableEnded) res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+          };
+          if (body.contextPath) sendEvent('stage', { text: `Anexando contexto: ${body.contextPath}`, elapsedMs: 0 });
+          if (Array.isArray(body.attachments) && body.attachments.length) {
+            sendEvent('stage', { text: `Carregando ${body.attachments.length} arquivo(s) da sessão...`, elapsedMs: 0 });
+          }
+          try {
+            const result = await runLocalCliAgent({
+              engine,
+              prompt,
+              cwd,
+              continueSession: Boolean(body.continueSession),
+              onProgress: (ev) => sendEvent(ev.type || 'activity', ev)
+            });
+            sendEvent('done', result);
+          } catch (err) {
+            sendEvent('error', { error: err.message || 'Falha na CLI local.' });
+          } finally {
+            if (!res.writableEnded) res.end();
+          }
+          return;
+        }
+
         const result = await runLocalCliAgent({
           engine,
           prompt,
