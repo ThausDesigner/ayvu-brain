@@ -177,8 +177,11 @@ def format_clock(sec):
 
 def transcribe_wav(model, wav_path, language):
     lang_arg = None if not language or language == "auto" else language.split("-")[0].lower()
+    audio_np, _ = read_wav_float(wav_path)
+    if audio_np.size == 0:
+        return [], lang_arg or "pt"
     raw_segs, info = model.transcribe(
-        wav_path,
+        audio_np,
         language=lang_arg,
         vad_filter=True,
         vad_parameters={"min_silence_duration_ms": 450},
