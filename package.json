@@ -14,6 +14,7 @@
     "uninstall:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/uninstall-windows.ps1",
     "test": "node --test",
     "test:ui": "node scripts/verify-ui.mjs",
+    "test:router:ui": "node scripts/verify-router-ui.mjs",
     "check": "node --check src/server.mjs"
   },
   "license": "MIT"
