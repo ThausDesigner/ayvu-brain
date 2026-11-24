@@ -126,6 +126,22 @@ test('AYVU Brain serves site, app, vault tree, note save and rejects secrets or 
     assert.ok(selfSt.appRoot);
     assert.ok(selfSt.branch);
 
+    // CORS strict check for brain.ayvu.org -> user's own localhost:4190
+    const corsOk = await fetch(`${running.url}/api/info`, {
+      method: 'OPTIONS',
+      headers: { Origin: 'https://brain.ayvu.org' }
+    });
+    assert.equal(corsOk.status, 204);
+    assert.equal(corsOk.headers.get('access-control-allow-origin'), 'https://brain.ayvu.org');
+    assert.equal(corsOk.headers.get('access-control-allow-private-network'), 'true');
+
+    const corsBlocked = await fetch(`${running.url}/api/info`, {
+      method: 'OPTIONS',
+      headers: { Origin: 'https://evil.invalid' }
+    });
+    assert.equal(corsBlocked.status, 403);
+    assert.equal(corsBlocked.headers.get('access-control-allow-origin'), null);
+
     const vAdd = await fetch(`${running.url}/api/voice/history`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

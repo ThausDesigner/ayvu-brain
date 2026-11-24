@@ -456,7 +456,34 @@ export async function startAyvuBrainServer({
   const layout = await detectVaultLayout(vaultRoot);
   const voiceHistory = [];
 
+  const allowedOrigins = new Set([
+    'https://brain.ayvu.org',
+    'https://ayvu-brain.vercel.app',
+    `http://127.0.0.1:${port}`,
+    `http://localhost:${port}`
+  ]);
+
+  const applyCors = (req, res) => {
+    const origin = String(req.headers.origin || '');
+    if (origin && allowedOrigins.has(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Vary', 'Origin');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization');
+      res.setHeader('Access-Control-Allow-Private-Network', 'true');
+      return true;
+    }
+    return false;
+  };
+
   const server = createServer(async (req, res) => {
+    const corsAllowed = applyCors(req, res);
+    if (req.method === 'OPTIONS') {
+      res.writeHead(corsAllowed ? 204 : 403);
+      res.end();
+      return;
+    }
+
     const sendJson = (status, data) => {
       res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
       res.end(JSON.stringify(data));
