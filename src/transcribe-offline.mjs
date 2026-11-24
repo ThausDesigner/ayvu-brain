@@ -13,26 +13,31 @@ export function getOfflineTranscriberPaths() {
     : join(baseDir, 'venv', 'bin', 'python');
   const scriptPath = join(projectRoot, 'scripts', 'transcribe_diarize.py');
   const workerScriptPath = join(projectRoot, 'scripts', 'transcribe_worker.py');
-  return { baseDir, pythonBin, scriptPath, workerScriptPath };
+  const wasapiScriptPath = join(projectRoot, 'scripts', 'wasapi_live.py');
+  return { baseDir, pythonBin, scriptPath, workerScriptPath, wasapiScriptPath };
 }
 
 export async function getOfflineTranscriberStatus() {
-  const { pythonBin, scriptPath, workerScriptPath } = getOfflineTranscriberPaths();
+  const { pythonBin, scriptPath, workerScriptPath, wasapiScriptPath } = getOfflineTranscriberPaths();
   let pythonReady = false;
   let scriptReady = false;
   let liveWorkerReady = false;
+  let wasapiReady = false;
   try { await fs.access(pythonBin); pythonReady = true; } catch {}
   try { await fs.access(scriptPath); scriptReady = true; } catch {}
   try { await fs.access(workerScriptPath); liveWorkerReady = true; } catch {}
+  try { await fs.access(wasapiScriptPath); wasapiReady = process.platform === 'win32'; } catch {}
   return {
     ready: pythonReady && scriptReady,
     liveReady: pythonReady && liveWorkerReady,
+    wasapiReady: pythonReady && wasapiReady,
     pythonReady,
     scriptReady,
     engine: 'faster-whisper-offline',
     pythonBin,
     scriptPath,
-    workerScriptPath
+    workerScriptPath,
+    wasapiScriptPath
   };
 }
 
@@ -239,13 +244,152 @@ export async function resetLiveTranscription(sessionId) {
   return sendLiveCommand({ cmd: 'reset', sessionId }, 10000);
 }
 
-export async function transcribeLiveChunk({ sessionId, dataBase64, offsetSec = 0, language = 'pt', dualChannel = true }) {
+export async function transcribeLiveChunk({ sessionId, dataBase64, offsetSec = 0, language = 'pt', dualChannel = true, micOnly = false }) {
   return sendLiveCommand({
     cmd: 'chunk',
     sessionId,
     dataBase64,
     offsetSec,
     language,
-    dualChannel
+    dualChannel,
+    micOnly
   }, 60000);
+}
+
+// --- Native Windows WASAPI Loopback capture (captures Slack/Meet/Zoom/Teams/OS audio directly) ---
+const systemSessions = new Map();
+
+export async function startSystemAudioCapture({ sessionId, language = 'pt', model = 'base' }) {
+  const sid = String(sessionId || `sys-${Date.now().toString(36)}`);
+  if (systemSessions.has(sid)) {
+    await stopSystemAudioCapture(sid).catch(() => {});
+  }
+  const status = await getOfflineTranscriberStatus();
+  if (!status.wasapiReady) {
+    return { ok: false, supported: false, error: 'Captura nativa WASAPI disponível apenas no Windows com motor offline.' };
+  }
+
+  const child = spawn(status.pythonBin, [
+    status.wasapiScriptPath,
+    '--language', String(language || 'pt').split('-')[0].toLowerCase(),
+    '--model', model,
+    '--chunk-sec', '4.5'
+  ], {
+    cwd: projectRoot,
+    shell: false,
+    stdio: ['pipe', 'pipe', 'pipe'],
+    windowsHide: true,
+    env: { ...process.env, PYTHONUTF8: '1', PYTHONIOENCODING: 'utf-8' }
+  });
+
+  const entry = {
+    sessionId: sid,
+    child,
+    active: true,
+    ready: false,
+    devices: [],
+    segments: [],
+    error: null,
+    stdoutBuf: '',
+    stderrTail: '',
+    resolveClose: null,
+    closePromise: null
+  };
+  entry.closePromise = new Promise(res => { entry.resolveClose = res; });
+  systemSessions.set(sid, entry);
+
+  let resolveReady;
+  const readyPromise = new Promise(res => { resolveReady = res; });
+  const readyTimeout = setTimeout(() => resolveReady({ ready: false }), 25000);
+
+  child.stdout.on('data', chunk => {
+    entry.stdoutBuf += chunk.toString('utf8');
+    let nl;
+    while ((nl = entry.stdoutBuf.indexOf('\n')) >= 0) {
+      const line = entry.stdoutBuf.slice(0, nl).trim();
+      entry.stdoutBuf = entry.stdoutBuf.slice(nl + 1);
+      if (!line || !line.startsWith('{')) continue;
+      let msg;
+      try { msg = JSON.parse(line); } catch { continue; }
+      if (msg.type === 'ready' || msg.ready) {
+        entry.ready = true;
+        entry.devices = Array.isArray(msg.devices) ? msg.devices : [];
+        clearTimeout(readyTimeout);
+        resolveReady({ ready: true, devices: entry.devices });
+      } else if (msg.type === 'segments' && Array.isArray(msg.segments)) {
+        entry.segments.push(...msg.segments);
+      } else if (msg.type === 'error') {
+        entry.error = msg.error || 'Erro no capturador WASAPI.';
+        clearTimeout(readyTimeout);
+        resolveReady({ ready: false, error: entry.error });
+      }
+    }
+  });
+
+  child.stderr.on('data', chunk => {
+    entry.stderrTail = (entry.stderrTail + chunk.toString('utf8')).slice(-600);
+  });
+
+  child.on('error', err => {
+    entry.error = err.message;
+    entry.active = false;
+    clearTimeout(readyTimeout);
+    resolveReady({ ready: false, error: err.message });
+    entry.resolveClose();
+  });
+
+  child.on('close', () => {
+    entry.active = false;
+    clearTimeout(readyTimeout);
+    resolveReady({ ready: entry.ready, error: entry.error || entry.stderrTail });
+    entry.resolveClose();
+  });
+
+  await readyPromise;
+  return {
+    ok: entry.ready,
+    supported: true,
+    sessionId: sid,
+    devices: entry.devices,
+    error: entry.error
+  };
+}
+
+export function pollSystemAudioCapture(sessionId, cursor = 0) {
+  const entry = systemSessions.get(String(sessionId || ''));
+  if (!entry) return { ok: false, active: false, segments: [], nextCursor: 0 };
+  const idx = Math.max(0, Number(cursor) || 0);
+  const slice = entry.segments.slice(idx);
+  return {
+    ok: true,
+    active: entry.active,
+    ready: entry.ready,
+    devices: entry.devices,
+    segments: slice,
+    nextCursor: entry.segments.length,
+    error: entry.error
+  };
+}
+
+export async function stopSystemAudioCapture(sessionId, cursor = 0) {
+  const sid = String(sessionId || '');
+  const entry = systemSessions.get(sid);
+  if (!entry) return { ok: true, segments: [] };
+  if (entry.active && entry.child) {
+    try {
+      entry.child.stdin.write(JSON.stringify({ cmd: 'stop' }) + '\n', 'utf8');
+      entry.child.stdin.end();
+    } catch {}
+    await Promise.race([
+      entry.closePromise,
+      new Promise(res => setTimeout(res, 12000))
+    ]);
+    if (entry.active) {
+      try { entry.child.kill(); } catch {}
+    }
+  }
+  const idx = Math.max(0, Number(cursor) || 0);
+  const remaining = entry.segments.slice(idx);
+  systemSessions.delete(sid);
+  return { ok: true, segments: remaining, devices: entry.devices };
 }

@@ -1559,12 +1559,13 @@ function appendLiveOfflineSegments(segments = []) {
       text: String(seg.text || '').trim()
     });
   }
+  meetingState.transcript.sort((a, b) => (Number(a.start || 0) - Number(b.start || 0)));
   renderMeetingTranscript();
   renderVoicesBoard();
   $('meet-output').value = buildMeetingMarkdown();
 }
 
-function startLiveOfflineChunks(audioStream, { dualChannel = true } = {}) {
+function startLiveOfflineChunks(audioStream, { dualChannel = true, captureSystemNative = false } = {}) {
   const audioMime = ['audio/webm;codecs=opus', 'audio/webm'].find(m => MediaRecorder.isTypeSupported(m)) || 'audio/webm';
   const sessionId = 'live-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);
   const CHUNK_MS = 5000;
@@ -1573,6 +1574,10 @@ function startLiveOfflineChunks(audioStream, { dualChannel = true } = {}) {
   let rotateTimer = null;
   let queue = Promise.resolve();
   let chunksSent = 0;
+  let wasapiActive = false;
+  let wasapiCursor = 0;
+  let wasapiDevices = [];
+  let wasapiPollTimer = null;
 
   fetch('/api/transcribe/chunk', {
     method: 'POST',
@@ -1580,13 +1585,54 @@ function startLiveOfflineChunks(audioStream, { dualChannel = true } = {}) {
     body: JSON.stringify({ cmd: 'reset', sessionId })
   }).catch(() => {});
 
+  const updateLiveStatus = () => {
+    if (!active) return;
+    const vCount = (meetingState.voices || []).length;
+    const modeTxt = wasapiActive
+      ? `SO nativo WASAPI (${wasapiDevices.length} saídas: Slack/Meet/Fone) + Microfone`
+      : (dualChannel ? 'SO + Microfone' : 'Microfone');
+    $('meet-live-interim').textContent = `Ao vivo 100% offline (${modeTxt}) • ${vCount} voz(es) detectada(s)`;
+  };
+
+  if (captureSystemNative) {
+    fetch('/api/system-audio/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId, language: $('meet-lang')?.value || 'pt', model: 'base' })
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (!active) return;
+        if (d.ok) {
+          wasapiActive = true;
+          wasapiDevices = Array.isArray(d.devices) ? d.devices : [];
+          updateLiveStatus();
+          wasapiPollTimer = setInterval(async () => {
+            if (!active) return;
+            try {
+              const pr = await fetch(`/api/system-audio/poll?sessionId=${encodeURIComponent(sessionId)}&cursor=${wasapiCursor}`);
+              const pd = await pr.json();
+              if (pd.ok) {
+                wasapiCursor = Number(pd.nextCursor || wasapiCursor);
+                if (Array.isArray(pd.segments) && pd.segments.length) {
+                  appendLiveOfflineSegments(pd.segments);
+                  updateLiveStatus();
+                }
+              }
+            } catch {}
+          }, 1500);
+        }
+      })
+      .catch(() => {});
+  }
+
   const enqueueChunk = (blob, offsetSec) => {
     if (!blob || blob.size < 800) return;
     queue = queue.then(async () => {
       try {
         chunksSent += 1;
         if (active) {
-          $('meet-live-interim').textContent = `Transcrevendo bloco #${chunksSent} (100% offline • ${dualChannel ? 'SO + Mic' : 'Áudio'})...`;
+          $('meet-live-interim').textContent = `Transcrevendo bloco #${chunksSent} (100% offline • ${wasapiActive ? 'SO WASAPI + Mic' : (dualChannel ? 'SO + Mic' : 'Mic')})...`;
         }
         const dataBase64 = await blobToBase64(blob);
         const r = await fetch('/api/transcribe/chunk', {
@@ -1597,17 +1643,15 @@ function startLiveOfflineChunks(audioStream, { dualChannel = true } = {}) {
             dataBase64,
             offsetSec,
             language: $('meet-lang')?.value || 'pt',
-            dualChannel
+            dualChannel: dualChannel || wasapiActive,
+            micOnly: wasapiActive
           })
         });
         const d = await r.json().catch(() => ({}));
         if (r.ok && Array.isArray(d.segments) && d.segments.length) {
           appendLiveOfflineSegments(d.segments);
         }
-        if (active) {
-          const vCount = (meetingState.voices || []).length;
-          $('meet-live-interim').textContent = `Ao vivo 100% offline (${dualChannel ? 'SO + Microfone' : 'Áudio'}) • ${vCount} voz(es) detectada(s)`;
-        }
+        updateLiveStatus();
       } catch (err) {
         if (active) {
           $('meet-live-interim').textContent = `Aguardando motor offline: ${err.message || 'processando...'}`;
@@ -1640,13 +1684,14 @@ function startLiveOfflineChunks(audioStream, { dualChannel = true } = {}) {
     }, CHUNK_MS);
   };
 
-  $('meet-live-interim').textContent = `Iniciando transcrição ao vivo 100% offline (${dualChannel ? 'SO + Microfone' : 'Áudio'})...`;
+  $('meet-live-interim').textContent = `Iniciando transcrição ao vivo 100% offline (${captureSystemNative ? 'SO nativo WASAPI + Microfone' : 'Microfone'})...`;
   startOneSegment();
 
   return {
     async stopAndFlush() {
       active = false;
       if (rotateTimer) { clearTimeout(rotateTimer); rotateTimer = null; }
+      if (wasapiPollTimer) { clearInterval(wasapiPollTimer); wasapiPollTimer = null; }
       if (currentRec && currentRec.state !== 'inactive') {
         await new Promise(resolveStop => {
           const prevOnStop = currentRec.onstop;
@@ -1657,7 +1702,21 @@ function startLiveOfflineChunks(audioStream, { dualChannel = true } = {}) {
           try { currentRec.stop(); } catch { resolveStop(); }
         });
       }
-      await queue;
+      const stopSysPromise = captureSystemNative
+        ? fetch('/api/system-audio/stop', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionId, cursor: wasapiCursor })
+          })
+            .then(r => r.json())
+            .then(d => {
+              if (d.ok && Array.isArray(d.segments) && d.segments.length) {
+                appendLiveOfflineSegments(d.segments);
+              }
+            })
+            .catch(() => {})
+        : Promise.resolve();
+      await Promise.all([queue, stopSysPromise]);
       $('meet-live-interim').textContent = '';
     }
   };
@@ -1678,6 +1737,7 @@ $('rec-start').onclick = async () => {
     const mode = $('rec-mode').value;
     ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
     const isDual = (mode === 'screen' || mode === 'both');
+    const useNativeSystemAudio = Boolean(state.info) && isDual;
     const dest = ctxAudio.createMediaStreamDestination();
     const merger = isDual ? ctxAudio.createChannelMerger(2) : null;
     if (merger) merger.connect(dest);
@@ -1686,8 +1746,8 @@ $('rec-start').onclick = async () => {
 
     let videoTrack = null;
     let hasSystemAudio = false;
-    if (mode === 'screen' || mode === 'both') {
-      const disp = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+    if (mode === 'screen' || (mode === 'both' && !useNativeSystemAudio)) {
+      const disp = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true, systemAudio: 'include' });
       streams.push(disp);
       if (mode === 'screen') {
         videoTrack = disp.getVideoTracks()[0] || null;
@@ -1701,8 +1761,6 @@ $('rec-start').onclick = async () => {
         if (merger) srcDisp.connect(merger, 0, 1); // Canal Direito = Sistema / Chamada
         else srcDisp.connect(dest);
         srcDisp.connect(analyser);
-      } else {
-        toast('Atenção: marque "Compartilhar áudio" no popup do navegador para captar vozes do SO.', 5000);
       }
     }
     const mic = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -1777,7 +1835,10 @@ $('rec-start').onclick = async () => {
     $('rec-start').classList.add('hidden'); $('rec-stop').classList.remove('hidden');
     startAudioMeter(analyser);
     if (state.info) {
-      liveOfflineCtrl = startLiveOfflineChunks(dest.stream, { dualChannel: meetingState.lastDualChannel });
+      liveOfflineCtrl = startLiveOfflineChunks(dest.stream, {
+        dualChannel: meetingState.lastDualChannel,
+        captureSystemNative: useNativeSystemAudio
+      });
     } else {
       startMeetingSpeech();
     }

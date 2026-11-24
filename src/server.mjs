@@ -32,7 +32,10 @@ import {
   getOfflineTranscriberStatus,
   runOfflineTranscription,
   transcribeLiveChunk,
-  resetLiveTranscription
+  resetLiveTranscription,
+  startSystemAudioCapture,
+  pollSystemAudioCapture,
+  stopSystemAudioCapture
 } from './transcribe-offline.mjs';
 
 const projectRoot = resolve(fileURLToPath(new URL('../', import.meta.url)));
@@ -727,9 +730,35 @@ export async function startAyvuBrainServer({
           dataBase64: String(body.dataBase64 || ''),
           offsetSec: Number(body.offsetSec || 0),
           language: String(body.language || 'pt'),
-          dualChannel: body.dualChannel !== undefined ? Boolean(body.dualChannel) : true
+          dualChannel: body.dualChannel !== undefined ? Boolean(body.dualChannel) : true,
+          micOnly: Boolean(body.micOnly)
         });
         sendJson(200, { ok: true, segments: out.segments || [] });
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/system-audio/start') {
+        const body = await readJson(req);
+        const out = await startSystemAudioCapture({
+          sessionId: String(body.sessionId || ''),
+          language: String(body.language || 'pt'),
+          model: String(body.model || 'base')
+        });
+        sendJson(200, out);
+        return;
+      }
+
+      if (req.method === 'GET' && url.pathname === '/api/system-audio/poll') {
+        const sid = url.searchParams.get('sessionId') || '';
+        const cursor = Number(url.searchParams.get('cursor') || 0);
+        sendJson(200, pollSystemAudioCapture(sid, cursor));
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/system-audio/stop') {
+        const body = await readJson(req);
+        const out = await stopSystemAudioCapture(String(body.sessionId || ''), Number(body.cursor || 0));
+        sendJson(200, out);
         return;
       }
 

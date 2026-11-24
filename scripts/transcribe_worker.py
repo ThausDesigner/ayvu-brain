@@ -95,6 +95,7 @@ def main():
             audio_b64 = req.get("dataBase64") or ""
             language = str(req.get("language") or "pt").split("-")[0].lower()
             dual_channel = bool(req.get("dualChannel", True))
+            mic_only = bool(req.get("micOnly", False))
             offset_sec = float(req.get("offsetSec") or 0.0)
 
             if not audio_b64:
@@ -134,7 +135,7 @@ def main():
                                 "text": s["text"],
                             })
 
-                    if rms_energy(right_audio) > 0.0025:
+                    if (not mic_only) and rms_energy(right_audio) > 0.0025:
                         r_segs, _ = transcribe_wav(model, right_wav, language)
                         for s in r_segs:
                             s_i = max(0, int(s["start"] * sr_r))
