@@ -5,6 +5,16 @@ import { resolve, join, dirname, relative, isAbsolute, basename, extname } from 
 import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
+import { defaultMcpPaths, scanInstalledMcps, connectMcpServer, disconnectMcpServer } from './mcp-catalog.mjs';
+import {
+  listSessions,
+  getSession,
+  saveSession,
+  deleteSession,
+  saveSessionAttachment,
+  readSessionAttachment,
+  removeSessionAttachment
+} from './sessions.mjs';
 
 const projectRoot = resolve(fileURLToPath(new URL('../', import.meta.url)));
 const publicDir = join(projectRoot, 'public');
@@ -382,6 +392,7 @@ function readJson(req, limit = 16 * 1024 * 1024) {
 
 function isAllowedRepoPath(target, projectsDir, worktreeRoot) {
   const resolved = resolve(target || '');
+  if (resolved === projectRoot) return resolved;
   for (const base of [projectsDir, worktreeRoot].filter(Boolean)) {
     const rel = relative(resolve(base), resolved);
     if (rel && !rel.startsWith('..') && !isAbsolute(rel)) return resolved;
@@ -389,9 +400,36 @@ function isAllowedRepoPath(target, projectsDir, worktreeRoot) {
   throw new Error('Path outside allowed project/worktree roots.');
 }
 
+function guessMimeType(filename) {
+  const ext = extname(String(filename || '')).toLowerCase();
+  const map = {
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.webp': 'image/webp',
+    '.avif': 'image/avif',
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+    '.pdf': 'application/pdf',
+    '.txt': 'text/plain; charset=utf-8',
+    '.md': 'text/markdown; charset=utf-8',
+    '.json': 'application/json; charset=utf-8',
+    '.csv': 'text/csv; charset=utf-8',
+    '.html': 'text/html; charset=utf-8',
+    '.css': 'text/css; charset=utf-8',
+    '.js': 'text/javascript; charset=utf-8',
+    '.mp3': 'audio/mpeg',
+    '.wav': 'audio/wav',
+    '.webm': 'audio/webm',
+    '.mp4': 'video/mp4'
+  };
+  return map[ext] || 'application/octet-stream';
+}
+
 export async function startAyvuBrainServer({
   vaultRoot = process.env.AYVU_BRAIN_VAULT || resolve(projectRoot, '../..'),
   worktreeRoot = resolve(process.env.SECOND_BRAIN_WORKTREE_ROOT || join(homedir(), '.second-brain-worktrees')),
+  mcpPaths = defaultMcpPaths(),
   port = Number(process.env.PORT || 4190)
 } = {}) {
   const layout = await detectVaultLayout(vaultRoot);
@@ -431,6 +469,7 @@ export async function startAyvuBrainServer({
           commit: git.ok ? git.stdout : 'dev',
           tag: tag.ok ? tag.stdout : 'v0.2.0',
           ...layout,
+          appRoot: projectRoot,
           worktreeRoot,
           voiceShortcut: 'Ctrl+Space',
           platform: process.platform
@@ -556,9 +595,25 @@ export async function startAyvuBrainServer({
         const engine = String(body.engine || 'agy').toLowerCase();
         const cwd = body.cwd ? isAllowedRepoPath(body.cwd, layout.projectsDir, worktreeRoot) : layout.vaultRoot;
         let prompt = String(body.prompt || '').trim();
+        const prefixes = [];
         if (body.contextPath) {
           const { rel } = validateSafeRelPath(layout.vaultRoot, body.contextPath);
-          prompt = `Context file in vault: ${rel}.\n\n${prompt}`;
+          prefixes.push(`Context file in vault: ${rel}.`);
+        }
+        if (Array.isArray(body.attachments) && body.attachments.length) {
+          const fileLines = body.attachments
+            .filter(a => a && (a.relPath || a.fullPath))
+            .map(a => `- ${a.name || basename(a.relPath || a.fullPath)} (${a.relPath || a.fullPath})`)
+            .join('\n');
+          if (fileLines) {
+            prefixes.push(`Session attached files saved in vault:\n${fileLines}`);
+          }
+        }
+        if (body.structuredQuestions) {
+          prefixes.push('Formatting preference: when asking questions, listing options, decisions or next steps, use clear Markdown checklists (- [ ] item) and concise bullet points (- item).');
+        }
+        if (prefixes.length) {
+          prompt = `${prefixes.join('\n\n')}\n\n${prompt}`;
         }
         const result = await runLocalCliAgent({
           engine,
@@ -567,6 +622,120 @@ export async function startAyvuBrainServer({
           continueSession: Boolean(body.continueSession)
         });
         sendJson(200, result);
+        return;
+      }
+
+      if (req.method === 'GET' && url.pathname === '/api/sessions') {
+        const items = await listSessions(layout.vaultRoot);
+        sendJson(200, { items });
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/sessions') {
+        const body = await readJson(req);
+        const saved = await saveSession(layout.vaultRoot, body);
+        sendJson(200, { ok: true, session: saved });
+        return;
+      }
+
+      const sessionAttMatch = url.pathname.match(/^\/api\/sessions\/([^/]+)\/attachments(?:\/([^/]+))?$/);
+      if (sessionAttMatch) {
+        const sessionId = decodeURIComponent(sessionAttMatch[1]);
+        const filename = sessionAttMatch[2] ? decodeURIComponent(sessionAttMatch[2]) : '';
+        if (req.method === 'POST' && !filename) {
+          const body = await readJson(req, 48 * 1024 * 1024);
+          const attachment = await saveSessionAttachment(layout.vaultRoot, sessionId, body);
+          sendJson(201, { ok: true, attachment });
+          return;
+        }
+        if (req.method === 'GET' && filename) {
+          const file = await readSessionAttachment(layout.vaultRoot, sessionId, filename);
+          res.writeHead(200, {
+            'Content-Type': guessMimeType(file.filename),
+            'Content-Disposition': `inline; filename="${file.filename.replaceAll('"', '')}"`,
+            'Cache-Control': 'no-store'
+          });
+          res.end(file.buffer);
+          return;
+        }
+        if (req.method === 'DELETE' && filename) {
+          const removed = await removeSessionAttachment(layout.vaultRoot, sessionId, filename);
+          sendJson(200, removed);
+          return;
+        }
+      }
+
+      const sessionItemMatch = url.pathname.match(/^\/api\/sessions\/([^/]+)$/);
+      if (sessionItemMatch) {
+        const sessionId = decodeURIComponent(sessionItemMatch[1]);
+        if (req.method === 'GET') {
+          const session = await getSession(layout.vaultRoot, sessionId);
+          sendJson(200, { session });
+          return;
+        }
+        if (req.method === 'DELETE') {
+          const removed = await deleteSession(layout.vaultRoot, sessionId);
+          sendJson(200, removed);
+          return;
+        }
+      }
+
+      if (req.method === 'GET' && url.pathname === '/api/mcp/catalog') {
+        const data = await scanInstalledMcps(mcpPaths);
+        sendJson(200, data);
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/mcp/connect') {
+        const body = await readJson(req);
+        const result = await connectMcpServer(body, mcpPaths);
+        sendJson(200, result);
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/mcp/disconnect') {
+        const body = await readJson(req);
+        const result = await disconnectMcpServer(body, mcpPaths);
+        sendJson(200, result);
+        return;
+      }
+
+      if (req.method === 'GET' && url.pathname === '/api/self/status') {
+        const branch = runGit(['rev-parse', '--abbrev-ref', 'HEAD'], projectRoot);
+        const commit = runGit(['rev-parse', '--short', 'HEAD'], projectRoot);
+        const status = runGit(['status', '--short'], projectRoot);
+        const diff = runGit(['diff', '--no-color'], projectRoot);
+        sendJson(200, {
+          appRoot: projectRoot,
+          branch: branch.ok ? branch.stdout : 'unknown',
+          commit: commit.ok ? commit.stdout : 'dev',
+          status: status.stdout,
+          dirtyCount: status.stdout ? status.stdout.split(/\r?\n/).filter(Boolean).length : 0,
+          diff: diff.stdout.slice(0, 120000)
+        });
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/self/improve') {
+        const body = await readJson(req);
+        const engine = String(body.engine || 'claude').toLowerCase();
+        const request = String(body.prompt || '').trim();
+        if (!request) throw new Error('Descreva a melhoria desejada na interface.');
+        const fullPrompt = [
+          'You are improving the AYVU Brain interface directly inside its repository.',
+          `Repository root: ${projectRoot}. Main files: public/app.html (UI) and src/server.mjs (local backend).`,
+          'Preserve the prismatic dark glass aesthetic, Lucide SVG icons, keyboard accessibility, and existing endpoints.',
+          'After making changes, verify syntax with `npm run check` and summarize the edits clearly using bullet points and a checklist (- [ ] / - [x]).',
+          '',
+          `User request:\n${request}`
+        ].join('\n');
+        const result = await runLocalCliAgent({
+          engine,
+          prompt: fullPrompt,
+          cwd: projectRoot,
+          continueSession: Boolean(body.continueSession)
+        });
+        sendJson(200, { ...result, appRoot: projectRoot });
         return;
       }
 

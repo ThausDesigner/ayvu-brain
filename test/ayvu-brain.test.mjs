@@ -22,7 +22,19 @@ test('AYVU Brain serves site, app, vault tree, note save and rejects secrets or 
   const leaked = ['xai-', 'A'.repeat(30)].join('');
   await assert.rejects(saveUniqueNote({ vaultRoot: temp, targetDir: '_sessions', title: 'Bad', content: leaked }), /secret/i);
 
-  const running = await startAyvuBrainServer({ vaultRoot: temp, port: 0 });
+  const mcpDir = join(temp, 'mcp-home');
+  const mcpPaths = {
+    claudeJson: join(mcpDir, '.claude.json'),
+    claudeSettings: join(mcpDir, '.claude', 'settings.json'),
+    codexToml: join(mcpDir, '.codex', 'config.toml'),
+    agyMcpConfig: join(mcpDir, '.gemini', 'antigravity', 'mcp_config.json'),
+    agyMcpDir: join(mcpDir, '.gemini', 'antigravity', 'mcp'),
+    agyPluginsDir: join(mcpDir, '.gemini', 'config', 'plugins')
+  };
+  await fs.mkdir(join(mcpDir, '.codex'), { recursive: true });
+  await fs.writeFile(mcpPaths.codexToml, '[mcp_servers.figma]\nurl = "https://mcp.figma.com/mcp"\n');
+
+  const running = await startAyvuBrainServer({ vaultRoot: temp, mcpPaths, port: 0 });
   try {
     const siteRes = await fetch(`${running.url}/`);
     assert.equal(siteRes.status, 200);
@@ -36,10 +48,83 @@ test('AYVU Brain serves site, app, vault tree, note save and rejects secrets or 
     assert.equal(info.domain, 'brain.ayvu.org');
     assert.equal(info.threadsDir, '_sync/fios');
     assert.equal(info.voiceShortcut, 'Ctrl+Space');
+    assert.ok(info.appRoot);
 
     const cliStatus = await (await fetch(`${running.url}/api/cli/status`)).json();
     assert.equal(cliStatus.engines.length, 3);
     assert.deepEqual(cliStatus.engines.map(e => e.id), ['claude', 'codex', 'agy']);
+
+    // Sessions auto-save & attachments
+    const savedSess = await (await fetch(`${running.url}/api/sessions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: 'sessao-teste',
+        engine: 'claude',
+        messages: [
+          { role: 'user', content: 'Organizar prioridades da semana' },
+          { role: 'assistant', content: '- [ ] Prioridade 1\n- [ ] Prioridade 2' }
+        ]
+      })
+    })).json();
+    assert.equal(savedSess.ok, true);
+    assert.equal(savedSess.session.id, 'sessao-teste');
+
+    const attRes = await fetch(`${running.url}/api/sessions/sessao-teste/attachments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'briefing.txt',
+        mimeType: 'text/plain',
+        dataBase64: Buffer.from('Conteudo anexo da sessao').toString('base64')
+      })
+    });
+    assert.equal(attRes.status, 201);
+    const attJson = await attRes.json();
+    assert.equal(attJson.attachment.name, 'briefing.txt');
+    const dl = await fetch(`${running.url}${attJson.attachment.url}`);
+    assert.equal(dl.status, 200);
+    assert.equal(await dl.text(), 'Conteudo anexo da sessao');
+
+    const sessList = await (await fetch(`${running.url}/api/sessions`)).json();
+    assert.equal(sessList.items.length, 1);
+    const sessDetail = await (await fetch(`${running.url}/api/sessions/sessao-teste`)).json();
+    assert.equal(sessDetail.session.messages.length, 2);
+
+    // MCP catalog scan + manual connect/disconnect
+    const mcpBefore = await (await fetch(`${running.url}/api/mcp/catalog`)).json();
+    assert.ok(mcpBefore.catalog.length >= 25);
+    assert.equal(mcpBefore.catalog.find(c => c.id === 'figma').connected.codex, true);
+
+    const mcpConn = await (await fetch(`${running.url}/api/mcp/connect`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'custom-crm',
+        transport: 'http',
+        url: 'https://mcp.example.com/crm',
+        targets: ['claude', 'codex', 'antigravity']
+      })
+    })).json();
+    assert.equal(mcpConn.ok, true);
+    assert.deepEqual(mcpConn.targets, ['claude', 'codex', 'antigravity']);
+
+    const mcpAfter = await (await fetch(`${running.url}/api/mcp/catalog`)).json();
+    const customEntry = mcpAfter.catalog.find(c => c.id === 'custom-crm');
+    assert.ok(customEntry);
+    assert.equal(customEntry.connectedCount, 3);
+
+    const mcpDisc = await (await fetch(`${running.url}/api/mcp/disconnect`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: 'custom-crm', target: 'claude' })
+    })).json();
+    assert.equal(mcpDisc.ok, true);
+
+    // Self-improve status
+    const selfSt = await (await fetch(`${running.url}/api/self/status`)).json();
+    assert.ok(selfSt.appRoot);
+    assert.ok(selfSt.branch);
 
     const vAdd = await fetch(`${running.url}/api/voice/history`, {
       method: 'POST',

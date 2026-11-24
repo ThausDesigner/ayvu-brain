@@ -27,7 +27,125 @@ html,body{background:#17181c}body{background:radial-gradient(ellipse at 12% -10%
 @media(max-width:600px){html,body{background:#0b0d12}.shell{margin:0;height:100dvh;border:0;border-radius:0}.main,.topbar{border-radius:0}.sidebar{width:280px;background:linear-gradient(145deg,#22242b,#14171e);padding:24px 18px 18px;border-right:1px solid #ffffff14}.mobile-nav .workspace-switch{display:flex}.sidebar .brand-text{display:block}.sidebar .brand-row{margin-bottom:0}.sidebar .cmd-trigger{margin-top:0}.sidebar .nav button{justify-content:flex-start}.sidebar .vault-chip{padding:12px;background:linear-gradient(#262a34,#1b1e27);border:1px solid #ffffff12;box-shadow:inset 0 1px #ffffff08}.sidebar .side-link{padding:0 10px}.topbar{height:62px;padding:0 16px}.viewport{padding:25px 16px}.page-intro{gap:18px}.page-intro h2{font-size:27px}.page-intro p{font-size:12px}.page-intro>.btn{min-height:40px}.stats{gap:10px;grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:22px}.stat{min-height:132px;padding:17px;border-radius:18px}.stat .stat-icon{display:grid;width:27px;height:27px;right:14px;top:14px}.stat .stat-icon .ico{width:13px;height:13px}.stat>span{font-size:10px;max-width:110px}.stat strong{font-size:32px;margin-top:13px}.stat small{font-size:9px}.card{padding:18px;border-radius:18px}.overview-grid{gap:16px}.thread-title{max-width:170px;font-size:12px}.thread-path{max-width:163px;font-size:9px}.card-head h3{font-size:12px}.thread-row .btn{min-height:36px}.memory-preview{font-size:11px}.quick-card{padding:17px;border-radius:16px}.quick-card b{font-size:12px}.quick-card small{font-size:10px}.overview-bottom{font-size:9px}.chat-layout{min-height:calc(100dvh - 115px)}.chat-box{max-height:none;min-height:300px;padding:26px 0}.chat-welcome{min-height:290px}.welcome-emblem{width:100px;height:100px;margin-bottom:18px}.chat-welcome h2{font-size:28px;line-height:1.2;max-width:330px;letter-spacing:-1px}.chat-welcome p{font-size:12px}.suggestions{gap:7px;margin-top:20px;max-width:330px}.suggestions button{font-size:10px;min-height:36px;padding:8px 11px}.composer{border-radius:22px;padding:17px 15px 14px}.composer textarea{font-size:14px;min-height:72px}.composer-tools{margin-top:16px;gap:10px}.composer-tools>div:first-child{grid-template-columns:34px minmax(0,1fr) minmax(0,1fr);gap:7px}.composer-tools .select-control{max-width:none}.composer-tools .select-trigger{font-size:10px;min-height:35px;padding:7px 9px;gap:5px}.composer-tools .select-trigger>.ico:first-child{width:12px;height:12px}.composer-tools .select-trigger>.ico:last-child{width:10px;height:10px}.composer-tools .select-trigger>.select-value{flex:1}.composer-tools>div:last-child{justify-content:flex-end;gap:9px}.composer-tools .icon-btn{width:34px;height:35px}.composer .btn#btn-send{width:36px;height:36px}.voice-trigger{min-height:35px;font-size:11px;padding:7px 12px}.composer-foot{font-size:9px}.chat-actions .btn{min-height:36px;font-size:10px}.chat-actions>.row{gap:6px}.dropdown-popup{border-radius:14px}.dropdown-option{min-height:43px;font-size:12px}.select-trigger{min-height:42px}.grid-vault{border-radius:18px}.grid-vault>.card{border-radius:0}.grid-vault textarea{font-size:12px}.view-heading h2{font-size:26px}.voice-panel{border-radius:22px}.voice-settings .select-trigger{min-height:42px}.collapsed .sidebar{padding:24px 18px 18px}.collapsed .brand-row{margin-bottom:0}}
 @media(prefers-reduced-motion:reduce){.view.active{animation:none}.composer:before{filter:blur(18px)}*{scroll-behavior:auto!important}}
 .composer:before{inset:0;background:transparent;filter:none;box-shadow:-15px -13px 36px -19px #f7a18377,16px 12px 38px -18px #8cbdff99;opacity:.8}.composer:after{inset:-20px 0;background:none;filter:none}.composer:focus-within:before{filter:none;opacity:1}.composer{background:linear-gradient(#090b10,#090b10) padding-box,linear-gradient(115deg,#f6b5a8cc 0%,#b8769a70 23%,#8f8dbb50 48%,#7c9be789 78%,#b4d6ffcf 100%) border-box}.chat-layout{min-width:0}.composer-tools{min-width:0}.composer-tools>div{min-width:0}@media(prefers-reduced-motion:reduce){.composer:before{filter:none}}
-</style></head><body><a class="skip-link" href="#workspace">Pular para o conteúdo</a><div class="shell"><button class="sidebar-backdrop" id="sidebar-backdrop" aria-label="Fechar navegação" type="button"></button><aside class="sidebar" id="sidebar" aria-label="Navegação principal"><div class="brand-row"><a class="brand" href="/" aria-label="AYVU Brain, página inicial"><img src="/icon.svg" width="28" height="28" alt=""><span class="brand-text"><strong>AYVU <em>Brain</em></strong></span></a><button class="icon-btn" id="collapse-sidebar" type="button" aria-label="Recolher navegação" title="Recolher navegação"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button></div><button type="button" class="workspace-switch" data-go="system" title="Configurar workspace"><span class="workspace-avatar">B</span><span><b>Workspace local</b><small>AYVU Brain</small></span><svg class="ico lucide lucide-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></button><button class="icon-btn rail-expand" id="expand-sidebar" type="button" aria-label="Expandir navegação" title="Expandir navegação"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button><button class="cmd-trigger" type="button" id="open-palette" aria-label="Buscar notas e ações"><svg class="ico lucide lucide-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg><span>Buscar no Brain</span><span class="kbd">Ctrl K</span></button><nav class="nav" aria-label="Módulos"><p class="nav-label">Workspace</p><button type="button" data-view="overview" class="active" aria-label="Visão geral" aria-current="page"><svg class="ico lucide lucide-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" /></svg><span class="nav-text">Visão geral</span><span class="kbd">1</span><span class="nav-tooltip">Visão geral</span></button><button type="button" data-view="vault" class="" aria-label="Vault" ><svg class="ico lucide lucide-book-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg><span class="nav-text">Vault</span><span class="kbd">2</span><span class="nav-tooltip">Vault</span></button><button type="button" data-view="chat" class="" aria-label="Multi-IA Chat" ><svg class="ico lucide lucide-messages-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1" /></svg><span class="nav-text">Multi-IA Chat</span><span class="kbd">3</span><span class="nav-tooltip">Multi-IA Chat</span></button><button type="button" data-view="meetings" class="" aria-label="Reuniões" ><svg class="ico lucide lucide-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></svg><span class="nav-text">Reuniões</span><span class="kbd">4</span><span class="nav-tooltip">Reuniões</span></button><button type="button" data-view="agents" class="" aria-label="Agentes & Git" ><svg class="ico lucide lucide-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6a9 9 0 0 0-9 9V3" /><circle cx="18" cy="6" r="3" /><circle cx="6" cy="18" r="3" /></svg><span class="nav-text">Agentes & Git</span><span class="kbd">5</span><span class="nav-tooltip">Agentes & Git</span></button><div class="nav-separator"></div><button type="button" data-view="system" class="" aria-label="Sistema" ><svg class="ico lucide lucide-settings-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 17H5" /><path d="M19 7h-9" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" /></svg><span class="nav-text">Sistema</span><span class="kbd">6</span><span class="nav-tooltip">Sistema</span></button></nav><div class="side-tree"><div class="tree-heading"><span>Fios recentes</span><span>↳</span></div><div class="tree-items" id="recent-threads"><span class="tree-empty">Conectando...</span></div></div><div class="side-spacer"></div><div class="side-foot"><a class="side-link" href="/" title="Sobre o AYVU Brain"><svg class="ico lucide lucide-paperclip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551" /></svg><span>Sobre o AYVU Brain</span></a><div class="vault-chip"><span class="vault-avatar" aria-hidden="true">B</span><div class="vault-info"><b id="side-vault-name">Conectando...</b><span id="side-vault-path">Workspace local</span></div></div></div></aside><main class="main" id="workspace" tabindex="-1"><header class="topbar"><div class="breadcrumbs"><button class="icon-btn mobile-toggle" id="mobile-menu" type="button" aria-label="Abrir navegação" aria-controls="sidebar" aria-expanded="false"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button><span class="workspace-crumb">Workspace</span><svg class="ico lucide lucide-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg><h1 id="view-title">Visão geral</h1></div><div class="top-meta"><span class="pill live" id="top-status">Conectando ao vault</span><span class="pill" id="top-version">v0.2.0</span></div></header><div class="viewport"><div id="preview-banner" class="callout preview-banner hidden" role="status"><p><b>Workspace desconectado.</b> Inicie o AYVU Brain no computador para acessar seus arquivos.</p><a class="btn sec sm" href="/#instalar">Ver instalação</a></div><section class="view active" id="view-overview"><div class="page-intro"><div><p class="eyebrow">Seu workspace</p><h2>Um lugar para continuar.</h2><p>Contexto, conversas e trabalho. Tudo no seu Brain.</p></div><button class="btn" type="button" data-go="chat"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Nova conversa</button></div>
+</style><style id="ayvu-v3-layout">
+/* v0.3: Barra superior da dashboard + dock flutuante de sessoes + MCP + anexos + checklists + self-UI */
+.shell{display:flex!important;flex-direction:column!important;overflow:hidden}
+.topbar{height:auto;min-height:60px;padding:10px 18px;gap:12px;border-bottom:1px solid #ffffff0d;background:radial-gradient(ellipse 60% 100% at 0 0,#8a84c814,transparent 65%),linear-gradient(180deg,#181920,#111217);border-radius:25px 25px 0 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;z-index:20;flex-shrink:0}
+.top-left{display:flex;align-items:center;gap:10px;min-width:0;flex-shrink:0}
+.top-nav{display:flex;align-items:center;gap:4px;overflow-x:auto;scrollbar-width:none;padding:3px;border-radius:14px;background:#0b0c1080;border:1px solid #ffffff0c;min-width:0;max-width:100%}
+.top-nav::-webkit-scrollbar{display:none}
+.top-nav button{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;min-height:36px;border-radius:10px;border:1px solid transparent;background:transparent;color:#a5a8b8;font:inherit;font-size:12px;white-space:nowrap;cursor:pointer;position:relative;transition:background .15s,color .15s,border-color .15s}
+.top-nav button>.ico{width:15px;height:15px;color:#9397aa;flex-shrink:0}
+.top-nav button:hover:not(.active){background:#ffffff07;color:#eef0fa}
+.top-nav button.active{background:radial-gradient(ellipse at 50% 100%,#c286ff18,transparent 75%),linear-gradient(135deg,#2c2e38,#1b1d25);border-color:#ffffff1a;box-shadow:inset 0 1px #ffffff16,0 2px 8px #0004;color:#fff}
+.top-nav button.active>.ico{color:#e7ddff}
+.top-nav button .kbd{display:none}
+.top-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.top-search-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;min-height:34px;border-radius:10px;border:1px solid #ffffff10;background:#0d0e1399;color:#a6aab9;font:inherit;font-size:11px;cursor:pointer;white-space:nowrap}
+.top-search-btn:hover{border-color:#ffffff22;color:#f2f3fa;background:#1a1c24}
+.top-search-btn>.ico{width:14px;height:14px}
+.self-ui-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;min-height:34px;border-radius:10px;border:1px solid #b8a5f833;background:linear-gradient(135deg,#262338,#181924);color:#e2d8ff;font:inherit;font-size:11px;cursor:pointer;white-space:nowrap;box-shadow:inset 0 1px #ffffff14}
+.self-ui-btn:hover{border-color:#cbbcff66;background:linear-gradient(135deg,#332e4a,#202130);color:#fff}
+.self-ui-btn>.ico{width:14px;height:14px;color:#d2c0ff}
+.workspace-body{display:grid;grid-template-columns:var(--sidebar,286px) minmax(0,1fr);flex:1;min-height:0;position:relative;overflow:hidden;padding:12px;gap:12px;background:radial-gradient(ellipse 75% 50% at 100% 0,#66617909,transparent 80%),#0b0c10}
+.collapsed .workspace-body{--sidebar:62px}
+.sessions-dock{position:relative;display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:20px;border:1px solid #ffffff14;background:radial-gradient(ellipse 140% 50% at 0 0,#8683b816,transparent 65%),linear-gradient(155deg,#1a1b22,#111218 72%);box-shadow:inset 0 1px #ffffff12,0 14px 36px #0006;overflow:hidden;min-height:0;width:auto;border-right:1px solid #ffffff14!important}
+.sessions-dock-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sessions-dock-title{display:flex;align-items:center;gap:8px;min-width:0}
+.sessions-dock-title strong{font-size:13px;font-weight:500;color:#f1f2f8;white-space:nowrap}
+.sessions-dock-title .badge{font-size:10px;padding:2px 6px}
+.sessions-dock-actions{display:flex;align-items:center;gap:6px}
+.sessions-new-btn{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 12px;min-height:38px;border-radius:12px;border:1px solid #b8a5f830;background:linear-gradient(135deg,#2a263a,#191a24);color:#efeaff;font:inherit;font-size:12px;cursor:pointer;box-shadow:inset 0 1px #ffffff16}
+.sessions-new-btn:hover{border-color:#cbbcff55;background:linear-gradient(135deg,#35304a,#222332)}
+.sessions-new-btn>.ico{width:15px;height:15px}
+.sessions-search{width:100%;padding:8px 10px;font-size:12px;border-radius:10px;border:1px solid #ffffff10;background:#0d0e13;color:#e6e8f2}
+.sessions-list{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:6px;padding-right:2px}
+.session-item{display:flex;flex-direction:column;gap:4px;padding:10px 11px;border-radius:13px;border:1px solid #ffffff09;background:#ffffff03;color:#c9ccda;text-align:left;cursor:pointer;transition:background .14s,border-color .14s;position:relative}
+.session-item:hover{background:#ffffff08;border-color:#ffffff18}
+.session-item.active{background:radial-gradient(ellipse at 100% 50%,#c286ff16,transparent 72%),linear-gradient(125deg,#2a2c38,#191b24);border-color:#c6b6ff38;box-shadow:inset 0 1px #ffffff14;color:#fff}
+.session-item-top{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.session-item-title{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.session-item-meta{display:flex;align-items:center;gap:6px;font-size:10px;color:#898da0;flex-wrap:wrap}
+.session-engine-pill{padding:1px 6px;border-radius:6px;background:#ffffff0a;border:1px solid #ffffff10;color:#c7c1f2;font-size:9.5px;text-transform:uppercase;letter-spacing:.4px}
+.session-del-btn{opacity:0;border:0;background:transparent;color:#9397aa;cursor:pointer;padding:2px 4px;border-radius:6px;line-height:1}
+.session-item:hover .session-del-btn,.session-item:focus-within .session-del-btn{opacity:1}
+.session-del-btn:hover{color:#ff9b9b;background:#ff5a5a18}
+.sessions-dock .side-tree{border-top:1px solid #ffffff0b;padding-top:10px;margin-top:0}
+.sessions-dock .tree-heading{padding:0 4px 6px}
+.sessions-dock .tree-items{margin-left:8px;padding-left:10px;max-height:112px;overflow:auto}
+.sessions-dock .side-foot{margin-top:0;padding-top:8px;border-top:1px solid #ffffff0b}
+.sessions-rail-bar{display:none;flex-direction:column;align-items:center;gap:10px;height:100%}
+.collapsed .sessions-dock{padding:12px 8px;align-items:center}
+.collapsed .sessions-dock>*:not(.sessions-rail-bar){display:none!important}
+.collapsed .sessions-rail-bar{display:flex}
+.main{border-radius:20px;border:1px solid #ffffff0d;background:radial-gradient(ellipse 70% 45% at 100% 0,#6661790b,transparent 80%),#0e1015;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.subbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 24px;border-bottom:1px solid #ffffff09;background:#12131966;flex-shrink:0}
+.subbar .breadcrumbs{display:flex;align-items:center;gap:8px;font-size:12px;color:#989daf}
+.subbar .breadcrumbs h1{font-size:13px;font-weight:500;color:#eff0f8;margin:0}
+.viewport{padding:24px 28px 28px;flex:1;overflow:auto}
+.mobile-toggle{display:none}
+/* Chat anexos + Markdown + Checklists */
+.session-attachments{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px}
+.session-attachments:empty{display:none}
+.att-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:10px;border:1px solid #ffffff16;background:linear-gradient(145deg,#20222c,#151720);color:#d7daea;font-size:11px;max-width:260px}
+.att-chip a{color:inherit;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.att-chip a:hover{color:#fff;text-decoration:underline}
+.att-chip small{color:#8c91a6;font-size:10px;flex-shrink:0}
+.att-chip button{border:0;background:transparent;color:#9196ab;cursor:pointer;padding:0 2px;font-size:13px;line-height:1}
+.att-chip button:hover{color:#ff9494}
+.composer.drag-over{box-shadow:0 0 0 2px #b7a0ff,0 16px 40px #0006!important}
+.chat-actions{flex-wrap:wrap;gap:8px}.chat-actions>div{display:flex;flex-wrap:wrap;gap:6px;max-width:100%}.context-control>div{min-width:0;max-width:100%;flex-wrap:wrap}.checklist-reply-bar{flex-wrap:wrap}.composer-tools{flex-wrap:wrap}.composer-tools>div{flex-wrap:wrap;max-width:100%}
+.session-save-badge{font-size:11px;color:#95d5b2;display:inline-flex;align-items:center;gap:5px}
+.session-save-badge.saving{color:#d0c3ff}
+.msg{white-space:normal;line-height:1.65}
+.msg-body p{margin:0 0 8px}.msg-body p:last-child{margin-bottom:0}
+.msg-body h1,.msg-body h2,.msg-body h3{font-size:14px;font-weight:600;color:#f4f5fc;margin:12px 0 6px}
+.msg-body h1:first-child,.msg-body h2:first-child,.msg-body h3:first-child{margin-top:0}
+.msg-body ul,.msg-body ol{margin:6px 0 10px;padding-left:20px}
+.msg-body li{margin:4px 0}
+.msg-body ul.md-checklist{list-style:none;padding-left:0;display:flex;flex-direction:column;gap:6px;margin:8px 0 10px}
+.msg-body li.md-check-item{display:flex;align-items:flex-start;gap:9px;padding:8px 11px;border-radius:10px;border:1px solid #ffffff10;background:#ffffff04;transition:background .14s,border-color .14s}
+.msg-body li.md-check-item:hover{background:#ffffff08;border-color:#ffffff1e}
+.msg-body li.md-check-item.checked{background:#b7a0ff12;border-color:#b7a0ff38}
+.msg-body li.md-check-item input[type=checkbox]{margin-top:3px;accent-color:#b8a5f8;width:15px;height:15px;cursor:pointer;flex-shrink:0}
+.msg-body li.md-check-item label{cursor:pointer;flex:1;color:#e6e8f4;font-size:13px}
+.msg-body li.md-check-item.checked label{color:#fff}
+.msg-body code{font-family:var(--mono);font-size:12px;background:#ffffff0d;padding:1px 5px;border-radius:5px;color:#e4d9ff}
+.msg-body pre{background:#090a0e;border:1px solid #ffffff12;border-radius:12px;padding:12px;overflow:auto;margin:8px 0;position:relative}
+.msg-body pre code{background:none;padding:0;color:#d6dcf0;font-size:12px}
+.msg-body blockquote{margin:8px 0;padding:6px 12px;border-left:2px solid #b7a0ff88;background:#ffffff04;border-radius:0 8px 8px 0;color:#c2c7da}
+.checklist-reply-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;padding-top:8px;border-top:1px solid #ffffff10;font-size:11px;color:#a5abc0}
+.structured-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;border:1px solid #ffffff12;background:#ffffff04;color:#b8bed3;font-size:11px;cursor:pointer}
+.structured-pill input{accent-color:#b8a5f8;margin:0}
+/* MCP Catalog */
+.mcp-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.mcp-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.mcp-filters{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.mcp-cat-btn{padding:6px 11px;border-radius:20px;border:1px solid #ffffff12;background:#ffffff04;color:#a9aec2;font:inherit;font-size:11px;cursor:pointer}
+.mcp-cat-btn.active,.mcp-cat-btn:hover{background:#b7a0ff1c;border-color:#b7a0ff44;color:#f4f0ff}
+.mcp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(290px,100%),1fr));gap:14px}
+.mcp-card{display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:18px;border:1px solid #ffffff10;background:linear-gradient(145deg,#191b22,#111218 82%);box-shadow:inset 0 1px #ffffff09,0 6px 18px #0003}
+.mcp-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.mcp-card-head h3{margin:0;font-size:14px;font-weight:500;color:#f3f4fa}
+.mcp-card p{margin:0;font-size:12px;color:#9ea4b8;line-height:1.5;flex:1}
+.mcp-cli-pills{display:flex;flex-wrap:wrap;gap:6px}
+.mcp-cli-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:8px;border:1px solid #ffffff12;background:#ffffff04;color:#8e94a8;font-size:10.5px;cursor:pointer}
+.mcp-cli-pill.on{border-color:#7be0b044;background:#7be0b014;color:#b8f5d6}
+.mcp-cli-pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.mcp-card-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:8px;border-top:1px solid #ffffff0a;font-size:10.5px;color:#878da2}
+/* Modals for Manual MCP & Self-Improve UI */
+.dialog-card{width:min(660px,calc(100vw - 24px));max-height:calc(100dvh - 36px);overflow:auto;padding:22px;display:flex;flex-direction:column;gap:14px}
+.target-checks{display:flex;flex-wrap:wrap;gap:12px;padding:10px 12px;border-radius:12px;border:1px solid #ffffff10;background:#0e1016}
+.target-checks label{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:#dce0ef;cursor:pointer}
+.target-checks input{accent-color:#b8a5f8}
+.preset-chips{display:flex;flex-wrap:wrap;gap:6px}
+.preset-chips button{padding:6px 10px;border-radius:18px;border:1px solid #ffffff14;background:#ffffff05;color:#bcc2d8;font:inherit;font-size:11px;cursor:pointer}
+.preset-chips button:hover{background:#b7a0ff1c;border-color:#b7a0ff44;color:#fff}
+.self-output{min-height:90px;max-height:260px;overflow:auto;padding:12px;border-radius:12px;border:1px solid #ffffff10;background:#0b0c11;font-size:12.5px;color:#d6dcf0}
+@media(max-width:1150px){.workspace-body{--sidebar:244px}.top-search-btn .kbd{display:none}.top-meta .pill#top-version{display:none}}
+@media(max-width:900px){.topbar{flex-wrap:wrap;padding:10px 14px;gap:8px}.top-nav{order:3;width:100%}.workspace-body{--sidebar:230px;padding:10px}.mcp-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.shell{border-radius:0}.topbar{border-radius:0;padding:8px 12px}.mobile-toggle{display:inline-flex}.workspace-body{grid-template-columns:1fr;padding:8px}.sessions-dock{position:fixed;left:10px;top:68px;bottom:10px;width:min(300px,calc(100vw - 20px));z-index:50;transform:translateX(-120%);transition:transform .2s ease}.mobile-nav .sessions-dock{transform:translateX(0)}.collapsed .sessions-dock>*:not(.sessions-rail-bar){display:flex!important}.collapsed .sessions-rail-bar{display:none}.main{border-radius:16px}.viewport{padding:16px 14px}.self-ui-btn span{display:none}.top-search-btn span:not(.kbd){display:none}.mcp-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.composer-tools>div:first-child{display:flex!important;flex-wrap:wrap;gap:7px;width:100%}.composer-tools .select-control{flex:1 1 110px;min-width:0;max-width:100%}.context-control .select-control{max-width:100%;min-width:0}}
+</style></head><body><a class="skip-link" href="#workspace">Pular para o conteúdo</a><div class="shell"><button class="sidebar-backdrop" id="sidebar-backdrop" aria-label="Fechar sessões" type="button"></button><header class="topbar" aria-label="Barra superior da dashboard"><div class="top-left"><button class="icon-btn mobile-toggle" id="mobile-menu" type="button" aria-label="Abrir sessões" aria-controls="sidebar" aria-expanded="false"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button><a class="brand" href="/" aria-label="AYVU Brain, página inicial"><img src="/icon.svg" width="28" height="28" alt=""><span class="brand-text"><strong>AYVU <em>Brain</em></strong></span></a></div><nav class="nav top-nav" aria-label="Módulos"><button type="button" data-view="overview" class="active" aria-label="Visão geral" aria-current="page"><svg class="ico lucide lucide-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" /></svg><span class="nav-text">Visão geral</span><span class="kbd">1</span></button><button type="button" data-view="vault" aria-label="Vault"><svg class="ico lucide lucide-book-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg><span class="nav-text">Vault</span><span class="kbd">2</span></button><button type="button" data-view="chat" aria-label="Multi-IA Chat"><svg class="ico lucide lucide-messages-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1" /></svg><span class="nav-text">Multi-IA Chat</span><span class="kbd">3</span></button><button type="button" data-view="mcp" aria-label="MCPs"><svg class="ico lucide lucide-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-5" /><path d="M9 8V2" /><path d="M15 8V2" /><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z" /></svg><span class="nav-text">MCPs</span><span class="kbd">4</span></button><button type="button" data-view="meetings" aria-label="Reuniões"><svg class="ico lucide lucide-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></svg><span class="nav-text">Reuniões</span><span class="kbd">5</span></button><button type="button" data-view="agents" aria-label="Agentes & Git"><svg class="ico lucide lucide-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6a9 9 0 0 0-9 9V3" /><circle cx="18" cy="6" r="3" /><circle cx="6" cy="18" r="3" /></svg><span class="nav-text">Agentes & Git</span><span class="kbd">6</span></button><button type="button" data-view="system" aria-label="Sistema"><svg class="ico lucide lucide-settings-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 17H5" /><path d="M19 7h-9" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" /></svg><span class="nav-text">Sistema</span><span class="kbd">7</span></button></nav><div class="top-right"><button class="top-search-btn" type="button" id="open-palette" aria-label="Buscar notas e ações"><svg class="ico lucide lucide-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg><span>Buscar</span><span class="kbd">Ctrl K</span></button><button class="self-ui-btn" type="button" id="open-self-improve" aria-label="Melhorar interface via CLI" title="Evoluir a interface do AYVU Brain usando CLI"><svg class="ico lucide lucide-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /></svg><span>Melhorar UI</span></button><div class="top-meta"><span class="pill live" id="top-status">Conectando ao vault</span><span class="pill" id="top-version">v0.3.0</span></div></div></header><div class="workspace-body"><aside class="sidebar sessions-dock" id="sidebar" aria-label="Sessões conectadas ao vault"><div class="sessions-rail-bar"><button class="icon-btn" id="expand-sidebar" type="button" aria-label="Expandir barra de sessões" title="Expandir sessões"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button><button class="icon-btn" id="rail-new-session" type="button" aria-label="Nova sessão" title="Nova sessão"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg></button></div><div class="sessions-dock-head"><div class="sessions-dock-title"><strong>Sessões · Vault</strong><span class="badge" id="sessions-count">0</span></div><div class="sessions-dock-actions"><button class="icon-btn" id="btn-refresh-sessions" type="button" aria-label="Atualizar sessões" title="Atualizar sessões"><svg class="ico lucide lucide-refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></svg></button><button class="icon-btn" id="collapse-sidebar" type="button" aria-label="Recolher sessões" title="Recolher sessões"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button></div></div><button class="sessions-new-btn" id="btn-new-session" type="button"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Nova sessão CLI</button><input type="text" class="sessions-search" id="session-filter" placeholder="Filtrar sessões no vault..." aria-label="Filtrar sessões no vault"><div class="sessions-list" id="sessions-list"><div class="empty-state">Nenhuma sessão salva ainda.</div></div><div class="side-tree"><div class="tree-heading"><span>Fios recentes</span><span>↳</span></div><div class="tree-items" id="recent-threads"><span class="tree-empty">Conectando...</span></div></div><div class="side-foot"><div class="vault-chip"><span class="vault-avatar" aria-hidden="true">B</span><div class="vault-info"><b id="side-vault-name">Conectando...</b><span id="side-vault-path">Workspace local</span></div></div></div></aside><main class="main" id="workspace" tabindex="-1"><div class="subbar"><div class="breadcrumbs"><span class="workspace-crumb">Workspace</span><svg class="ico lucide lucide-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg><h1 id="view-title">Visão geral</h1></div><span class="muted" style="font-size:11px">Sessões salvas automaticamente em <code>_sessions/chats/</code></span></div><div class="viewport"><div id="preview-banner" class="callout preview-banner hidden" role="status"><p><b>Workspace desconectado.</b> Inicie o AYVU Brain no computador para acessar seus arquivos.</p><a class="btn sec sm" href="/#instalar">Ver instalação</a></div><section class="view active" id="view-overview"><div class="page-intro"><div><p class="eyebrow">Seu workspace</p><h2>Um lugar para continuar.</h2><p>Contexto, conversas e trabalho. Tudo no seu Brain.</p></div><button class="btn" type="button" data-go="chat"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Nova conversa</button></div>
 <div class="stats"><div class="stat"><span>Notas no vault</span><span class="stat-icon"><svg class="ico lucide lucide-book-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg></span><strong id="stat-notes">···</strong><small>Arquivos Markdown</small></div><div class="stat"><span>Fios em aberto</span><span class="stat-icon"><svg class="ico lucide lucide-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6a9 9 0 0 0-9 9V3" /><circle cx="18" cy="6" r="3" /><circle cx="6" cy="18" r="3" /></svg></span><strong id="stat-threads">···</strong><small>Frentes de trabalho</small></div><div class="stat"><span>Projetos Git</span><span class="stat-icon"><svg class="ico lucide lucide-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg></span><strong id="stat-repos">···</strong><small>Repositórios locais</small></div><div class="stat"><span>IAs locais</span><span class="stat-icon"><svg class="ico lucide lucide-messages-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1" /></svg></span><strong id="stat-providers">3</strong><small>Claude · Codex · Antigravity</small></div></div>
 <div class="grid-2 overview-grid"><div class="card"><div class="card-head"><h3>Fios do workspace <span class="count-label" id="thread-count"></span></h3><button class="icon-btn" id="btn-refresh-overview" type="button" aria-label="Atualizar workspace" title="Atualizar workspace"><svg class="ico lucide lucide-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" /></svg></button></div><div class="table-head"><span>Frente de trabalho</span><span>Responsável</span></div><ul class="list" id="overview-threads"><li class="empty-state">Lendo os fios do vault...</li></ul></div>
 <div class="card memory-card"><div class="card-head"><h3>Memória do workspace</h3><span class="badge">Markdown</span></div><div class="memory-file"><svg class="ico lucide lucide-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>_memory/current-state.md</div><pre id="current-state-preview" class="memory-preview">Carregando o estado atual...</pre><div class="memory-footer"><span>Direto do seu vault</span><button class="btn sec sm" id="btn-edit-state" type="button">Abrir nota <svg class="ico lucide lucide-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></button></div></div></div>
@@ -52,10 +170,36 @@ html,body{background:#17181c}body{background:radial-gradient(ellipse at 12% -10%
             <div id="vault-msg" class="callout hidden"></div>
           </div>
         </div>
-      </section><section class="view" id="view-chat"><div class="chat-layout"><div class="chat-actions"><span>Converse com o seu contexto.</span><div><button class="btn sec sm" id="btn-save-chat-note" type="button"><svg class="ico lucide lucide-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>Salvar resposta</button><button class="btn sec sm" id="btn-clear-chat" type="button"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Nova conversa</button><button class="icon-btn" id="open-chat-config" type="button" aria-label="Configurar sessão local" title="Configurar sessão local" aria-expanded="false" aria-controls="chat-config"><svg class="ico lucide lucide-settings-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 17H5" /><path d="M19 7h-9" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" /></svg></button></div></div>
+      </section><section class="view" id="view-chat"><div class="chat-layout"><div class="chat-actions"><span class="session-save-badge" id="session-save-status">Auto-save ativo · Vault</span><div><button class="btn sec sm" id="btn-open-session-note" type="button" disabled>Abrir no Vault</button><button class="btn sec sm" id="btn-save-chat-note" type="button"><svg class="ico lucide lucide-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>Salvar resposta</button><button class="btn sec sm" id="btn-clear-chat" type="button"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Nova conversa</button><button class="icon-btn" id="open-chat-config" type="button" aria-label="Configurar sessão local" title="Configurar sessão local" aria-expanded="false" aria-controls="chat-config"><svg class="ico lucide lucide-settings-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 17H5" /><path d="M19 7h-9" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" /></svg></button></div></div>
 <div class="chat-config hidden" id="chat-config"><div class="card-head"><h3>Sessão local</h3><button class="icon-btn" id="close-chat-config" type="button" aria-label="Fechar configuração"><svg class="ico lucide lucide-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button></div><label class="field"><span>Diretório de trabalho</span><select id="cli-cwd"><option value="">Vault conectado</option></select></label><label class="session-toggle"><input type="checkbox" id="cli-continue"><span>Continuar a última sessão deste diretório</span></label><p class="config-foot">Usa o login que você já fez na CLI. A IA pode ler e alterar arquivos conforme as permissões dessa ferramenta.</p><button class="btn sec sm" id="cli-refresh" type="button">Verificar CLIs instaladas</button><div class="callout hidden" id="cli-status-error" role="status"></div></div><div class="chat-box" id="chat-box"><div class="chat-welcome" id="chat-welcome"><div class="welcome-emblem" aria-hidden="true"><svg class="glass-mark" viewBox="0 0 220 220" fill="none" aria-hidden="true"><defs><linearGradient id="chat-glass" x1="96" y1="10" x2="132" y2="88" gradientUnits="userSpaceOnUse"><stop stop-color="#b3cbdd"/><stop offset=".15" stop-color="#eff5ff" stop-opacity=".9"/><stop offset=".32" stop-color="#16313f" stop-opacity=".32"/><stop offset=".49" stop-color="#4a7288" stop-opacity=".45"/><stop offset=".64" stop-color="#a0d6ff"/><stop offset=".73" stop-color="#fdcda6"/><stop offset=".79" stop-color="#9689da"/><stop offset=".84" stop-color="#152f40" stop-opacity=".6"/><stop offset="1" stop-color="#e7f5ff"/></linearGradient><linearGradient id="chat-edge" x1="100" y1="10" x2="120" y2="85" gradientUnits="userSpaceOnUse"><stop stop-color="white"/><stop offset=".34" stop-color="#b1d4ff" stop-opacity=".22"/><stop offset=".6" stop-color="#96f6ff"/><stop offset=".8" stop-color="#ffae80"/><stop offset="1" stop-color="white"/></linearGradient><linearGradient id="chat-facet" x1="99" y1="14" x2="110" y2="83" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset=".35" stop-color="#91d0ff" stop-opacity=".2"/><stop offset=".7" stop-color="#92cced" stop-opacity=".8"/><stop offset="1" stop-color="#f9d9aa"/></linearGradient><linearGradient id="chat-dark" x1="109" y1="20" x2="124" y2="75" gradientUnits="userSpaceOnUse"><stop stop-color="#080a0c"/><stop offset=".5" stop-color="#030b18"/><stop offset=".8" stop-color="#b8dcff" stop-opacity=".2"/><stop offset="1" stop-color="#020509"/></linearGradient><radialGradient id="chat-dot"><stop stop-color="#fbfbff"/><stop offset=".45" stop-color="#b9d7ed"/><stop offset=".7" stop-color="#6585a4"/><stop offset=".82" stop-color="#f9cda2"/><stop offset="1" stop-color="#0d182a"/></radialGradient></defs><g transform="rotate(-12 110 110)"><g transform="rotate(0 110 110)"><path d="M100 14 120 8 120 78 100 86Z" fill="url(#chat-glass)" stroke="url(#chat-edge)" stroke-width=".8"/><path d="m100 14 7 5v60l-7 7z" fill="url(#chat-facet)" opacity=".7"/><path d="m100 14 20-6-13 11z" fill="#d8e9fa" opacity=".7"/><path d="m120 8-13 11v60l13-1z" fill="url(#chat-dark)" opacity=".55"/><path d="m100 14 7 5v60" fill="none" stroke="#e5f1ff" stroke-opacity=".6" stroke-width=".6"/></g><g transform="rotate(90 110 110)"><path d="M100 14 120 8 120 78 100 86Z" fill="url(#chat-glass)" stroke="url(#chat-edge)" stroke-width=".8"/><path d="m100 14 7 5v60l-7 7z" fill="url(#chat-facet)" opacity=".7"/><path d="m100 14 20-6-13 11z" fill="#d8e9fa" opacity=".7"/><path d="m120 8-13 11v60l13-1z" fill="url(#chat-dark)" opacity=".55"/><path d="m100 14 7 5v60" fill="none" stroke="#e5f1ff" stroke-opacity=".6" stroke-width=".6"/></g><g transform="rotate(135 110 110)"><path d="M100 14 120 8 120 78 100 86Z" fill="url(#chat-glass)" stroke="url(#chat-edge)" stroke-width=".8"/><path d="m100 14 7 5v60l-7 7z" fill="url(#chat-facet)" opacity=".7"/><path d="m100 14 20-6-13 11z" fill="#d8e9fa" opacity=".7"/><path d="m120 8-13 11v60l13-1z" fill="url(#chat-dark)" opacity=".55"/><path d="m100 14 7 5v60" fill="none" stroke="#e5f1ff" stroke-opacity=".6" stroke-width=".6"/></g><g transform="rotate(180 110 110)"><path d="M100 14 120 8 120 78 100 86Z" fill="url(#chat-glass)" stroke="url(#chat-edge)" stroke-width=".8"/><path d="m100 14 7 5v60l-7 7z" fill="url(#chat-facet)" opacity=".7"/><path d="m100 14 20-6-13 11z" fill="#d8e9fa" opacity=".7"/><path d="m120 8-13 11v60l13-1z" fill="url(#chat-dark)" opacity=".55"/><path d="m100 14 7 5v60" fill="none" stroke="#e5f1ff" stroke-opacity=".6" stroke-width=".6"/></g><g transform="rotate(225 110 110)"><path d="M100 14 120 8 120 78 100 86Z" fill="url(#chat-glass)" stroke="url(#chat-edge)" stroke-width=".8"/><path d="m100 14 7 5v60l-7 7z" fill="url(#chat-facet)" opacity=".7"/><path d="m100 14 20-6-13 11z" fill="#d8e9fa" opacity=".7"/><path d="m120 8-13 11v60l13-1z" fill="url(#chat-dark)" opacity=".55"/><path d="m100 14 7 5v60" fill="none" stroke="#e5f1ff" stroke-opacity=".6" stroke-width=".6"/></g><g transform="rotate(270 110 110)"><path d="M100 14 120 8 120 78 100 86Z" fill="url(#chat-glass)" stroke="url(#chat-edge)" stroke-width=".8"/><path d="m100 14 7 5v60l-7 7z" fill="url(#chat-facet)" opacity=".7"/><path d="m100 14 20-6-13 11z" fill="#d8e9fa" opacity=".7"/><path d="m120 8-13 11v60l13-1z" fill="url(#chat-dark)" opacity=".55"/><path d="m100 14 7 5v60" fill="none" stroke="#e5f1ff" stroke-opacity=".6" stroke-width=".6"/></g><g transform="rotate(315 110 110)"><path d="M100 14 120 8 120 78 100 86Z" fill="url(#chat-glass)" stroke="url(#chat-edge)" stroke-width=".8"/><path d="m100 14 7 5v60l-7 7z" fill="url(#chat-facet)" opacity=".7"/><path d="m100 14 20-6-13 11z" fill="#d8e9fa" opacity=".7"/><path d="m120 8-13 11v60l13-1z" fill="url(#chat-dark)" opacity=".55"/><path d="m100 14 7 5v60" fill="none" stroke="#e5f1ff" stroke-opacity=".6" stroke-width=".6"/></g><circle cx="110" cy="24" r="11" transform="rotate(45 110 110)" fill="url(#chat-dot)" stroke="#b9c7e1" stroke-width=".7"/><circle cx="110" cy="109" r="18" fill="#080d15" fill-opacity=".6" stroke="#80a9d1" stroke-opacity=".24"/></g></svg></div><h2>O que vamos pensar hoje?</h2><p>Use suas IAs locais já autenticadas.<br>Traga uma nota e continue o trabalho.</p><div class="suggestions"><button type="button" data-prompt="Resuma o contexto da nota anexada e identifique os próximos passos.">Resumir uma nota</button><button type="button" data-prompt="Me ajude a planejar a próxima etapa deste projeto.">Planejar um projeto</button><button type="button" data-prompt="Revise esta ideia e questione as premissas antes de propor uma solução.">Revisar uma ideia</button></div></div></div>
-<div class="context-control"><label for="chat-context"><svg class="ico lucide lucide-paperclip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551" /></svg>Contexto</label><select id="chat-context"><option value="">Nenhuma nota anexada</option></select></div>
-<div class="composer"><label for="chat-input" class="hidden">Sua mensagem</label><textarea id="chat-input" rows="2" placeholder="Pergunte, desenvolva uma ideia ou continue um fio..." aria-label="Sua mensagem"></textarea><div class="composer-tools"><div><button class="icon-btn" id="attach-note" type="button" aria-label="Anexar nota do vault" title="Anexar nota do vault"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg></button><select id="chat-provider" aria-label="IA local"><option value="claude">Claude Code</option><option value="codex">Codex</option><option value="agy">Gemini / Antigravity</option></select><select id="chat-mode" aria-label="Modo de resposta"><option value="conversation">Conversa</option><option value="summary">Resumo</option><option value="plan">Planejamento</option></select></div><div><button class="voice-trigger" id="voice-trigger" type="button" aria-label="Voice: abrir ditado por voz" aria-controls="voice-panel" aria-expanded="false" title="Ditado por voz · Ctrl + Space"><svg class="ico lucide lucide-audio-lines" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 10v3" /><path d="M6 6v11" /><path d="M10 3v18" /><path d="M14 8v7" /><path d="M18 5v13" /><path d="M22 10v3" /></svg><span>Voice</span></button><button class="btn" id="btn-send" type="button" aria-label="Enviar mensagem" title="Enviar mensagem"><svg class="ico lucide lucide-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" /><path d="m21.854 2.147-10.94 10.939" /></svg></button></div></div></div><div id="chat-err" class="callout err hidden" role="alert"></div><div class="composer-foot"><span id="chat-connection">Verificando suas CLIs locais...</span><span>Enter para enviar · Shift + Enter para nova linha</span></div></div></section><section class="view" id="view-meetings"><div class="view-heading"><h2>Reuniões que viram memória.</h2><p>Capture áudio, registre suas notas e salve o que importa.</p></div>
+<div class="context-control" style="justify-content:space-between;flex-wrap:wrap;gap:8px"><div style="display:flex;align-items:center;gap:8px"><label for="chat-context"><svg class="ico lucide lucide-paperclip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551" /></svg>Contexto</label><select id="chat-context"><option value="">Nenhuma nota anexada</option></select></div><label class="structured-pill" title="Pede à CLI para estruturar perguntas, opções e próximos passos com checklists e bullet points"><input type="checkbox" id="chat-structured" checked><span>Checklists & bullets</span></label></div>
+<div class="session-attachments" id="session-attachments" aria-label="Arquivos salvos nesta sessão"></div>
+<div class="composer" id="chat-composer"><input type="file" id="chat-file-input" multiple class="hidden" aria-label="Subir arquivos para a sessão"><label for="chat-input" class="hidden">Sua mensagem</label><textarea id="chat-input" rows="2" placeholder="Pergunte, desenvolva uma ideia, arraste arquivos ou continue um fio..." aria-label="Sua mensagem"></textarea><div class="composer-tools"><div><button class="icon-btn" id="attach-note" type="button" aria-label="Anexar nota do vault" title="Anexar nota do vault"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg></button><button class="icon-btn" id="attach-file" type="button" aria-label="Subir arquivo de qualquer tipo na sessão" title="Subir arquivo (fica salvo na sessão)"><svg class="ico lucide lucide-paperclip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551" /></svg></button><select id="chat-provider" aria-label="IA local"><option value="claude">Claude Code</option><option value="codex">Codex</option><option value="agy">Gemini / Antigravity</option></select><select id="chat-mode" aria-label="Modo de resposta"><option value="conversation">Conversa</option><option value="questions">Perguntas & Checklist</option><option value="summary">Resumo</option><option value="plan">Planejamento</option></select></div><div><button class="voice-trigger" id="voice-trigger" type="button" aria-label="Voice: abrir ditado por voz" aria-controls="voice-panel" aria-expanded="false" title="Ditado por voz · Ctrl + Space"><svg class="ico lucide lucide-audio-lines" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 10v3" /><path d="M6 6v11" /><path d="M10 3v18" /><path d="M14 8v7" /><path d="M18 5v13" /><path d="M22 10v3" /></svg><span>Voice</span></button><button class="btn" id="btn-send" type="button" aria-label="Enviar mensagem" title="Enviar mensagem"><svg class="ico lucide lucide-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" /><path d="m21.854 2.147-10.94 10.939" /></svg></button></div></div></div><div id="chat-err" class="callout err hidden" role="alert"></div><div class="composer-foot"><span id="chat-connection">Verificando suas CLIs locais...</span><span>Enter para enviar · Shift + Enter para nova linha · Arraste arquivos para anexar</span></div></div></section>
+<section class="view" id="view-mcp">
+  <div class="page-intro">
+    <div>
+      <p class="eyebrow">Model Context Protocol</p>
+      <h2>Catálogo de MCPs.</h2>
+      <p>Ferramentas detectadas em Claude Code, Codex e Antigravity + catálogo principal do mercado e conexão manual.</p>
+    </div>
+    <div class="row">
+      <button class="btn sec" id="btn-mcp-rescan" type="button">Reescanear CLIs</button>
+      <button class="btn" id="btn-mcp-manual" type="button"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Conectar MCP manual</button>
+    </div>
+  </div>
+  <div class="mcp-summary">
+    <div class="stat"><span>Claude Code</span><strong id="mcp-count-claude">···</strong><small>~/.claude.json</small></div>
+    <div class="stat"><span>OpenAI Codex</span><strong id="mcp-count-codex">···</strong><small>~/.codex/config.toml</small></div>
+    <div class="stat"><span>Antigravity</span><strong id="mcp-count-agy">···</strong><small>mcp_config & plugins</small></div>
+    <div class="stat"><span>Catálogo total</span><strong id="mcp-count-total">···</strong><small>Principais + locais</small></div>
+  </div>
+  <div class="mcp-toolbar">
+    <div class="mcp-filters" id="mcp-categories"></div>
+    <input type="text" id="mcp-search" placeholder="Buscar MCP por nome ou função..." aria-label="Buscar MCP" style="max-width:280px">
+  </div>
+  <div id="mcp-msg" class="callout hidden"></div>
+  <div class="mcp-grid" id="mcp-grid"><div class="empty-state">Vasculhando Claude, Codex e Antigravity...</div></div>
+</section><section class="view" id="view-meetings"><div class="view-heading"><h2>Reuniões que viram memória.</h2><p>Capture áudio, registre suas notas e salve o que importa.</p></div>
         <div class="grid-2">
           <div class="card">
             <div class="card-head">
@@ -169,13 +313,85 @@ html,body{background:#17181c}body{background:radial-gradient(ellipse at 12% -10%
             <div class="callout">No Windows, execute <code>npm run install:windows</code> na pasta do projeto para criar os atalhos do aplicativo.</div>
           </div>
         </div>
-      <div class="voice-system card"><div><h3><svg class="ico lucide lucide-audio-lines" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 10v3" /><path d="M6 6v11" /><path d="M10 3v18" /><path d="M14 8v7" /><path d="M18 5v13" /><path d="M22 10v3" /></svg>Sua voz, direto no texto.</h3><p>Ctrl + Space inicia ou para o ditado no Chat, no editor ou em um rascunho rápido. Escolha Web Speech instantâneo ou alta precisão com sua API.</p></div><button class="btn sec" id="voice-system-open" type="button">Abrir ditado</button></div><div class="local-clis"><h3 class="section-label">Suas IAs locais</h3><div class="local-cli-grid" id="local-cli-grid"><p class="muted">Verificando instalações...</p></div></div><details class="advanced-api" id="advanced-api"><summary><span>Avançado · APIs opcionais e Grok</span><span class="badge">BYOK</span></summary><div class="advanced-body"><p class="muted">O uso principal funciona sem chave de API. Configure esta área apenas se quiser chamar uma API diretamente.</p><div class="quick-section"><h3 class="section-label">Provedores de IA <span class="count-label">Chaves apenas nesta janela</span></h3><div class="provider-grid"><button class="provider-card" data-provider="claude" type="button" aria-label="Configurar Claude"><span class="provider-monogram" aria-hidden="true"><svg class="ico lucide lucide-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /><path d="M20 2v4" /><path d="M22 4h-4" /><circle cx="4" cy="20" r="2" /></svg></span><b>Claude</b><span class="muted">Anthropic</span><span class="provider-status"><span data-provider-status="claude">Não configurado</span><span class="toggle-track" aria-hidden="true"></span></span></button><button class="provider-card" data-provider="openai" type="button" aria-label="Configurar OpenAI / Codex"><span class="provider-monogram" aria-hidden="true"><svg class="ico lucide lucide-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></svg></span><b>OpenAI / Codex</b><span class="muted">OpenAI</span><span class="provider-status"><span data-provider-status="openai">Não configurado</span><span class="toggle-track" aria-hidden="true"></span></span></button><button class="provider-card" data-provider="gemini" type="button" aria-label="Configurar Gemini"><span class="provider-monogram" aria-hidden="true"><svg class="ico lucide lucide-gem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 3 8 9l4 13 4-13-2.5-6" /><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z" /><path d="M2 9h20" /></svg></span><b>Gemini</b><span class="muted">Google</span><span class="provider-status"><span data-provider-status="gemini">Não configurado</span><span class="toggle-track" aria-hidden="true"></span></span></button><button class="provider-card" data-provider="grok" type="button" aria-label="Configurar Grok"><span class="provider-monogram" aria-hidden="true"><svg class="ico lucide lucide-orbit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.341 6.484A10 10 0 0 1 10.266 21.85" /><path d="M3.659 17.516A10 10 0 0 1 13.74 2.152" /><circle cx="12" cy="12" r="3" /><circle cx="19" cy="5" r="2" /><circle cx="5" cy="19" r="2" /></svg></span><b>Grok</b><span class="muted">xAI</span><span class="provider-status"><span data-provider-status="grok">Não configurado</span><span class="toggle-track" aria-hidden="true"></span></span></button></div></div><div class="grid-2 advanced-chat"><div><label class="field"><span>Provedor de API</span><select id="api-provider"><option value="claude">Claude / Anthropic</option><option value="openai">OpenAI / Codex</option><option value="gemini">Gemini / Google</option><option value="grok">Grok / xAI</option></select></label><label class="field"><span>Modelo da API</span><input type="text" id="chat-model" value="claude-sonnet-4-5" autocomplete="off"></label><label class="field"><span>Chave de API · opcional</span><input type="password" id="chat-key" autocomplete="off" placeholder="Somente para integrações BYOK"></label><p class="config-foot">O chat principal usa suas CLIs já autenticadas. Esta área é opcional e usa APIs cobradas separadamente.</p><button class="guide-help" id="open-api-guide" type="button">Como obter minha chave?</button><button class="btn sec" id="disconnect-provider" type="button">Desconectar provedor de API</button></div><div><label class="field"><span>Mensagem para a API opcional</span><textarea id="advanced-input" rows="4" placeholder="Use esta área se preferir BYOK ao chat local."></textarea></label><button class="btn" id="advanced-send" type="button">Enviar à API</button><div id="advanced-error" class="callout err hidden" role="alert"></div><pre id="advanced-output" class="advanced-output"></pre></div></div><div class="api-guide" id="api-guide"><div class="card-head"><div><h3>Como obter suas chaves de API</h3><p>Crie a chave no site oficial e conecte aqui. Você só precisa dos provedores que quiser usar.</p></div><span class="badge">Conferido em 24/11/2026</span></div><div class="api-guide-grid"><details id="guide-claude"><summary><span><svg class="ico lucide lucide-key-round" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></svg>Claude / Anthropic</span><svg class="ico lucide lucide-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary><div class="guide-body"><ol><li>Entre no Claude Console e abra API keys.</li><li>Escolha Create key, dê um nome e vincule à sua conta ou workspace.</li><li>Copie a chave na criação. Confira créditos e cobrança no Console.</li></ol><p>Se a chave não aparecer novamente, crie outra no Console.</p><div class="row"><a class="btn sec sm" href="https://platform.claude.com/settings/keys" target="_blank" rel="noopener noreferrer">Abrir console <svg class="ico lucide lucide-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg></a><button type="button" class="btn sm" data-connect="claude">Conectar chave</button></div><a class="guide-source" href="https://platform.claude.com/docs/en/get-api-key" target="_blank" rel="noopener noreferrer">Consultar documentação oficial <svg class="ico lucide lucide-arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></a></div></details><details id="guide-openai"><summary><span><svg class="ico lucide lucide-key-round" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></svg>OpenAI / Codex</span><svg class="ico lucide lucide-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary><div class="guide-body"><ol><li>Entre na plataforma OpenAI e selecione seu projeto.</li><li>Abra API keys e crie uma chave secreta para esse projeto.</li><li>Copie a chave na criação e confira a cobrança da API.</li></ol><p>A cobrança da API é separada da assinatura ChatGPT. Codex CLI pode usar o próprio login; este chat usa API.</p><div class="row"><a class="btn sec sm" href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">Abrir console <svg class="ico lucide lucide-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg></a><button type="button" class="btn sm" data-connect="openai">Conectar chave</button></div><a class="guide-source" href="https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key" target="_blank" rel="noopener noreferrer">Consultar documentação oficial <svg class="ico lucide lucide-arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></a></div></details><details id="guide-gemini"><summary><span><svg class="ico lucide lucide-key-round" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></svg>Gemini / Google</span><svg class="ico lucide lucide-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary><div class="guide-body"><ol><li>Entre no Google AI Studio e abra API Keys.</li><li>Use uma chave existente ou escolha Create API key e o projeto.</li><li>Copie a chave. Confira cota, permissões e faturamento do projeto.</li></ol><p>O projeto e a chave gerados pelo AI Studio podem ser usados também para transcrever reuniões.</p><div class="row"><a class="btn sec sm" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">Abrir console <svg class="ico lucide lucide-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg></a><button type="button" class="btn sm" data-connect="gemini">Conectar chave</button></div><a class="guide-source" href="https://aistudio.google.com/docs/api-key" target="_blank" rel="noopener noreferrer">Consultar documentação oficial <svg class="ico lucide lucide-arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></a></div></details><details id="guide-grok"><summary><span><svg class="ico lucide lucide-key-round" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></svg>Grok / xAI</span><svg class="ico lucide lucide-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary><div class="guide-body"><ol><li>Entre no console da xAI e selecione sua equipe.</li><li>Abra API Keys e crie uma chave para usar a API.</li><li>Copie a chave e confira os créditos da equipe antes de enviar mensagens.</li></ol><p>A chave é criada no console de desenvolvedores, separado da tela de conversa do Grok.</p><div class="row"><a class="btn sec sm" href="https://console.x.ai/" target="_blank" rel="noopener noreferrer">Abrir console <svg class="ico lucide lucide-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg></a><button type="button" class="btn sm" data-connect="grok">Conectar chave</button></div><a class="guide-source" href="https://docs.x.ai/developers/quickstart" target="_blank" rel="noopener noreferrer">Consultar documentação oficial <svg class="ico lucide lucide-arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></a></div></details></div><div class="guide-note"><svg class="ico lucide lucide-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg><div><b>Cole a chave apenas no campo “Chave de API”.</b><p>Em Multi-IA Chat, escolha o provedor, abra a engrenagem e cole a chave. Confira o modelo e envie uma mensagem curta. “Chave configurada” indica que você preencheu o campo; a autenticação só é confirmada após uma resposta. Recarregar a janela remove as chaves.</p></div></div><details class="guide-troubleshooting"><summary>Minha chave não funcionou</summary><p>401/403: confira a chave e suas permissões. 429: confira cotas, créditos e limites de requisição. Modelo indisponível: copie o identificador de um modelo compatível com sua conta no campo Modelo. Erro de conexão: confirme que o servidor local está rodando. O tutorial não faz chamadas pagas automaticamente.</p></details></div></div></details></section></div></main></div><section class="voice-panel hidden" id="voice-panel" role="dialog" aria-label="Ditado rápido por voz" aria-modal="false"><div class="voice-head"><div><svg class="ico lucide lucide-audio-lines" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 10v3" /><path d="M6 6v11" /><path d="M10 3v18" /><path d="M14 8v7" /><path d="M18 5v13" /><path d="M22 10v3" /></svg><h2>Ditado rápido</h2><span class="kbd" id="voice-shortcut">Ctrl + Space</span></div><button class="icon-btn" id="voice-close" type="button" aria-label="Fechar ditado"><svg class="ico lucide lucide-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button></div><div class="voice-settings"><label class="field"><span>Modo</span><select id="voice-mode"><option value="instant">Instantâneo · grátis</option><option value="byok">Alta precisão · BYOK</option></select></label><label class="field"><span>Idioma</span><select id="voice-language"><option value="pt-BR">Português (BR)</option><option value="en-US">English</option></select></label></div><div class="voice-byok hidden" id="voice-byok"><label class="field"><span>Provedor de transcrição</span><select id="voice-provider"><option value="groq">Groq · whisper-large-v3-turbo</option><option value="gemini">Gemini · gemini-2.5-flash</option><option value="openai">OpenAI · gpt-4o-mini-transcribe</option></select></label><label class="field"><span>Chave de API · apenas nesta janela</span><input type="password" id="voice-key" autocomplete="off" placeholder="Cole sua chave de transcrição"></label><a class="voice-key-help" id="voice-key-help" href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">Obter chave no console oficial <svg class="ico lucide lucide-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg></a></div><div class="voice-capture"><span class="voice-indicator" id="voice-indicator"></span><span id="voice-status" role="status" aria-live="polite">Pronto para ditar.</span><button class="btn sm" id="voice-start" type="button"><svg class="ico lucide lucide-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></svg>Iniciar ditado</button></div><p class="voice-target" id="voice-target">Destino: rascunho rápido</p><div class="voice-interim" id="voice-interim" aria-live="polite"></div><textarea id="voice-draft" rows="3" aria-label="Rascunho do ditado" placeholder="O texto reconhecido aparece aqui..."></textarea><div class="voice-draft-actions"><button class="btn sec sm" id="voice-copy" type="button"><svg class="ico lucide lucide-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>Copiar</button><button class="btn sec sm" id="voice-to-chat" type="button"><svg class="ico lucide lucide-messages-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1" /></svg>Levar ao chat</button><button class="btn sec sm" id="voice-save" type="button"><svg class="ico lucide lucide-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>Salvar nota</button></div><p class="voice-privacy" id="voice-privacy">Web Speech usa o reconhecimento do navegador, que pode enviar áudio ao serviço dele. Requer navegador compatível e permissão de microfone.</p><details class="voice-history" id="voice-history"><summary>Histórico de voz <span class="count-label" id="voice-history-count"></span></summary><p>Até 30 ditados na memória do servidor local. Reiniciar o servidor limpa este histórico.</p><div id="voice-history-list"><p>Nenhum ditado ainda.</p></div><button class="btn sec sm" id="voice-refresh" type="button">Atualizar histórico</button></details><div class="callout err hidden" id="voice-error" role="alert"></div></section><div class="modal-bg" id="palette-bg"><div class="modal" role="dialog" aria-modal="true" aria-label="Buscar notas e ações"><div class="palette-search"><svg class="ico lucide lucide-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg><input type="text" id="palette-input" aria-label="Buscar nota ou módulo" placeholder="Buscar nota ou módulo..." autocomplete="off"><button class="icon-btn" type="button" onclick="closePalette()" aria-label="Fechar busca"><svg class="ico lucide lucide-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button></div><div class="modal-list" id="palette-list"></div><div class="palette-foot"><span>↑ ↓ navegar · Enter abrir</span><span>Esc para fechar</span></div></div></div><div class="toast" id="toast" role="status" aria-live="polite"></div><script>
+      <div class="voice-system card"><div><h3><svg class="ico lucide lucide-audio-lines" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 10v3" /><path d="M6 6v11" /><path d="M10 3v18" /><path d="M14 8v7" /><path d="M18 5v13" /><path d="M22 10v3" /></svg>Sua voz, direto no texto.</h3><p>Ctrl + Space inicia ou para o ditado no Chat, no editor ou em um rascunho rápido. Escolha Web Speech instantâneo ou alta precisão com sua API.</p></div><button class="btn sec" id="voice-system-open" type="button">Abrir ditado</button></div><div class="local-clis"><h3 class="section-label">Suas IAs locais</h3><div class="local-cli-grid" id="local-cli-grid"><p class="muted">Verificando instalações...</p></div></div><details class="advanced-api" id="advanced-api"><summary><span>Avançado · APIs opcionais e Grok</span><span class="badge">BYOK</span></summary><div class="advanced-body"><p class="muted">O uso principal funciona sem chave de API. Configure esta área apenas se quiser chamar uma API diretamente.</p><div class="quick-section"><h3 class="section-label">Provedores de IA <span class="count-label">Chaves apenas nesta janela</span></h3><div class="provider-grid"><button class="provider-card" data-provider="claude" type="button" aria-label="Configurar Claude"><span class="provider-monogram" aria-hidden="true"><svg class="ico lucide lucide-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /><path d="M20 2v4" /><path d="M22 4h-4" /><circle cx="4" cy="20" r="2" /></svg></span><b>Claude</b><span class="muted">Anthropic</span><span class="provider-status"><span data-provider-status="claude">Não configurado</span><span class="toggle-track" aria-hidden="true"></span></span></button><button class="provider-card" data-provider="openai" type="button" aria-label="Configurar OpenAI / Codex"><span class="provider-monogram" aria-hidden="true"><svg class="ico lucide lucide-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></svg></span><b>OpenAI / Codex</b><span class="muted">OpenAI</span><span class="provider-status"><span data-provider-status="openai">Não configurado</span><span class="toggle-track" aria-hidden="true"></span></span></button><button class="provider-card" data-provider="gemini" type="button" aria-label="Configurar Gemini"><span class="provider-monogram" aria-hidden="true"><svg class="ico lucide lucide-gem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 3 8 9l4 13 4-13-2.5-6" /><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z" /><path d="M2 9h20" /></svg></span><b>Gemini</b><span class="muted">Google</span><span class="provider-status"><span data-provider-status="gemini">Não configurado</span><span class="toggle-track" aria-hidden="true"></span></span></button><button class="provider-card" data-provider="grok" type="button" aria-label="Configurar Grok"><span class="provider-monogram" aria-hidden="true"><svg class="ico lucide lucide-orbit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.341 6.484A10 10 0 0 1 10.266 21.85" /><path d="M3.659 17.516A10 10 0 0 1 13.74 2.152" /><circle cx="12" cy="12" r="3" /><circle cx="19" cy="5" r="2" /><circle cx="5" cy="19" r="2" /></svg></span><b>Grok</b><span class="muted">xAI</span><span class="provider-status"><span data-provider-status="grok">Não configurado</span><span class="toggle-track" aria-hidden="true"></span></span></button></div></div><div class="grid-2 advanced-chat"><div><label class="field"><span>Provedor de API</span><select id="api-provider"><option value="claude">Claude / Anthropic</option><option value="openai">OpenAI / Codex</option><option value="gemini">Gemini / Google</option><option value="grok">Grok / xAI</option></select></label><label class="field"><span>Modelo da API</span><input type="text" id="chat-model" value="claude-sonnet-4-5" autocomplete="off"></label><label class="field"><span>Chave de API · opcional</span><input type="password" id="chat-key" autocomplete="off" placeholder="Somente para integrações BYOK"></label><p class="config-foot">O chat principal usa suas CLIs já autenticadas. Esta área é opcional e usa APIs cobradas separadamente.</p><button class="guide-help" id="open-api-guide" type="button">Como obter minha chave?</button><button class="btn sec" id="disconnect-provider" type="button">Desconectar provedor de API</button></div><div><label class="field"><span>Mensagem para a API opcional</span><textarea id="advanced-input" rows="4" placeholder="Use esta área se preferir BYOK ao chat local."></textarea></label><button class="btn" id="advanced-send" type="button">Enviar à API</button><div id="advanced-error" class="callout err hidden" role="alert"></div><pre id="advanced-output" class="advanced-output"></pre></div></div><div class="api-guide" id="api-guide"><div class="card-head"><div><h3>Como obter suas chaves de API</h3><p>Crie a chave no site oficial e conecte aqui. Você só precisa dos provedores que quiser usar.</p></div><span class="badge">Conferido em 24/11/2026</span></div><div class="api-guide-grid"><details id="guide-claude"><summary><span><svg class="ico lucide lucide-key-round" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></svg>Claude / Anthropic</span><svg class="ico lucide lucide-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary><div class="guide-body"><ol><li>Entre no Claude Console e abra API keys.</li><li>Escolha Create key, dê um nome e vincule à sua conta ou workspace.</li><li>Copie a chave na criação. Confira créditos e cobrança no Console.</li></ol><p>Se a chave não aparecer novamente, crie outra no Console.</p><div class="row"><a class="btn sec sm" href="https://platform.claude.com/settings/keys" target="_blank" rel="noopener noreferrer">Abrir console <svg class="ico lucide lucide-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg></a><button type="button" class="btn sm" data-connect="claude">Conectar chave</button></div><a class="guide-source" href="https://platform.claude.com/docs/en/get-api-key" target="_blank" rel="noopener noreferrer">Consultar documentação oficial <svg class="ico lucide lucide-arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></a></div></details><details id="guide-openai"><summary><span><svg class="ico lucide lucide-key-round" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></svg>OpenAI / Codex</span><svg class="ico lucide lucide-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary><div class="guide-body"><ol><li>Entre na plataforma OpenAI e selecione seu projeto.</li><li>Abra API keys e crie uma chave secreta para esse projeto.</li><li>Copie a chave na criação e confira a cobrança da API.</li></ol><p>A cobrança da API é separada da assinatura ChatGPT. Codex CLI pode usar o próprio login; este chat usa API.</p><div class="row"><a class="btn sec sm" href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">Abrir console <svg class="ico lucide lucide-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg></a><button type="button" class="btn sm" data-connect="openai">Conectar chave</button></div><a class="guide-source" href="https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key" target="_blank" rel="noopener noreferrer">Consultar documentação oficial <svg class="ico lucide lucide-arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></a></div></details><details id="guide-gemini"><summary><span><svg class="ico lucide lucide-key-round" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></svg>Gemini / Google</span><svg class="ico lucide lucide-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary><div class="guide-body"><ol><li>Entre no Google AI Studio e abra API Keys.</li><li>Use uma chave existente ou escolha Create API key e o projeto.</li><li>Copie a chave. Confira cota, permissões e faturamento do projeto.</li></ol><p>O projeto e a chave gerados pelo AI Studio podem ser usados também para transcrever reuniões.</p><div class="row"><a class="btn sec sm" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">Abrir console <svg class="ico lucide lucide-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg></a><button type="button" class="btn sm" data-connect="gemini">Conectar chave</button></div><a class="guide-source" href="https://aistudio.google.com/docs/api-key" target="_blank" rel="noopener noreferrer">Consultar documentação oficial <svg class="ico lucide lucide-arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></a></div></details><details id="guide-grok"><summary><span><svg class="ico lucide lucide-key-round" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></svg>Grok / xAI</span><svg class="ico lucide lucide-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary><div class="guide-body"><ol><li>Entre no console da xAI e selecione sua equipe.</li><li>Abra API Keys e crie uma chave para usar a API.</li><li>Copie a chave e confira os créditos da equipe antes de enviar mensagens.</li></ol><p>A chave é criada no console de desenvolvedores, separado da tela de conversa do Grok.</p><div class="row"><a class="btn sec sm" href="https://console.x.ai/" target="_blank" rel="noopener noreferrer">Abrir console <svg class="ico lucide lucide-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg></a><button type="button" class="btn sm" data-connect="grok">Conectar chave</button></div><a class="guide-source" href="https://docs.x.ai/developers/quickstart" target="_blank" rel="noopener noreferrer">Consultar documentação oficial <svg class="ico lucide lucide-arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></a></div></details></div><div class="guide-note"><svg class="ico lucide lucide-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg><div><b>Cole a chave apenas no campo “Chave de API”.</b><p>Em Multi-IA Chat, escolha o provedor, abra a engrenagem e cole a chave. Confira o modelo e envie uma mensagem curta. “Chave configurada” indica que você preencheu o campo; a autenticação só é confirmada após uma resposta. Recarregar a janela remove as chaves.</p></div></div><details class="guide-troubleshooting"><summary>Minha chave não funcionou</summary><p>401/403: confira a chave e suas permissões. 429: confira cotas, créditos e limites de requisição. Modelo indisponível: copie o identificador de um modelo compatível com sua conta no campo Modelo. Erro de conexão: confirme que o servidor local está rodando. O tutorial não faz chamadas pagas automaticamente.</p></details></div></div></details></section></div></main></div></div><section class="voice-panel hidden" id="voice-panel" role="dialog" aria-label="Ditado rápido por voz" aria-modal="false"><div class="voice-head"><div><svg class="ico lucide lucide-audio-lines" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 10v3" /><path d="M6 6v11" /><path d="M10 3v18" /><path d="M14 8v7" /><path d="M18 5v13" /><path d="M22 10v3" /></svg><h2>Ditado rápido</h2><span class="kbd" id="voice-shortcut">Ctrl + Space</span></div><button class="icon-btn" id="voice-close" type="button" aria-label="Fechar ditado"><svg class="ico lucide lucide-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button></div><div class="voice-settings"><label class="field"><span>Modo</span><select id="voice-mode"><option value="instant">Instantâneo · grátis</option><option value="byok">Alta precisão · BYOK</option></select></label><label class="field"><span>Idioma</span><select id="voice-language"><option value="pt-BR">Português (BR)</option><option value="en-US">English</option></select></label></div><div class="voice-byok hidden" id="voice-byok"><label class="field"><span>Provedor de transcrição</span><select id="voice-provider"><option value="groq">Groq · whisper-large-v3-turbo</option><option value="gemini">Gemini · gemini-2.5-flash</option><option value="openai">OpenAI · gpt-4o-mini-transcribe</option></select></label><label class="field"><span>Chave de API · apenas nesta janela</span><input type="password" id="voice-key" autocomplete="off" placeholder="Cole sua chave de transcrição"></label><a class="voice-key-help" id="voice-key-help" href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">Obter chave no console oficial <svg class="ico lucide lucide-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg></a></div><div class="voice-capture"><span class="voice-indicator" id="voice-indicator"></span><span id="voice-status" role="status" aria-live="polite">Pronto para ditar.</span><button class="btn sm" id="voice-start" type="button"><svg class="ico lucide lucide-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></svg>Iniciar ditado</button></div><p class="voice-target" id="voice-target">Destino: rascunho rápido</p><div class="voice-interim" id="voice-interim" aria-live="polite"></div><textarea id="voice-draft" rows="3" aria-label="Rascunho do ditado" placeholder="O texto reconhecido aparece aqui..."></textarea><div class="voice-draft-actions"><button class="btn sec sm" id="voice-copy" type="button"><svg class="ico lucide lucide-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>Copiar</button><button class="btn sec sm" id="voice-to-chat" type="button"><svg class="ico lucide lucide-messages-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1" /></svg>Levar ao chat</button><button class="btn sec sm" id="voice-save" type="button"><svg class="ico lucide lucide-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>Salvar nota</button></div><p class="voice-privacy" id="voice-privacy">Web Speech usa o reconhecimento do navegador, que pode enviar áudio ao serviço dele. Requer navegador compatível e permissão de microfone.</p><details class="voice-history" id="voice-history"><summary>Histórico de voz <span class="count-label" id="voice-history-count"></span></summary><p>Até 30 ditados na memória do servidor local. Reiniciar o servidor limpa este histórico.</p><div id="voice-history-list"><p>Nenhum ditado ainda.</p></div><button class="btn sec sm" id="voice-refresh" type="button">Atualizar histórico</button></details><div class="callout err hidden" id="voice-error" role="alert"></div></section><div class="modal-bg" id="palette-bg"><div class="modal" role="dialog" aria-modal="true" aria-label="Buscar notas e ações"><div class="palette-search"><svg class="ico lucide lucide-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg><input type="text" id="palette-input" aria-label="Buscar nota ou módulo" placeholder="Buscar nota ou módulo..." autocomplete="off"><button class="icon-btn" type="button" onclick="closePalette()" aria-label="Fechar busca"><svg class="ico lucide lucide-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button></div><div class="modal-list" id="palette-list"></div><div class="palette-foot"><span>↑ ↓ navegar · Enter abrir</span><span>Esc para fechar</span></div></div></div><div class="modal-bg" id="mcp-manual-bg">
+  <div class="modal dialog-card" role="dialog" aria-modal="true" aria-label="Conectar servidor MCP manualmente">
+    <div class="card-head" style="margin-bottom:0">
+      <div><h3 id="mcp-modal-title" style="margin:0">Conectar MCP manualmente</h3><p class="muted" style="margin:4px 0 0;font-size:12px">Registra o servidor diretamente nos arquivos de configuração das CLIs selecionadas.</p></div>
+      <button class="icon-btn" id="close-mcp-modal" type="button" aria-label="Fechar modal MCP"><svg class="ico lucide lucide-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
+    </div>
+    <div class="grid-2">
+      <label class="field"><span>Nome / ID do servidor</span><input type="text" id="mcp-in-name" placeholder="ex: notion, linear, meu-mcp"></label>
+      <label class="field"><span>Transporte</span><select id="mcp-in-transport"><option value="http">HTTP / Streamable</option><option value="sse">SSE (remoto)</option><option value="stdio">STDIO (comando local)</option></select></label>
+    </div>
+    <div id="mcp-http-fields">
+      <label class="field"><span>URL do servidor MCP</span><input type="text" id="mcp-in-url" placeholder="https://mcp.exemplo.com/mcp"></label>
+    </div>
+    <div id="mcp-stdio-fields" class="hidden">
+      <div class="grid-2">
+        <label class="field"><span>Comando</span><input type="text" id="mcp-in-command" placeholder="npx, node, python, uvx"></label>
+        <label class="field"><span>Argumentos (separados por espaço)</span><input type="text" id="mcp-in-args" placeholder="-y @modelcontextprotocol/server-memory"></label>
+      </div>
+    </div>
+    <label class="field"><span>Variáveis de ambiente opcionais (CHAVE=valor, uma por linha)</span><textarea id="mcp-in-env" rows="2" placeholder="API_TOKEN=..."></textarea></label>
+    <div>
+      <span style="display:block;font-size:12px;color:#b0b1bd;margin-bottom:6px">Conectar nas CLIs</span>
+      <div class="target-checks">
+        <label><input type="checkbox" id="mcp-target-claude" checked> Claude Code</label>
+        <label><input type="checkbox" id="mcp-target-codex" checked> OpenAI Codex</label>
+        <label><input type="checkbox" id="mcp-target-agy" checked> Antigravity</label>
+      </div>
+    </div>
+    <div id="mcp-modal-err" class="callout err hidden" role="alert"></div>
+    <div class="row" style="justify-content:flex-end">
+      <button class="btn sec" id="cancel-mcp-modal" type="button">Cancelar</button>
+      <button class="btn" id="submit-mcp-modal" type="button">Conectar MCP</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="self-improve-bg">
+  <div class="modal dialog-card" role="dialog" aria-modal="true" aria-label="Melhorar interface do AYVU Brain via CLI">
+    <div class="card-head" style="margin-bottom:0">
+      <div><h3 style="margin:0">Evoluir interface via CLI</h3><p class="muted" style="margin:4px 0 0;font-size:12px">Roda sua CLI autenticada direto no repositório do AYVU Brain para editar a própria ferramenta.</p></div>
+      <button class="icon-btn" id="close-self-improve" type="button" aria-label="Fechar melhoria de UI"><svg class="ico lucide lucide-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
+    </div>
+    <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px;padding:10px 12px;border-radius:12px;border:1px solid #ffffff10;background:#0e1016">
+      <span class="muted" id="self-git-status" style="font-size:11.5px;font-family:var(--mono)">Verificando repositório do AYVU Brain...</span>
+      <div class="row">
+        <button class="btn sec sm" id="btn-self-diff" type="button">Ver diff</button>
+        <button class="btn sec sm" id="btn-self-reload" type="button">Recarregar interface</button>
+      </div>
+    </div>
+    <div class="grid-2">
+      <label class="field"><span>CLI para editar a interface</span><select id="self-engine"><option value="claude">Claude Code</option><option value="codex">OpenAI Codex</option><option value="agy">Gemini (Antigravity)</option></select></label>
+      <label class="field" style="justify-content:flex-end"><label class="session-toggle" style="margin-top:22px"><input type="checkbox" id="self-continue"><span>Continuar última sessão no repo</span></label></label>
+    </div>
+    <div>
+      <span style="display:block;font-size:12px;color:#b0b1bd;margin-bottom:6px">Sugestões rápidas</span>
+      <div class="preset-chips">
+        <button type="button" data-self-preset="Refine o espaçamento, contraste e hierarquia visual da visão geral mantendo o tema prismático.">Refinar hierarquia da Overview</button>
+        <button type="button" data-self-preset="Adicione um atalho de teclado e indicador visual de produtividade na barra superior.">Atalho na barra superior</button>
+        <button type="button" data-self-preset="Melhore a responsividade mobile da barra de sessões e do composer do chat.">Polir mobile do chat</button>
+      </div>
+    </div>
+    <label class="field"><span>O que você quer melhorar na interface?</span><textarea id="self-prompt" rows="3" placeholder="Ex: Quero um filtro por CLI na barra de sessões e um botão para exportar a conversa em PDF..."></textarea></label>
+    <div id="self-err" class="callout err hidden" role="alert"></div>
+    <div class="row" style="justify-content:flex-end">
+      <button class="btn" id="btn-run-self-improve" type="button">Executar melhoria via CLI</button>
+    </div>
+    <div id="self-output" class="self-output msg-body hidden"></div>
+    <div id="self-diff-view" class="diff-view hidden" style="max-height:220px;overflow:auto"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div><script>
 const $ = (id) => document.getElementById(id);
-const state = { info: null, notes: [], threads: [], repos: [], currentNote: null, chatHistory: [], audioBlob: null };
+const state = { info: null, notes: [], threads: [], repos: [], sessions: [], activeSessionId: null, sessionAttachments: [], mcpData: null, mcpCategory: 'Todos', currentNote: null, chatHistory: [], audioBlob: null };
 const viewTitles = {
   overview: 'Visão geral',
   vault: 'Vault (Notas Markdown)',
   chat: 'Multi-IA Chat',
+  mcp: 'Catálogo de MCPs',
   meetings: 'Reuniões sem bot',
   agents: 'Agentes em paralelo (Git Worktrees)',
   system: 'Sistema'
@@ -376,33 +592,326 @@ $('btn-save-note').onclick = async () => {
   toast(`Salvo: ${d.path}`);
 };
 
-// CHAT
+// CHAT, MARKDOWN/CHECKLISTS, ANEXOS & AUTO-SAVE DE SESSÕES
 $('chat-provider').addEventListener('change',updateLocalConnection);
 
-function appendChat(role, label, text) {
+function formatBytes(bytes){
+  const n=Number(bytes||0);
+  if(n<1024)return n+' B';
+  if(n<1024*1024)return (n/1024).toFixed(1)+' KB';
+  return (n/(1024*1024)).toFixed(1)+' MB';
+}
+
+function formatInlineMarkdown(raw){
+  let s=escapeHtml(raw);
+  s=s.replace(/`([^`]+)`/g,'<code>$1</code>');
+  s=s.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  s=s.replace(/(^|[^*])\*([^*]+)\*(?!\*)/g,'$1<em>$2</em>');
+  s=s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  return s;
+}
+
+function renderRichMarkdown(text, msgIndex){
+  const src=String(text||'').replace(/\r\n/g,'\n');
+  const lines=src.split('\n');
+  const out=[];
+  let inCode=false, codeBuf=[];
+  let listType=null; // 'ul' | 'ol' | 'check'
+  let checkIdx=0;
+  const closeList=()=>{if(listType){out.push(listType==='ol'?'</ol>':'</ul>');listType=null;}};
+
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i];
+    if(line.trim().startsWith('```')){
+      closeList();
+      if(!inCode){inCode=true;codeBuf=[];}
+      else{out.push('<pre><code>'+escapeHtml(codeBuf.join('\n'))+'</code></pre>');inCode=false;}
+      continue;
+    }
+    if(inCode){codeBuf.push(line);continue;}
+
+    const checkMatch=line.match(/^\s*[-*]\s+\[([ xX])\]\s+(.+)$/);
+    if(checkMatch){
+      if(listType!=='check'){closeList();out.push('<ul class="md-checklist">');listType='check';}
+      const checked=checkMatch[1].toLowerCase()==='x';
+      const cid=`chk-${msgIndex}-${checkIdx}`;
+      out.push(`<li class="md-check-item${checked?' checked':''}"><input type="checkbox" id="${cid}" data-msg-idx="${msgIndex}" data-check-idx="${checkIdx}" data-check-line="${i}"${checked?' checked':''}><label for="${cid}">${formatInlineMarkdown(checkMatch[2])}</label></li>`);
+      checkIdx++;
+      continue;
+    }
+
+    const ulMatch=line.match(/^\s*[-*•]\s+(.+)$/);
+    if(ulMatch){
+      if(listType!=='ul'){closeList();out.push('<ul>');listType='ul';}
+      out.push('<li>'+formatInlineMarkdown(ulMatch[1])+'</li>');
+      continue;
+    }
+
+    const olMatch=line.match(/^\s*\d+[.)]\s+(.+)$/);
+    if(olMatch){
+      if(listType!=='ol'){closeList();out.push('<ol>');listType='ol';}
+      out.push('<li>'+formatInlineMarkdown(olMatch[1])+'</li>');
+      continue;
+    }
+
+    closeList();
+    const hMatch=line.match(/^(#{1,3})\s+(.+)$/);
+    if(hMatch){
+      const lvl=hMatch[1].length;
+      out.push(`<h${lvl}>${formatInlineMarkdown(hMatch[2])}</h${lvl}>`);
+      continue;
+    }
+    const qMatch=line.match(/^>\s?(.*)$/);
+    if(qMatch){
+      out.push('<blockquote>'+formatInlineMarkdown(qMatch[1])+'</blockquote>');
+      continue;
+    }
+    if(!line.trim()){continue;}
+    out.push('<p>'+formatInlineMarkdown(line)+'</p>');
+  }
+  if(inCode)out.push('<pre><code>'+escapeHtml(codeBuf.join('\n'))+'</code></pre>');
+  closeList();
+  return { html: out.join('') || '<p></p>', hasChecklist: checkIdx > 0 };
+}
+
+function appendChat(role, label, text, msgIndex = state.chatHistory.length - 1) {
   const div = document.createElement('div');
   div.className = `msg ${role}`;
   const sm = document.createElement('small'); sm.textContent = label;
   div.appendChild(sm);
-  div.appendChild(document.createTextNode(text));
+  const body = document.createElement('div');
+  body.className = 'msg-body';
+  const rendered = renderRichMarkdown(text, msgIndex);
+  body.innerHTML = rendered.html;
+  div.appendChild(body);
+
+  if (rendered.hasChecklist) {
+    const bar = document.createElement('div');
+    bar.className = 'checklist-reply-bar';
+    const info = document.createElement('span');
+    const updateBar = () => {
+      const boxes = [...body.querySelectorAll('input[type=checkbox]')];
+      const checked = boxes.filter(b => b.checked);
+      info.textContent = checked.length ? `${checked.length} de ${boxes.length} selecionado(s)` : 'Marque itens para responder rapidamente';
+    };
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'btn sec sm'; btn.textContent = 'Responder com selecionados';
+    btn.onclick = () => {
+      const selected = [...body.querySelectorAll('li.md-check-item')].filter(li => li.querySelector('input')?.checked).map(li => '- [x] ' + li.querySelector('label').textContent.trim());
+      if (!selected.length) { toast('Marque ao menos um item do checklist.'); return; }
+      $('chat-input').value = ($('chat-input').value ? $('chat-input').value + '\n' : '') + 'Itens selecionados:\n' + selected.join('\n');
+      $('chat-input').focus();
+    };
+    body.addEventListener('change', (e) => {
+      const cb = e.target;
+      if (cb.type !== 'checkbox') return;
+      cb.closest('li.md-check-item')?.classList.toggle('checked', cb.checked);
+      const lineIdx = Number(cb.dataset.checkLine);
+      const mIdx = Number(cb.dataset.msgIdx);
+      if (state.chatHistory[mIdx] && Number.isInteger(lineIdx)) {
+        const lines = String(state.chatHistory[mIdx].content || '').replace(/\r\n/g, '\n').split('\n');
+        if (lines[lineIdx] !== undefined) {
+          lines[lineIdx] = lines[lineIdx].replace(/\[[ xX]\]/, cb.checked ? '[x]' : '[ ]');
+          state.chatHistory[mIdx].content = lines.join('\n');
+          saveActiveSession({ silent: true });
+        }
+      }
+      updateBar();
+    });
+    updateBar();
+    bar.append(info, btn);
+    div.appendChild(bar);
+  }
+
   $('chat-welcome')?.remove();
   $('chat-box').appendChild(div);
   $('chat-box').scrollTop = $('chat-box').scrollHeight;
 }
 
+function ensureActiveSessionId(){
+  if(!state.activeSessionId){
+    const day=new Date().toISOString().slice(0,10);
+    state.activeSessionId=`sessao-${day}-${Date.now().toString(36)}`;
+  }
+  return state.activeSessionId;
+}
+
+function setSaveStatus(text, saving = false){
+  const el=$('session-save-status');
+  if(!el)return;
+  el.textContent=text;
+  el.classList.toggle('saving',saving);
+}
+
+async function saveActiveSession({ silent = false } = {}){
+  if(!state.info)return null;
+  if(!state.chatHistory.length && !state.sessionAttachments.length)return null;
+  const id=ensureActiveSessionId();
+  setSaveStatus('Salvando sessão no vault...', true);
+  try{
+    const res=await fetch('/api/sessions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        id,
+        title: state.activeSessionTitle || '',
+        engine: $('chat-provider').value,
+        mode: $('chat-mode').value,
+        cwd: $('cli-cwd').value || '',
+        contextPath: $('chat-context').value || '',
+        continueSession: $('cli-continue').checked,
+        structuredQuestions: $('chat-structured')?.checked !== false,
+        attachments: state.sessionAttachments,
+        messages: state.chatHistory
+      })
+    });
+    const d=await res.json();
+    if(!res.ok)throw new Error(d.error||'Falha ao salvar sessão.');
+    state.activeSessionId=d.session.id;
+    state.activeSessionTitle=d.session.title;
+    state.activeSessionPath=d.session.relPath;
+    $('btn-open-session-note').disabled=false;
+    const hhmm=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    setSaveStatus(`Salvo no vault · ${hhmm}`, false);
+    await loadSessions();
+    return d.session;
+  }catch(e){
+    setSaveStatus('Erro ao salvar sessão', false);
+    if(!silent)toast(e.message||'Não foi possível salvar a sessão no vault.');
+    return null;
+  }
+}
+
+function renderSessionAttachments(){
+  const box=$('session-attachments');
+  if(!box)return;
+  box.replaceChildren();
+  for(const att of state.sessionAttachments){
+    const chip=document.createElement('div');
+    chip.className='att-chip';
+    const link=document.createElement('a');
+    link.href=att.url;
+    link.target='_blank';
+    link.rel='noopener noreferrer';
+    link.textContent=att.name;
+    link.title=`${att.name} (${att.relPath})`;
+    const sz=document.createElement('small');
+    sz.textContent=formatBytes(att.size);
+    const del=document.createElement('button');
+    del.type='button'; del.textContent='×'; del.ariaLabel=`Remover ${att.name}`;
+    del.onclick=()=>safeAction(()=>removeAttachment(att.name));
+    chip.append(link,sz,del);
+    box.append(chip);
+  }
+}
+
+async function uploadSessionFiles(fileList){
+  const files=[...(fileList||[])];
+  if(!files.length)return;
+  const id=ensureActiveSessionId();
+  for(const file of files){
+    setSaveStatus(`Subindo ${file.name}...`, true);
+    const dataBase64=await new Promise((res,rej)=>{
+      const reader=new FileReader();
+      reader.onload=()=>res(String(reader.result||'').split(',')[1]||'');
+      reader.onerror=rej;
+      reader.readAsDataURL(file);
+    });
+    const r=await fetch(`/api/sessions/${encodeURIComponent(id)}/attachments`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:file.name,mimeType:file.type||'application/octet-stream',dataBase64})
+    });
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error||`Falha ao subir ${file.name}`);
+    state.sessionAttachments.push(d.attachment);
+  }
+  renderSessionAttachments();
+  await saveActiveSession({ silent: true });
+  toast(`${files.length} arquivo(s) salvo(s) na sessão.`);
+}
+
+async function removeAttachment(filename){
+  if(!state.activeSessionId)return;
+  const r=await fetch(`/api/sessions/${encodeURIComponent(state.activeSessionId)}/attachments/${encodeURIComponent(filename)}`,{method:'DELETE'});
+  if(!r.ok){const d=await r.json().catch(()=>({}));toast(d.error||'Erro ao remover anexo.');return;}
+  state.sessionAttachments=state.sessionAttachments.filter(a=>a.name!==filename);
+  renderSessionAttachments();
+  await saveActiveSession({ silent: true });
+  toast('Arquivo removido da sessão.');
+}
+
 async function sendChat(){
  if(state.chatBusy)return;const text=$('chat-input').value.trim(),engine=$('chat-provider').value;if(!text)return;
  const installed=state.cliEngines?.find(e=>e.id===engine);if(installed&&!installed.installed){$('chat-err').textContent='Esta CLI não está instalada. Instale e faça login no terminal antes de usar.';$('chat-err').classList.remove('hidden');return;}
- $('chat-err').classList.add('hidden');$('chat-input').value='';state.chatHistory.push({role:'user',content:text});appendChat('user','Você',text);state.chatBusy=true;$('btn-send').disabled=true;$('btn-clear-chat').disabled=true;['chat-provider','chat-mode','cli-cwd','cli-continue'].forEach(id=>$(id).disabled=true);$('chat-connection').textContent='A IA local está trabalhando. Aguarde a resposta...';
- const instruction={conversation:'',summary:'Resuma o contexto em português com pontos importantes, decisões e próximos passos.\n\n',plan:'Crie um plano em português com etapas concretas e dependências.\n\n'}[$('chat-mode').value];
- try{const res=await fetch('/api/cli/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({engine,prompt:instruction+text,cwd:$('cli-cwd').value||'',continueSession:$('cli-continue').checked,contextPath:$('chat-context').value||''})});const d=await res.json();if(!res.ok)throw new Error(d.error||'A CLI local não respondeu.');state.chatHistory.push({role:'assistant',content:d.reply});appendChat('assistant',engine+' · local',d.reply);}
- catch(e){state.chatHistory.pop();$('chat-box').querySelector('.msg.user:last-child')?.remove();$('chat-input').value=text;$('chat-err').textContent=e.message+' Confira o login da CLI no terminal e tente novamente.';$('chat-err').classList.remove('hidden');}
+ $('chat-err').classList.add('hidden');$('chat-input').value='';
+ const userMsg={role:'user',content:text,createdAt:new Date().toISOString()};
+ state.chatHistory.push(userMsg);appendChat('user','Você',text,state.chatHistory.length-1);
+ await saveActiveSession({ silent: true });
+ state.chatBusy=true;$('btn-send').disabled=true;$('btn-clear-chat').disabled=true;['chat-provider','chat-mode','cli-cwd','cli-continue'].forEach(id=>$(id).disabled=true);$('chat-connection').textContent='A IA local está trabalhando. Aguarde a resposta...';
+ const instruction={
+   conversation:'',
+   questions:'Responda em português usando perguntas objetivas com lista de checklist (- [ ] opção) e bullet points (- ponto) claros para decisões e próximos passos.\n\n',
+   summary:'Resuma o contexto em português com bullet points importantes, decisões e próximos passos em checklist (- [ ]).\n\n',
+   plan:'Crie um plano em português com etapas concretas em checklist (- [ ]) e dependências em bullet points.\n\n'
+ }[$('chat-mode').value] || '';
+ try{
+   const res=await fetch('/api/cli/chat',{
+     method:'POST',
+     headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({
+       engine,
+       prompt:instruction+text,
+       cwd:$('cli-cwd').value||'',
+       continueSession:$('cli-continue').checked,
+       contextPath:$('chat-context').value||'',
+       attachments:state.sessionAttachments,
+       structuredQuestions:Boolean($('chat-structured')?.checked)
+     })
+   });
+   const d=await res.json();
+   if(!res.ok)throw new Error(d.error||'A CLI local não respondeu.');
+   const assistantMsg={role:'assistant',content:d.reply,engine,createdAt:new Date().toISOString()};
+   state.chatHistory.push(assistantMsg);
+   appendChat('assistant',engine+' · local',d.reply,state.chatHistory.length-1);
+   await saveActiveSession({ silent: true });
+ }
+ catch(e){
+   state.chatHistory.pop();$('chat-box').querySelector('.msg.user:last-child')?.remove();$('chat-input').value=text;$('chat-err').textContent=e.message+' Confira o login da CLI no terminal e tente novamente.';$('chat-err').classList.remove('hidden');
+   await saveActiveSession({ silent: true });
+ }
  finally{state.chatBusy=false;$('btn-send').disabled=false;$('btn-clear-chat').disabled=false;['chat-provider','chat-mode','cli-cwd','cli-continue'].forEach(id=>$(id).disabled=false);updateLocalConnection();}
 }
 $('btn-send').onclick = sendChat;
 $('chat-input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); sendChat(); } });
 const welcomeMarkup=$('chat-box').innerHTML;
-$('btn-clear-chat').onclick=()=>{if(state.chatBusy)return;state.chatHistory=[];$('cli-continue').checked=false;$('chat-box').innerHTML=welcomeMarkup;$('chat-err').classList.add('hidden');bindSuggestions();};
+function startNewSession(){
+  if(state.chatBusy)return;
+  state.activeSessionId=null;
+  state.activeSessionTitle='';
+  state.activeSessionPath='';
+  state.chatHistory=[];
+  state.sessionAttachments=[];
+  $('cli-continue').checked=false;
+  $('chat-box').innerHTML=welcomeMarkup;
+  $('chat-err').classList.add('hidden');
+  $('btn-open-session-note').disabled=true;
+  renderSessionAttachments();
+  setSaveStatus('Auto-save ativo · Vault', false);
+  renderSessionsList($('session-filter')?.value||'');
+  bindSuggestions();
+  switchView('chat');
+  $('chat-input').focus();
+}
+$('btn-clear-chat').onclick=startNewSession;
+$('btn-open-session-note').onclick=()=>{if(state.activeSessionPath)openNote(state.activeSessionPath);};
+$('attach-file').onclick=()=>$('chat-file-input').click();
+$('chat-file-input').onchange=(e)=>{const files=[...(e.target.files||[])];e.target.value='';safeAction(()=>uploadSessionFiles(files));};
+const composerEl=$('chat-composer');
+composerEl.addEventListener('dragover',(e)=>{e.preventDefault();composerEl.classList.add('drag-over');});
+composerEl.addEventListener('dragleave',()=>composerEl.classList.remove('drag-over'));
+composerEl.addEventListener('drop',(e)=>{e.preventDefault();composerEl.classList.remove('drag-over');if(e.dataTransfer?.files?.length)safeAction(()=>uploadSessionFiles(e.dataTransfer.files));});
+$('chat-input').addEventListener('paste',(e)=>{const files=[...(e.clipboardData?.files||[])];if(files.length){e.preventDefault();safeAction(()=>uploadSessionFiles(files));}});
 $('btn-save-chat-note').onclick = async () => {
   const last = [...state.chatHistory].reverse().find(m => m.role === 'assistant');
   if (!last) { toast('Nenhuma resposta para salvar.'); return; }
@@ -544,9 +1053,9 @@ $('palette-input').addEventListener('input', e => renderPalette(e.target.value))
 
 window.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); $('open-palette').click(); }
-  if(e.key==='Escape'){closePalette();closeChatConfig();document.body.classList.remove('mobile-nav');$('mobile-menu').setAttribute('aria-expanded','false');}
+  if(e.key==='Escape'){closePalette();closeChatConfig();closeMcpModal();closeSelfImprove();document.body.classList.remove('mobile-nav');$('mobile-menu').setAttribute('aria-expanded','false');}
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && state.currentNote && document.activeElement===$('note-editor')) { e.preventDefault(); $('btn-save-note').click(); }
-  const map = { '1': 'overview', '2': 'vault', '3': 'chat', '4': 'meetings', '5': 'agents', '6': 'system' };
+  const map = { '1': 'overview', '2': 'vault', '3': 'chat', '4': 'mcp', '5': 'meetings', '6': 'agents', '7': 'system' };
   if ((e.ctrlKey || e.metaKey) && map[e.key]) { e.preventDefault(); switchView(map[e.key]); }
 });
 
@@ -598,11 +1107,11 @@ function enhanceSelect(select){
 function showDropdown(select,button){
  closeDropdown();if(select.disabled)return;
  const popup=document.createElement('div');popup.className='dropdown-popup';const options=document.createElement('div');options.className='dropdown-options';options.id=select.id+'-options';options.setAttribute('role','listbox');options.setAttribute('aria-label',button.getAttribute('aria-label'));popup.append(options);
- const all=[...select.options].filter(o=>!o.disabled);const d={select,button,popup,options,all,visible:all,index:Math.max(0,all.findIndex(o=>o.value===select.value)),search:null,typeText:'',typeTimer:null};openDropdown=d;
+ const all=[...select.options].filter(o=>!o.disabled);const d={select,button,popup,options,all,visible:all,index:Math.max(0,all.findIndex(o=>o.value===select.value)),search:null,typeText:'',typeTimer:null,openedAt:performance.now()};openDropdown=d;
  if(all.length>8){const searchWrap=document.createElement('div');searchWrap.className='dropdown-search';const input=document.createElement('input');input.type='text';input.placeholder='Buscar opção...';input.setAttribute('aria-label','Buscar '+button.getAttribute('aria-label'));searchWrap.append(input);popup.prepend(searchWrap);d.search=input;input.oninput=()=>{d.visible=all.filter(o=>o.textContent.toLowerCase().includes(input.value.toLowerCase()));d.index=0;renderDropdown(d);};input.onkeydown=dropdownKeys;}
  document.body.append(popup);button.setAttribute('aria-expanded','true');button.setAttribute('aria-controls',options.id);renderDropdown(d);
  const r=button.getBoundingClientRect();const width=Math.min(Math.max(r.width,all.length>8?340:180),innerWidth-24);popup.style.width=width+'px';popup.style.left=Math.max(12,Math.min(r.left,innerWidth-width-12))+'px';const height=Math.min(popup.scrollHeight,320);const below=innerHeight-r.bottom-12;if(below<height&&r.top>height){popup.style.bottom=(innerHeight-r.top+6)+'px';}else{popup.style.top=(r.bottom+6)+'px';options.style.maxHeight=Math.max(110,Math.min(260,below-(d.search?58:12)))+'px';}
- popup.addEventListener('keydown',dropdownKeys);if(d.search)d.search.focus();
+ popup.addEventListener('keydown',dropdownKeys);if(d.search)d.search.focus({preventScroll:true});
 }
 function renderDropdown(d){d.options.replaceChildren();d.visible.forEach((option,index)=>{const item=document.createElement('div');item.className='dropdown-option';item.id=d.select.id+'-option-'+index;item.setAttribute('role','option');item.setAttribute('aria-selected',String(option.value===d.select.value));const text=document.createElement('span');text.textContent=option.textContent;item.append(text);if(option.value===d.select.value)item.insertAdjacentHTML('beforeend',dropdownCheck);item.onpointerdown=e=>e.preventDefault();item.onclick=()=>chooseDropdown(index);item.onpointermove=()=>{d.index=index;highlightDropdown();};d.options.append(item);});if(!d.visible.length)d.options.innerHTML='<div class="dropdown-empty">Nenhuma opção encontrada.</div>';highlightDropdown();}
 function highlightDropdown(){const d=openDropdown;if(!d)return;const items=[...d.options.children];items.forEach((el,i)=>el.classList.toggle('is-focused',i===d.index));const item=items[d.index];if(item){d.button.setAttribute('aria-activedescendant',item.id);d.search?.setAttribute('aria-activedescendant',item.id);item.scrollIntoView({block:'nearest'});}}
@@ -612,7 +1121,7 @@ function typeDropdown(letter){const d=openDropdown;if(!d)return;clearTimeout(d.t
 function dropdownKeys(e){if(!openDropdown)return;if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();e.stopPropagation();moveDropdown(e.key);}else if(e.key==='Enter'){e.preventDefault();e.stopPropagation();chooseDropdown(openDropdown.index);}else if(e.key==='Escape'){e.preventDefault();e.stopPropagation();closeDropdown(true);}else if(e.key==='Tab'){closeDropdown();}}
 document.addEventListener('keydown',e=>{if(openDropdown&&e.target===openDropdown.button)dropdownKeys(e);});
 document.addEventListener('pointerdown',e=>{if(openDropdown&&!openDropdown.popup.contains(e.target)&&!openDropdown.button.contains(e.target))closeDropdown();});
-window.addEventListener('resize',()=>closeDropdown());document.addEventListener('scroll',e=>{if(openDropdown&&!openDropdown.popup.contains(e.target))closeDropdown();},true);
+window.addEventListener('resize',()=>closeDropdown());document.addEventListener('scroll',e=>{if(openDropdown&&performance.now()-openDropdown.openedAt>120&&!openDropdown.popup.contains(e.target))closeDropdown();},true);
 function syncMobileNav(){const mobile=matchMedia('(max-width:600px)').matches,open=document.body.classList.contains('mobile-nav');$('sidebar').inert=mobile&&!open;document.querySelector('main').inert=mobile&&open;}
 new MutationObserver(syncMobileNav).observe(document.body,{attributes:true,attributeFilter:['class']});window.addEventListener('resize',syncMobileNav);syncMobileNav();
 
@@ -682,5 +1191,324 @@ document.querySelectorAll('.nav button[data-view]').forEach(b=>b.title=b.getAttr
 
 $('attach-note').onclick=()=>{const d=selectViews.get('chat-context');if(!state.notes.length){toast('Conecte seu vault local para anexar uma nota.');return;}showDropdown(d.select,d.button);};
 
-loadAll();loadCliStatus();
+// SESSÕES CONECTADAS AO VAULT (BARRA FLUTUANTE)
+async function loadSessions(){
+  try{
+    const d=await readApi('/api/sessions');
+    state.sessions=d.items||[];
+    $('sessions-count').textContent=state.sessions.length;
+    renderSessionsList($('session-filter')?.value||'');
+  }catch{
+    $('sessions-list').innerHTML='<div class="empty-state">Conecte o servidor local para carregar sessões do vault.</div>';
+  }
+}
+
+function renderSessionsList(filter=''){
+  const list=$('sessions-list');
+  if(!list)return;
+  const q=String(filter||'').toLowerCase().trim();
+  const items=state.sessions.filter(s=>!q || s.title.toLowerCase().includes(q) || (s.engine||'').toLowerCase().includes(q));
+  list.replaceChildren();
+  if(!items.length){
+    list.innerHTML=`<div class="empty-state">${q?'Nenhuma sessão encontrada.':'Envie uma mensagem no chat para salvar sua primeira sessão no vault.'}</div>`;
+    return;
+  }
+  for(const s of items){
+    const row=document.createElement('div');
+    row.className='session-item'+(state.activeSessionId===s.id?' active':'');
+    row.setAttribute('role','button');
+    row.tabIndex=0;
+    const top=document.createElement('div'); top.className='session-item-top';
+    const title=document.createElement('span'); title.className='session-item-title'; title.textContent=s.title; title.title=s.title;
+    const del=document.createElement('button'); del.type='button'; del.className='session-del-btn'; del.textContent='×'; del.title='Excluir sessão'; del.ariaLabel='Excluir sessão '+s.title;
+    del.onclick=(e)=>{e.stopPropagation();safeAction(()=>deleteSessionItem(s.id,s.title));};
+    top.append(title,del);
+    const meta=document.createElement('div'); meta.className='session-item-meta';
+    const eng=document.createElement('span'); eng.className='session-engine-pill'; eng.textContent=s.engine||'cli';
+    const info=document.createElement('span');
+    const dt=s.updatedAt?new Date(s.updatedAt).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+    info.textContent=`${s.messageCount||0} msg${s.attachmentCount?` · ${s.attachmentCount} arq`:''}${dt?' · '+dt:''}`;
+    meta.append(eng,info);
+    row.append(top,meta);
+    const open=()=>safeAction(()=>openSession(s.id));
+    row.onclick=open;
+    row.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}};
+    list.append(row);
+  }
+}
+
+async function openSession(id){
+  if(state.chatBusy){toast('Aguarde a resposta atual antes de trocar de sessão.');return;}
+  const d=await readApi('/api/sessions/'+encodeURIComponent(id));
+  const s=d.session;
+  state.activeSessionId=s.id;
+  state.activeSessionTitle=s.title;
+  state.activeSessionPath=s.relPath;
+  state.chatHistory=Array.isArray(s.messages)?s.messages:[];
+  state.sessionAttachments=Array.isArray(s.attachments)?s.attachments:[];
+  if(s.engine)$('chat-provider').value=s.engine;
+  if(s.mode)$('chat-mode').value=s.mode;
+  $('cli-cwd').value=s.cwd||'';
+  $('chat-context').value=s.contextPath||'';
+  $('cli-continue').checked=Boolean(s.continueSession);
+  if($('chat-structured'))$('chat-structured').checked=s.structuredQuestions!==false;
+  $('chat-box').innerHTML=state.chatHistory.length?'':welcomeMarkup;
+  if(!state.chatHistory.length)bindSuggestions();
+  state.chatHistory.forEach((m,idx)=>appendChat(m.role,m.role==='assistant'?(m.engine||s.engine||'cli')+' · local':'Você',m.content,idx));
+  renderSessionAttachments();
+  $('btn-open-session-note').disabled=!s.relPath;
+  const hhmm=s.updatedAt?new Date(s.updatedAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
+  setSaveStatus(hhmm?`Sessão do vault · ${hhmm}`:'Sessão do vault',false);
+  renderSessionsList($('session-filter')?.value||'');
+  updateLocalConnection();
+  switchView('chat');
+}
+
+async function deleteSessionItem(id,title){
+  if(!confirm(`Excluir a sessão "${title}" e seus anexos do vault?`))return;
+  const r=await fetch('/api/sessions/'+encodeURIComponent(id),{method:'DELETE'});
+  if(!r.ok){const d=await r.json().catch(()=>({}));toast(d.error||'Erro ao excluir sessão.');return;}
+  if(state.activeSessionId===id)startNewSession();
+  await loadSessions();
+  toast('Sessão removida do vault.');
+}
+
+$('btn-new-session').onclick=startNewSession;
+$('rail-new-session').onclick=startNewSession;
+$('btn-refresh-sessions').onclick=()=>safeAction(loadSessions);
+$('session-filter').addEventListener('input',e=>renderSessionsList(e.target.value));
+
+// CATÁLOGO DE MCP & CONEXÃO MANUAL
+async function loadMcpCatalog(){
+  try{
+    const data=await readApi('/api/mcp/catalog');
+    state.mcpData=data;
+    $('mcp-count-claude').textContent=data.summary?.claude??0;
+    $('mcp-count-codex').textContent=data.summary?.codex??0;
+    $('mcp-count-agy').textContent=data.summary?.antigravity??0;
+    $('mcp-count-total').textContent=data.summary?.totalCatalog??0;
+    renderMcpCategories();
+    renderMcpCatalog();
+  }catch{
+    $('mcp-grid').innerHTML='<div class="empty-state">Inicie o servidor local para vasculhar MCPs em Claude, Codex e Antigravity.</div>';
+  }
+}
+
+function renderMcpCategories(){
+  const bar=$('mcp-categories');
+  if(!bar||!state.mcpData)return;
+  const cats=['Todos','Conectados',...new Set(state.mcpData.catalog.map(c=>c.category))];
+  bar.replaceChildren();
+  for(const cat of cats){
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='mcp-cat-btn'+(state.mcpCategory===cat?' active':'');
+    b.textContent=cat;
+    b.onclick=()=>{state.mcpCategory=cat;renderMcpCategories();renderMcpCatalog();};
+    bar.append(b);
+  }
+}
+
+function renderMcpCatalog(){
+  const grid=$('mcp-grid');
+  if(!grid||!state.mcpData)return;
+  const q=($('mcp-search')?.value||'').toLowerCase().trim();
+  const items=state.mcpData.catalog.filter(item=>{
+    if(state.mcpCategory==='Conectados' && !item.connectedCount)return false;
+    if(state.mcpCategory!=='Todos' && state.mcpCategory!=='Conectados' && item.category!==state.mcpCategory)return false;
+    if(q && !`${item.name} ${item.id} ${item.category} ${item.description}`.toLowerCase().includes(q))return false;
+    return true;
+  });
+  grid.replaceChildren();
+  if(!items.length){grid.innerHTML='<div class="empty-state">Nenhum MCP encontrado para este filtro.</div>';return;}
+
+  for(const item of items){
+    const card=document.createElement('div');
+    card.className='mcp-card';
+    card.innerHTML=`<div class="mcp-card-head"><div><h3>${escapeHtml(item.name)}</h3><span class="muted" style="font-size:11px">${escapeHtml(item.category)}</span></div><span class="badge">${escapeHtml(item.transport||'stdio')}</span></div><p>${escapeHtml(item.description||'')}</p>`;
+
+    const pills=document.createElement('div'); pills.className='mcp-cli-pills';
+    for(const [key,label] of [['claude','Claude'],['codex','Codex'],['antigravity','Antigravity']]){
+      const on=Boolean(item.connected?.[key]);
+      const p=document.createElement('button');
+      p.type='button';
+      p.className='mcp-cli-pill'+(on?' on':'');
+      p.innerHTML=`<span class="dot"></span>${label}`;
+      p.title=on?`Conectado em ${label} (clique para desconectar)`:`Não conectado em ${label} (clique para configurar)`;
+      p.onclick=()=>{
+        if(on)safeAction(()=>disconnectMcpTarget(item.id,key,label));
+        else openMcpModal(item,[key]);
+      };
+      pills.append(p);
+    }
+
+    const foot=document.createElement('div'); foot.className='mcp-card-foot';
+    const endpoint=document.createElement('span');
+    endpoint.style.fontFamily='var(--mono)';
+    endpoint.style.overflow='hidden'; endpoint.style.textOverflow='ellipsis'; endpoint.style.whiteSpace='nowrap';
+    endpoint.textContent=item.url||(item.command?[item.command,...(item.args||[])].join(' '):'plugin/managed');
+    endpoint.title=endpoint.textContent;
+    const btn=document.createElement('button');
+    btn.type='button'; btn.className='btn sec sm';
+    btn.textContent=item.connectedCount?'Gerenciar':'Conectar';
+    btn.onclick=()=>openMcpModal(item);
+    foot.append(endpoint,btn);
+
+    card.append(pills,foot);
+    grid.append(card);
+  }
+}
+
+function syncMcpTransportFields(){
+  const t=$('mcp-in-transport').value;
+  $('mcp-http-fields').classList.toggle('hidden',t==='stdio');
+  $('mcp-stdio-fields').classList.toggle('hidden',t!=='stdio');
+}
+$('mcp-in-transport').addEventListener('change',syncMcpTransportFields);
+
+function openMcpModal(preset=null,onlyTargets=null){
+  $('mcp-modal-err').classList.add('hidden');
+  $('mcp-modal-title').textContent=preset?`Conectar ${preset.name}`:'Conectar MCP manualmente';
+  $('mcp-in-name').value=preset?.id||'';
+  const tr=preset?.transport==='stdio'?'stdio':(preset?.transport==='sse'?'sse':'http');
+  $('mcp-in-transport').value=tr;
+  $('mcp-in-url').value=preset?.url||'';
+  $('mcp-in-command').value=preset?.command||'';
+  $('mcp-in-args').value=Array.isArray(preset?.args)?preset.args.join(' '):'';
+  $('mcp-in-env').value='';
+  $('mcp-target-claude').checked=onlyTargets?onlyTargets.includes('claude'):true;
+  $('mcp-target-codex').checked=onlyTargets?onlyTargets.includes('codex'):true;
+  $('mcp-target-agy').checked=onlyTargets?onlyTargets.includes('antigravity'):true;
+  syncMcpTransportFields();
+  $('mcp-manual-bg').classList.add('open');
+  $('mcp-in-name').focus();
+}
+function closeMcpModal(){$('mcp-manual-bg').classList.remove('open');}
+
+async function submitMcpModal(){
+  const targets=[];
+  if($('mcp-target-claude').checked)targets.push('claude');
+  if($('mcp-target-codex').checked)targets.push('codex');
+  if($('mcp-target-agy').checked)targets.push('antigravity');
+  const env={};
+  for(const line of $('mcp-in-env').value.split(/\r?\n/)){
+    const idx=line.indexOf('=');
+    if(idx>0){const k=line.slice(0,idx).trim(),v=line.slice(idx+1).trim();if(k)env[k]=v;}
+  }
+  $('mcp-modal-err').classList.add('hidden');
+  $('submit-mcp-modal').disabled=true;
+  try{
+    const r=await fetch('/api/mcp/connect',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        name:$('mcp-in-name').value.trim(),
+        transport:$('mcp-in-transport').value,
+        url:$('mcp-in-url').value.trim(),
+        command:$('mcp-in-command').value.trim(),
+        args:$('mcp-in-args').value.trim(),
+        env,
+        targets
+      })
+    });
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error||'Falha ao conectar MCP.');
+    closeMcpModal();
+    await loadMcpCatalog();
+    toast(`MCP "${d.id}" conectado em: ${d.targets.join(', ')}.`);
+  }catch(e){
+    $('mcp-modal-err').textContent=e.message;
+    $('mcp-modal-err').classList.remove('hidden');
+  }finally{$('submit-mcp-modal').disabled=false;}
+}
+
+async function disconnectMcpTarget(id,target,label){
+  if(!confirm(`Remover o MCP "${id}" de ${label}?`))return;
+  const r=await fetch('/api/mcp/disconnect',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,target})});
+  const d=await r.json();
+  if(!r.ok){toast(d.error||'Falha ao remover MCP.');return;}
+  await loadMcpCatalog();
+  toast(`MCP "${id}" removido de ${label}.`);
+}
+
+$('btn-mcp-manual').onclick=()=>openMcpModal(null);
+$('btn-mcp-rescan').onclick=()=>safeAction(async()=>{await loadMcpCatalog();toast('CLIs reescaneadas.');});
+$('mcp-search').addEventListener('input',renderMcpCatalog);
+$('close-mcp-modal').onclick=closeMcpModal;
+$('cancel-mcp-modal').onclick=closeMcpModal;
+$('mcp-manual-bg').onclick=(e)=>{if(e.target===$('mcp-manual-bg'))closeMcpModal();};
+$('submit-mcp-modal').onclick=()=>safeAction(submitMcpModal);
+
+// MELHORAR INTERFACE DA PRÓPRIA FERRAMENTA VIA CLI
+async function loadSelfStatus(){
+  try{
+    const d=await readApi('/api/self/status');
+    $('self-git-status').textContent=`branch: ${d.branch} · commit: ${d.commit} · ${d.dirtyCount?d.dirtyCount+' arquivo(s) alterado(s)':'limpo'}`;
+    return d;
+  }catch{
+    $('self-git-status').textContent='Repositório local indisponível.';
+    return null;
+  }
+}
+
+function openSelfImprove(){
+  $('self-err').classList.add('hidden');
+  $('self-improve-bg').classList.add('open');
+  safeAction(loadSelfStatus);
+  $('self-prompt').focus();
+}
+function closeSelfImprove(){$('self-improve-bg').classList.remove('open');}
+
+async function runSelfImprove(){
+  const prompt=$('self-prompt').value.trim();
+  if(!prompt){$('self-err').textContent='Descreva o que deseja melhorar na interface.';$('self-err').classList.remove('hidden');return;}
+  $('self-err').classList.add('hidden');
+  $('btn-run-self-improve').disabled=true;
+  $('btn-run-self-improve').textContent='CLI editando interface...';
+  try{
+    const r=await fetch('/api/self/improve',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({engine:$('self-engine').value,prompt,continueSession:$('self-continue').checked})
+    });
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error||'A CLI não conseguiu aplicar a melhoria.');
+    const out=$('self-output');
+    out.classList.remove('hidden');
+    out.innerHTML=renderRichMarkdown(d.reply||'Concluído.',999).html;
+    await loadSelfStatus();
+    toast('Melhoria executada pela CLI. Clique em "Recarregar interface" para ver.');
+  }catch(e){
+    $('self-err').textContent=e.message;
+    $('self-err').classList.remove('hidden');
+  }finally{
+    $('btn-run-self-improve').disabled=false;
+    $('btn-run-self-improve').textContent='Executar melhoria via CLI';
+  }
+}
+
+$('open-self-improve').onclick=openSelfImprove;
+$('close-self-improve').onclick=closeSelfImprove;
+$('self-improve-bg').onclick=(e)=>{if(e.target===$('self-improve-bg'))closeSelfImprove();};
+$('btn-run-self-improve').onclick=()=>safeAction(runSelfImprove);
+$('btn-self-reload').onclick=()=>location.reload();
+$('btn-self-diff').onclick=()=>safeAction(async()=>{
+  const d=await loadSelfStatus();
+  if(!d)return;
+  const view=$('self-diff-view');
+  view.classList.remove('hidden');
+  view.replaceChildren();
+  const txt=d.diff||d.status||'Nenhuma alteração pendente no AYVU Brain.';
+  for(const line of txt.split('\n')){
+    const el=document.createElement('div');
+    if(line.startsWith('+')&&!line.startsWith('+++'))el.className='diff-add';
+    else if(line.startsWith('-')&&!line.startsWith('---'))el.className='diff-del';
+    else if(line.startsWith('@@')||line.startsWith('diff --git'))el.className='diff-hunk';
+    el.textContent=line;
+    view.append(el);
+  }
+});
+document.querySelectorAll('[data-self-preset]').forEach(b=>b.onclick=()=>{$('self-prompt').value=b.dataset.selfPreset;$('self-prompt').focus();});
+
+loadAll();loadCliStatus();loadSessions();loadMcpCatalog();
 </script></body></html>
