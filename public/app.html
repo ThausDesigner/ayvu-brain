@@ -587,34 +587,44 @@ async function removeWt(repo, worktreePath) {
 }
 
 async function loadAll() {
-  const [info, tree, threads, repos] = await Promise.all([
-    fetch('/api/info').then(r => r.json()),
-    fetch('/api/vault/tree').then(r => r.json()),
-    fetch('/api/threads').then(r => r.json()),
-    fetch('/api/repos').then(r => r.json())
-  ]);
-  state.info = info;
-  state.notes = tree.notes || [];
-  state.threads = threads.items || [];
-  state.repos = repos.items || [];
+  try {
+    const infoRes = await fetch('/api/info');
+    if (!infoRes.ok) throw new Error('web-preview');
+    const [info, tree, threads, repos] = await Promise.all([
+      infoRes.json(),
+      fetch('/api/vault/tree').then(r => r.json()),
+      fetch('/api/threads').then(r => r.json()),
+      fetch('/api/repos').then(r => r.json())
+    ]);
+    state.info = info;
+    state.notes = tree.notes || [];
+    state.threads = threads.items || [];
+    state.repos = repos.items || [];
 
-  $('side-vault-name').textContent = info.vaultName;
-  $('side-vault-path').textContent = info.vaultRoot;
-  $('top-version').textContent = `${info.tag} · ${info.commit}`;
+    $('side-vault-name').textContent = info.vaultName;
+    $('side-vault-path').textContent = info.vaultRoot;
+    $('top-version').textContent = `${info.tag} · ${info.commit}`;
 
-  $('sys-info').innerHTML = `
-    <li class="list-item"><span class="muted">Domínio alvo</span><span class="badge">${info.domain}</span></li>
-    <li class="list-item"><span class="muted">Versão / Commit</span><span class="badge">${info.version} (${info.commit})</span></li>
-    <li class="list-item"><span class="muted">Vault conectado</span><span class="muted" style="font-family:var(--mono)">${info.vaultRoot}</span></li>
-    <li class="list-item"><span class="muted">Pasta de Worktrees</span><span class="muted" style="font-family:var(--mono)">${info.worktreeRoot}</span></li>
-  `;
+    $('sys-info').innerHTML = `
+      <li class="list-item"><span class="muted">Domínio alvo</span><span class="badge">${info.domain}</span></li>
+      <li class="list-item"><span class="muted">Versão / Commit</span><span class="badge">${info.version} (${info.commit})</span></li>
+      <li class="list-item"><span class="muted">Vault conectado</span><span class="muted" style="font-family:var(--mono)">${info.vaultRoot}</span></li>
+      <li class="list-item"><span class="muted">Pasta de Worktrees</span><span class="muted" style="font-family:var(--mono)">${info.worktreeRoot}</span></li>
+    `;
 
-  renderOverview();
-  renderVaultList($('vault-filter').value);
-  renderRepos();
+    renderOverview();
+    renderVaultList($('vault-filter').value);
+    renderRepos();
 
-  const cs = await fetch('/api/vault/note?path=_memory/current-state.md');
-  if (cs.ok) $('current-state-preview').textContent = (await cs.json()).content;
+    const cs = await fetch('/api/vault/note?path=_memory/current-state.md');
+    if (cs.ok) $('current-state-preview').textContent = (await cs.json()).content;
+  } catch {
+    $('side-vault-name').textContent = 'Modo prévia web';
+    $('side-vault-path').textContent = 'Rode "npm start" localmente para conectar seu vault';
+    $('top-status').textContent = 'Prévia web · brain.ayvu.org';
+    $('top-status').classList.remove('live');
+    $('current-state-preview').textContent = 'Esta prévia está rodando na nuvem (sem acesso ao seu disco).\n\nPara conectar seu vault local, fios e Git worktrees:\n  git clone https://github.com/ThausDesigner/ayvu-brain\n  cd ayvu-brain\n  npm start\n  Abra http://127.0.0.1:4190/app';
+  }
 }
 
 $('vault-filter').addEventListener('input', e => renderVaultList(e.target.value));
