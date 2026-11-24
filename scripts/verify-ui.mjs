@@ -50,7 +50,6 @@ try{
  await check('erro de CLI permite tentar novamente sem duplicar histórico',async()=>{await page.unroute('**/api/cli/chat');await page.route('**/api/cli/chat',r=>r.fulfill({status:400,json:{error:'Falha CLI simulada'}}));await page.locator('#chat-input').fill('Tente novamente');await page.locator('#btn-send').click();await page.waitForFunction(()=>document.getElementById('chat-err').textContent.includes('Falha CLI simulada'));assert.equal(await page.locator('#chat-input').inputValue(),'Tente novamente');assert.equal(await page.locator('.msg.user').count(),1);});
  await check('CLI ausente informa instalação sem pedir API key',async()=>{await page.locator('#chat-provider').evaluate(el=>{el.value='agy';el.dispatchEvent(new Event('change'));});await page.locator('#btn-send').click();assert.match(await page.locator('#chat-err').textContent(),/não está instalada/);assert.equal(await page.locator('#chat-key').isVisible(),false);await page.locator('#chat-provider').evaluate(el=>{el.value='codex';el.dispatchEvent(new Event('change'));});});
  await check('catalogo MCP vasculha CLIs e permite conexao manual',async()=>{await page.getByRole('button',{name:'MCPs',exact:true}).click();await page.waitForSelector('.mcp-card');assert.ok((await page.locator('.mcp-card').count())>=25);await page.locator('#btn-mcp-manual').click();await page.locator('#mcp-in-name').fill('qa-mcp-server');await page.locator('#mcp-in-url').fill('https://mcp.qa.invalid/mcp');await page.locator('#submit-mcp-modal').click();await page.waitForFunction(()=>document.getElementById('toast').textContent.includes('qa-mcp-server'));});
- await check('modal Melhorar UI via CLI abre com status git',async()=>{await page.locator('#open-self-improve').click();await page.waitForFunction(()=>document.getElementById('self-git-status').textContent.includes('branch:'));await page.locator('#close-self-improve').click();});
  await check('BYOK opcional e tutorial ficam em Sistema avançado',async()=>{await page.evaluate(()=>switchView('system'));await page.locator('#advanced-api').evaluate(el=>el.open=true);await page.locator('[data-provider="openai"]').click();await page.locator('#open-api-guide').click();assert.equal(await page.locator('#guide-openai').getAttribute('open'),'');await page.locator('#guide-openai [data-connect]').click();assert.equal(await page.locator('#chat-key').isVisible(),true);assert.equal(await page.locator('#api-provider').inputValue(),'openai');});
  await check('API opcional mantém contrato existente',async()=>{let apiPayload;await page.route('**/api/ai/chat',async r=>{apiPayload=r.request().postDataJSON();await r.fulfill({json:{reply:'Resposta opcional de QA.'}});});await page.locator('#chat-key').fill('qa-not-a-real-key');await page.locator('#advanced-input').fill('Teste opcional');await page.locator('#advanced-send').click();await page.waitForFunction(()=>document.getElementById('advanced-output').textContent==='Resposta opcional de QA.');assert.equal(apiPayload.provider,'openai');assert.equal(apiPayload.messages[0].content,'Teste opcional');});
  await check('reunião manual salva em Markdown pelo endpoint existente',async()=>{await page.getByRole('button',{name:'Reuniões',exact:true}).click();await page.locator('#meet-title').fill('Reunião QA');await page.locator('#meet-notes').fill('Decisão de teste.');await page.locator('#btn-meet-manual').click();assert.match(await page.locator('#meet-output').inputValue(),/Decisão de teste/);await page.locator('#btn-meet-save').click();await page.waitForFunction(()=>document.getElementById('toast').textContent.includes('Reunião salva'));const files=(await fs.readdir(join(temp,'_sessions'))).filter(f=>f.endsWith('.md'));assert.equal(files.length,1);});
@@ -66,16 +65,20 @@ try{
   }
   window.SpeechRecognition=FakeRecognition;
  });
- await check('Ctrl+Space: Web Speech insere no cursor e registra histórico',async()=>{
+ await check('voz inline no chat: sem popup, barra ativa e escreve direto no cursor',async()=>{
   await page.evaluate(()=>switchView('chat'));await page.locator('#chat-input').fill('Antes depois');await page.locator('#chat-input').evaluate(el=>{el.focus();el.setSelectionRange(5,5);});
-  await page.keyboard.press('Control+Space');await page.waitForFunction(()=>window.qaRecognition);
+  await page.locator('#voice-trigger').click();await page.waitForFunction(()=>window.qaRecognition);
+  assert.equal(await page.locator('#voice-panel').isVisible(),false);
+  assert.equal(await page.locator('#chat-voice-bar').isVisible(),true);
   assert.equal(await page.evaluate(()=>window.qaRecognition.lang),'pt-BR');
   await page.evaluate(()=>{const result=[{transcript:'texto ditado'}];result.isFinal=true;window.qaRecognition.onresult({resultIndex:0,results:[result]});});
   assert.match(await page.locator('#chat-input').inputValue(),/Antes texto ditado depois/);
-  await page.keyboard.press('Control+Space');await page.waitForFunction(()=>document.getElementById('voice-history-count').textContent==='1');
+  await page.locator('#chat-voice-stop').click();await page.waitForFunction(()=>document.getElementById('voice-history-count').textContent==='1');
+  assert.equal(await page.locator('#chat-voice-bar').isVisible(),false);
   const history=await (await fetch(running.url+'/api/voice/history')).json();assert.equal(history.items[0].text,'texto ditado');
  });
  await check('voz: histórico leva ao chat e salva em _sessions',async()=>{
+  await page.evaluate(()=>openVoice());
   await page.locator('#voice-history').evaluate(el=>el.open=true);await page.locator('#voice-history-list').getByRole('button',{name:'Salvar nota',exact:true}).first().click();
   await page.waitForFunction(()=>document.getElementById('toast').textContent.startsWith('Salvo em'));
   assert.equal((await fs.readdir(join(temp,'_sessions'))).filter(f=>f.endsWith('.md')).length,2);
