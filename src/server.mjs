@@ -5,6 +5,16 @@ import { resolve, join, dirname, relative, isAbsolute, basename, extname } from 
 import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
+import { defaultMcpPaths, scanInstalledMcps, connectMcpServer, disconnectMcpServer } from './mcp-catalog.mjs';
+import {
+  listSessions,
+  getSession,
+  saveSession,
+  deleteSession,
+  saveSessionAttachment,
+  readSessionAttachment,
+  removeSessionAttachment
+} from './sessions.mjs';
 
 const projectRoot = resolve(fileURLToPath(new URL('../', import.meta.url)));
 const publicDir = join(projectRoot, 'public');
@@ -253,7 +263,145 @@ async function callProviderChat({ provider, apiKey, model, systemPrompt, message
   throw new Error('Unsupported provider. Use claude, openai, gemini or grok.');
 }
 
-function readJson(req, limit = 3 * 1024 * 1024) {
+function checkCliInstalled(name) {
+  const probe = process.platform === 'win32'
+    ? spawnSync('where.exe', [name], { shell: false, encoding: 'utf8' })
+    : spawnSync('which', [name], { shell: false, encoding: 'utf8' });
+  const first = (probe.stdout || '').split(/\r?\n/).map(s => s.trim()).find(Boolean) || '';
+  return { id: name, installed: !probe.error && probe.status === 0 && Boolean(first), path: first };
+}
+
+function stripAnsi(text) {
+  return String(text || '').replace(/\x1b\[[0-9;]*[A-Za-z]/g, '').replace(/\r/g, '\n');
+}
+
+function runLocalCliAgent({ engine, prompt, cwd, continueSession = false, onProgress = null }) {
+  return new Promise((resolveRun, rejectRun) => {
+    const cleanPrompt = String(prompt || '').trim();
+    if (!cleanPrompt) { rejectRun(new Error('Prompt cannot be empty.')); return; }
+
+    let cmd;
+    let args;
+    const isWin = process.platform === 'win32';
+
+    if (engine === 'claude') {
+      cmd = isWin ? 'cmd.exe' : 'claude';
+      const claudeArgs = continueSession ? ['-c', '-p', cleanPrompt] : ['-p', cleanPrompt];
+      args = isWin ? ['/d', '/s', '/c', 'claude.cmd', ...claudeArgs] : claudeArgs;
+    } else if (engine === 'codex') {
+      cmd = isWin ? 'cmd.exe' : 'codex';
+      const codexArgs = continueSession ? ['exec', 'resume', '--last', cleanPrompt] : ['exec', cleanPrompt];
+      args = isWin ? ['/d', '/s', '/c', 'codex.cmd', ...codexArgs] : codexArgs;
+    } else if (engine === 'agy' || engine === 'gemini') {
+      cmd = isWin ? 'agy.exe' : 'agy';
+      args = continueSession ? ['-c', '-p', cleanPrompt] : ['-p', cleanPrompt];
+    } else {
+      rejectRun(new Error('Unsupported local CLI engine. Use claude, codex or agy.'));
+      return;
+    }
+
+    const started = Date.now();
+    onProgress?.({ type: 'stage', text: `Iniciando ${engine} em ${basename(cwd) || cwd}...`, elapsedMs: 0 });
+    const child = spawn(cmd, args, {
+      cwd,
+      shell: false,
+      stdio: ['ignore', 'pipe', 'pipe'],
+      windowsHide: true
+    });
+
+    let stdout = '';
+    let stderr = '';
+    const emitLines = (stream, chunkText) => {
+      if (!onProgress) return;
+      const lines = stripAnsi(chunkText).split('\n').map(l => l.trim()).filter(Boolean);
+      for (const line of lines.slice(-3)) {
+        onProgress({ type: 'activity', stream, text: line.slice(0, 180), elapsedMs: Date.now() - started });
+      }
+    };
+
+    const timer = setTimeout(() => {
+      child.kill();
+      rejectRun(new Error(`Local ${engine} timed out after 180s.`));
+    }, 180000);
+
+    child.stdout.on('data', chunk => {
+      const str = chunk.toString('utf8');
+      stdout += str;
+      emitLines('stdout', str);
+    });
+    child.stderr.on('data', chunk => {
+      const str = chunk.toString('utf8');
+      stderr += str;
+      emitLines('stderr', str);
+    });
+    child.on('error', err => { clearTimeout(timer); rejectRun(new Error(`Could not start ${engine}: ${err.message}`)); });
+    child.on('close', code => {
+      clearTimeout(timer);
+      if (code !== 0 && !stdout.trim()) {
+        rejectRun(new Error(stderr.trim() || `${engine} exited with code ${code}.`));
+        return;
+      }
+      resolveRun({
+        reply: stdout.trim() || stderr.trim(),
+        engine,
+        cwd,
+        durationMs: Date.now() - started
+      });
+    });
+  });
+}
+
+async function callVoiceTranscribe({ provider = 'groq', apiKey, audioBase64, mimeType = 'audio/webm', language = '' }) {
+  if (!apiKey || !String(apiKey).trim()) throw new Error('API key is required for BYOK voice transcription.');
+  if (!audioBase64 || typeof audioBase64 !== 'string') throw new Error('Audio payload is required.');
+  const key = String(apiKey).trim();
+  const cleanMime = String(mimeType || 'audio/webm').split(';')[0];
+  const ext = cleanMime.includes('wav') ? 'wav' : cleanMime.includes('mp3') || cleanMime.includes('mpeg') ? 'mp3' : cleanMime.includes('mp4') || cleanMime.includes('m4a') ? 'm4a' : 'webm';
+  const buffer = Buffer.from(audioBase64, 'base64');
+
+  if (provider === 'gemini') {
+    const model = 'gemini-2.5-flash';
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+    const langHint = language ? ` Language hint: ${language}.` : '';
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{
+          parts: [
+            { text: `Transcribe this short voice dictation accurately. Return ONLY the clean spoken text without commentary or markdown.${langHint}` },
+            { inlineData: { mimeType: cleanMime, data: audioBase64 } }
+          ]
+        }]
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || `Gemini transcription error (${res.status})`);
+    const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join(' ').trim() || '';
+    return { text, provider: 'gemini', model };
+  }
+
+  if (provider === 'groq' || provider === 'openai') {
+    const base = provider === 'groq' ? 'https://api.groq.com/openai/v1' : 'https://api.openai.com/v1';
+    const model = provider === 'groq' ? 'whisper-large-v3-turbo' : 'gpt-4o-mini-transcribe';
+    const form = new FormData();
+    form.append('file', new Blob([buffer], { type: cleanMime }), `dictation.${ext}`);
+    form.append('model', model);
+    if (language && language !== 'auto') form.append('language', language.slice(0, 2).toLowerCase());
+    const res = await fetch(`${base}/audio/transcriptions`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${key}` },
+      body: form
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || `${provider} transcription error (${res.status})`);
+    return { text: String(data.text || '').trim(), provider, model };
+  }
+
+  throw new Error('Unsupported voice provider. Use groq, gemini or openai.');
+}
+
+function readJson(req, limit = 16 * 1024 * 1024) {
   return new Promise((res, rej) => {
     const chunks = [];
     let size = 0;
@@ -265,6 +413,7 @@ function readJson(req, limit = 3 * 1024 * 1024) {
 
 function isAllowedRepoPath(target, projectsDir, worktreeRoot) {
   const resolved = resolve(target || '');
+  if (resolved === projectRoot) return resolved;
   for (const base of [projectsDir, worktreeRoot].filter(Boolean)) {
     const rel = relative(resolve(base), resolved);
     if (rel && !rel.startsWith('..') && !isAbsolute(rel)) return resolved;
@@ -272,12 +421,40 @@ function isAllowedRepoPath(target, projectsDir, worktreeRoot) {
   throw new Error('Path outside allowed project/worktree roots.');
 }
 
+function guessMimeType(filename) {
+  const ext = extname(String(filename || '')).toLowerCase();
+  const map = {
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.webp': 'image/webp',
+    '.avif': 'image/avif',
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+    '.pdf': 'application/pdf',
+    '.txt': 'text/plain; charset=utf-8',
+    '.md': 'text/markdown; charset=utf-8',
+    '.json': 'application/json; charset=utf-8',
+    '.csv': 'text/csv; charset=utf-8',
+    '.html': 'text/html; charset=utf-8',
+    '.css': 'text/css; charset=utf-8',
+    '.js': 'text/javascript; charset=utf-8',
+    '.mp3': 'audio/mpeg',
+    '.wav': 'audio/wav',
+    '.webm': 'audio/webm',
+    '.mp4': 'video/mp4'
+  };
+  return map[ext] || 'application/octet-stream';
+}
+
 export async function startAyvuBrainServer({
   vaultRoot = process.env.AYVU_BRAIN_VAULT || resolve(projectRoot, '../..'),
   worktreeRoot = resolve(process.env.SECOND_BRAIN_WORKTREE_ROOT || join(homedir(), '.second-brain-worktrees')),
+  mcpPaths = defaultMcpPaths(),
   port = Number(process.env.PORT || 4190)
 } = {}) {
   const layout = await detectVaultLayout(vaultRoot);
+  const voiceHistory = [];
 
   const server = createServer(async (req, res) => {
     const sendJson = (status, data) => {
@@ -308,12 +485,14 @@ export async function startAyvuBrainServer({
         const tag = runGit(['describe', '--tags', '--abbrev=0'], projectRoot);
         sendJson(200, {
           app: 'AYVU Brain',
-          version: '0.2.0',
+          version: '0.3.0',
           domain: 'brain.ayvu.org',
           commit: git.ok ? git.stdout : 'dev',
-          tag: tag.ok ? tag.stdout : 'v0.2.0',
+          tag: tag.ok ? tag.stdout : 'v0.3.0',
           ...layout,
+          appRoot: projectRoot,
           worktreeRoot,
+          voiceShortcut: 'Ctrl+Space',
           platform: process.platform
         });
         return;
@@ -422,6 +601,196 @@ export async function startAyvuBrainServer({
         return;
       }
 
+      if (req.method === 'GET' && url.pathname === '/api/cli/status') {
+        const engines = [
+          { ...checkCliInstalled('claude'), label: 'Claude Code', mode: 'local-cli' },
+          { ...checkCliInstalled('codex'), label: 'OpenAI Codex', mode: 'local-cli' },
+          { ...checkCliInstalled('agy'), label: 'Gemini (Antigravity)', mode: 'local-cli' }
+        ];
+        sendJson(200, { engines });
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/cli/chat') {
+        const body = await readJson(req);
+        const engine = String(body.engine || 'agy').toLowerCase();
+        const cwd = body.cwd ? isAllowedRepoPath(body.cwd, layout.projectsDir, worktreeRoot) : layout.vaultRoot;
+        let prompt = String(body.prompt || '').trim();
+        const prefixes = [];
+        if (body.contextPath) {
+          const { rel } = validateSafeRelPath(layout.vaultRoot, body.contextPath);
+          prefixes.push(`Context file in vault: ${rel}.`);
+        }
+        if (Array.isArray(body.attachments) && body.attachments.length) {
+          const fileLines = body.attachments
+            .filter(a => a && (a.relPath || a.fullPath))
+            .map(a => `- ${a.name || basename(a.relPath || a.fullPath)} (${a.relPath || a.fullPath})`)
+            .join('\n');
+          if (fileLines) {
+            prefixes.push(`Session attached files saved in vault:\n${fileLines}`);
+          }
+        }
+        if (body.structuredQuestions !== false) {
+          prefixes.push('Formatting preference: interpret the user intent automatically (conversation, summary, planning or Q&A). Whenever asking questions, listing options, decisions or next steps, structure them cleanly with Markdown checklists (- [ ] item) and concise bullet points (- item).');
+        }
+        if (prefixes.length) {
+          prompt = `${prefixes.join('\n\n')}\n\n${prompt}`;
+        }
+        const wantsStream = String(req.headers.accept || '').includes('text/event-stream');
+        if (wantsStream) {
+          res.writeHead(200, {
+            'Content-Type': 'text/event-stream; charset=utf-8',
+            'Cache-Control': 'no-cache, no-transform',
+            Connection: 'keep-alive'
+          });
+          const sendEvent = (event, data) => {
+            if (!res.writableEnded) res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+          };
+          if (body.contextPath) sendEvent('stage', { text: `Anexando contexto: ${body.contextPath}`, elapsedMs: 0 });
+          if (Array.isArray(body.attachments) && body.attachments.length) {
+            sendEvent('stage', { text: `Carregando ${body.attachments.length} arquivo(s) da sessão...`, elapsedMs: 0 });
+          }
+          try {
+            const result = await runLocalCliAgent({
+              engine,
+              prompt,
+              cwd,
+              continueSession: Boolean(body.continueSession),
+              onProgress: (ev) => sendEvent(ev.type || 'activity', ev)
+            });
+            sendEvent('done', result);
+          } catch (err) {
+            sendEvent('error', { error: err.message || 'Falha na CLI local.' });
+          } finally {
+            if (!res.writableEnded) res.end();
+          }
+          return;
+        }
+
+        const result = await runLocalCliAgent({
+          engine,
+          prompt,
+          cwd,
+          continueSession: Boolean(body.continueSession)
+        });
+        sendJson(200, result);
+        return;
+      }
+
+      if (req.method === 'GET' && url.pathname === '/api/sessions') {
+        const items = await listSessions(layout.vaultRoot);
+        sendJson(200, { items });
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/sessions') {
+        const body = await readJson(req);
+        const saved = await saveSession(layout.vaultRoot, body);
+        sendJson(200, { ok: true, session: saved });
+        return;
+      }
+
+      const sessionAttMatch = url.pathname.match(/^\/api\/sessions\/([^/]+)\/attachments(?:\/([^/]+))?$/);
+      if (sessionAttMatch) {
+        const sessionId = decodeURIComponent(sessionAttMatch[1]);
+        const filename = sessionAttMatch[2] ? decodeURIComponent(sessionAttMatch[2]) : '';
+        if (req.method === 'POST' && !filename) {
+          const body = await readJson(req, 48 * 1024 * 1024);
+          const attachment = await saveSessionAttachment(layout.vaultRoot, sessionId, body);
+          sendJson(201, { ok: true, attachment });
+          return;
+        }
+        if (req.method === 'GET' && filename) {
+          const file = await readSessionAttachment(layout.vaultRoot, sessionId, filename);
+          res.writeHead(200, {
+            'Content-Type': guessMimeType(file.filename),
+            'Content-Disposition': `inline; filename="${file.filename.replaceAll('"', '')}"`,
+            'Cache-Control': 'no-store'
+          });
+          res.end(file.buffer);
+          return;
+        }
+        if (req.method === 'DELETE' && filename) {
+          const removed = await removeSessionAttachment(layout.vaultRoot, sessionId, filename);
+          sendJson(200, removed);
+          return;
+        }
+      }
+
+      const sessionItemMatch = url.pathname.match(/^\/api\/sessions\/([^/]+)$/);
+      if (sessionItemMatch) {
+        const sessionId = decodeURIComponent(sessionItemMatch[1]);
+        if (req.method === 'GET') {
+          const session = await getSession(layout.vaultRoot, sessionId);
+          sendJson(200, { session });
+          return;
+        }
+        if (req.method === 'DELETE') {
+          const removed = await deleteSession(layout.vaultRoot, sessionId);
+          sendJson(200, removed);
+          return;
+        }
+      }
+
+      if (req.method === 'GET' && url.pathname === '/api/mcp/catalog') {
+        const data = await scanInstalledMcps(mcpPaths);
+        sendJson(200, data);
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/mcp/connect') {
+        const body = await readJson(req);
+        const result = await connectMcpServer(body, mcpPaths);
+        sendJson(200, result);
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/mcp/disconnect') {
+        const body = await readJson(req);
+        const result = await disconnectMcpServer(body, mcpPaths);
+        sendJson(200, result);
+        return;
+      }
+
+      if (req.method === 'GET' && url.pathname === '/api/self/status') {
+        const branch = runGit(['rev-parse', '--abbrev-ref', 'HEAD'], projectRoot);
+        const commit = runGit(['rev-parse', '--short', 'HEAD'], projectRoot);
+        const status = runGit(['status', '--short'], projectRoot);
+        const diff = runGit(['diff', '--no-color'], projectRoot);
+        sendJson(200, {
+          appRoot: projectRoot,
+          branch: branch.ok ? branch.stdout : 'unknown',
+          commit: commit.ok ? commit.stdout : 'dev',
+          status: status.stdout,
+          dirtyCount: status.stdout ? status.stdout.split(/\r?\n/).filter(Boolean).length : 0,
+          diff: diff.stdout.slice(0, 120000)
+        });
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/self/improve') {
+        const body = await readJson(req);
+        const engine = String(body.engine || 'claude').toLowerCase();
+        const request = String(body.prompt || '').trim();
+        if (!request) throw new Error('Descreva a melhoria desejada na interface.');
+        const fullPrompt = [
+          'You are improving the AYVU Brain interface directly inside its repository.',
+          `Repository root: ${projectRoot}. Main files: public/app.html (UI) and src/server.mjs (local backend).`,
+          'Preserve the prismatic dark glass aesthetic, Lucide SVG icons, keyboard accessibility, and existing endpoints.',
+          'After making changes, verify syntax with `npm run check` and summarize the edits clearly using bullet points and a checklist (- [ ] / - [x]).',
+          '',
+          `User request:\n${request}`
+        ].join('\n');
+        const result = await runLocalCliAgent({
+          engine,
+          prompt: fullPrompt,
+          cwd: projectRoot,
+          continueSession: Boolean(body.continueSession)
+        });
+        sendJson(200, { ...result, appRoot: projectRoot });
+        return;
+      }
+
       if (req.method === 'POST' && url.pathname === '/api/ai/chat') {
         const body = await readJson(req);
         let contextText = '';
@@ -438,6 +807,39 @@ export async function startAyvuBrainServer({
           messages: body.messages
         });
         sendJson(200, out);
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/voice/transcribe') {
+        const body = await readJson(req);
+        const result = await callVoiceTranscribe({
+          provider: body.provider || 'groq',
+          apiKey: body.apiKey,
+          audioBase64: body.audioBase64,
+          mimeType: body.mimeType,
+          language: body.language || ''
+        });
+        if (result.text) {
+          voiceHistory.unshift({ id: Date.now().toString(36), text: result.text, provider: result.provider, createdAt: new Date().toISOString() });
+          if (voiceHistory.length > 30) voiceHistory.length = 30;
+        }
+        sendJson(200, result);
+        return;
+      }
+
+      if (req.method === 'GET' && url.pathname === '/api/voice/history') {
+        sendJson(200, { items: voiceHistory });
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/voice/history') {
+        const body = await readJson(req);
+        const text = String(body.text || '').trim();
+        if (!text) throw new Error('Voice text cannot be empty.');
+        const item = { id: Date.now().toString(36), text, provider: String(body.provider || 'webspeech'), createdAt: new Date().toISOString() };
+        voiceHistory.unshift(item);
+        if (voiceHistory.length > 30) voiceHistory.length = 30;
+        sendJson(201, { ok: true, item });
         return;
       }
 

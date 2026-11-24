@@ -1,6 +1,6 @@
 {
   "name": "ayvu-brain",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "AYVU Brain - Local-first Windows desktop workspace for Second Brain notes, threads, bot-free meetings, parallel Git worktree agents and multi-AI (Claude, Codex/OpenAI, Gemini, Grok).",
   "private": true,
   "type": "module",
@@ -13,6 +13,7 @@
     "install:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-windows.ps1",
     "uninstall:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/uninstall-windows.ps1",
     "test": "node --test",
+    "test:ui": "node scripts/verify-ui.mjs",
     "check": "node --check src/server.mjs"
   },
   "license": "MIT"
