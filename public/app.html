@@ -1126,7 +1126,7 @@ async function uploadSessionFiles(fileList){
     setSaveStatus(`Subindo ${file.name}...`, true);
     const dataBase64=await new Promise((res,rej)=>{
       const reader=new FileReader();
-      reader.onload=()=>res(String(reader.result||'').split(',')[1]||'');
+      reader.onload=()=>{const s=String(reader.result||'');const i=s.indexOf(';base64,');res(i>=0?s.slice(i+8):'');};
       reader.onerror=rej;
       reader.readAsDataURL(file);
     });
@@ -1517,11 +1517,160 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
+let liveOfflineCtrl = null;
+
+function blobToBase64(blob) {
+  return new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const s = String(reader.result || '');
+      const i = s.indexOf(';base64,');
+      res(i >= 0 ? s.slice(i + 8) : '');
+    };
+    reader.onerror = rej;
+    reader.readAsDataURL(blob);
+  });
+}
+
+function appendLiveOfflineSegments(segments = []) {
+  if (!Array.isArray(segments) || !segments.length) return;
+  const voiceById = new Map((meetingState.voices || []).map(v => [v.voiceId, v]));
+  for (const seg of segments) {
+    const voiceId = String(seg.voiceId || seg.speaker || 'Voz 1');
+    let voice = voiceById.get(voiceId);
+    if (!voice) {
+      voice = {
+        voiceId,
+        name: voiceId,
+        channel: seg.channel || (voiceId === 'Voz 1' ? 'mic' : 'system'),
+        count: 0
+      };
+      voiceById.set(voiceId, voice);
+      meetingState.voices.push(voice);
+    }
+    voice.count = (voice.count || 0) + 1;
+    meetingState.transcript.push({
+      start: Number(seg.start || 0),
+      end: Number(seg.end || 0),
+      time: seg.time || formatMeetClock((seg.start || 0) * 1000),
+      voiceId,
+      speaker: voice.name || voiceId,
+      channel: seg.channel || voice.channel || 'mixed',
+      text: String(seg.text || '').trim()
+    });
+  }
+  renderMeetingTranscript();
+  renderVoicesBoard();
+  $('meet-output').value = buildMeetingMarkdown();
+}
+
+function startLiveOfflineChunks(audioStream, { dualChannel = true } = {}) {
+  const audioMime = ['audio/webm;codecs=opus', 'audio/webm'].find(m => MediaRecorder.isTypeSupported(m)) || 'audio/webm';
+  const sessionId = 'live-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6);
+  const CHUNK_MS = 5000;
+  let active = true;
+  let currentRec = null;
+  let rotateTimer = null;
+  let queue = Promise.resolve();
+  let chunksSent = 0;
+
+  fetch('/api/transcribe/chunk', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cmd: 'reset', sessionId })
+  }).catch(() => {});
+
+  const enqueueChunk = (blob, offsetSec) => {
+    if (!blob || blob.size < 800) return;
+    queue = queue.then(async () => {
+      try {
+        chunksSent += 1;
+        if (active) {
+          $('meet-live-interim').textContent = `Transcrevendo bloco #${chunksSent} (100% offline • ${dualChannel ? 'SO + Mic' : 'Áudio'})...`;
+        }
+        const dataBase64 = await blobToBase64(blob);
+        const r = await fetch('/api/transcribe/chunk', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId,
+            dataBase64,
+            offsetSec,
+            language: $('meet-lang')?.value || 'pt',
+            dualChannel
+          })
+        });
+        const d = await r.json().catch(() => ({}));
+        if (r.ok && Array.isArray(d.segments) && d.segments.length) {
+          appendLiveOfflineSegments(d.segments);
+        }
+        if (active) {
+          const vCount = (meetingState.voices || []).length;
+          $('meet-live-interim').textContent = `Ao vivo 100% offline (${dualChannel ? 'SO + Microfone' : 'Áudio'}) • ${vCount} voz(es) detectada(s)`;
+        }
+      } catch (err) {
+        if (active) {
+          $('meet-live-interim').textContent = `Aguardando motor offline: ${err.message || 'processando...'}`;
+        }
+      }
+    });
+  };
+
+  const startOneSegment = () => {
+    if (!active) return;
+    const segParts = [];
+    const segOffsetSec = Math.max(0, (Date.now() - startTs) / 1000);
+    let rec;
+    try {
+      rec = new MediaRecorder(audioStream, { mimeType: audioMime });
+    } catch {
+      return;
+    }
+    currentRec = rec;
+    rec.ondataavailable = ev => { if (ev.data && ev.data.size) segParts.push(ev.data); };
+    rec.onstop = () => {
+      if (active) startOneSegment();
+      if (segParts.length) enqueueChunk(new Blob(segParts, { type: audioMime }), segOffsetSec);
+    };
+    rec.start();
+    rotateTimer = setTimeout(() => {
+      if (rec.state !== 'inactive') {
+        try { rec.stop(); } catch {}
+      }
+    }, CHUNK_MS);
+  };
+
+  $('meet-live-interim').textContent = `Iniciando transcrição ao vivo 100% offline (${dualChannel ? 'SO + Microfone' : 'Áudio'})...`;
+  startOneSegment();
+
+  return {
+    async stopAndFlush() {
+      active = false;
+      if (rotateTimer) { clearTimeout(rotateTimer); rotateTimer = null; }
+      if (currentRec && currentRec.state !== 'inactive') {
+        await new Promise(resolveStop => {
+          const prevOnStop = currentRec.onstop;
+          currentRec.onstop = () => {
+            if (prevOnStop) prevOnStop();
+            resolveStop();
+          };
+          try { currentRec.stop(); } catch { resolveStop(); }
+        });
+      }
+      await queue;
+      $('meet-live-interim').textContent = '';
+    }
+  };
+}
+
 $('rec-start').onclick = async () => {
   try {
     chunks = []; streams = [];
     meetingState.transcript = [];
+    meetingState.voices = [];
+    meetingState.voiceFilter = 'all';
     renderMeetingTranscript();
+    renderVoicesBoard();
     $('rec-video-player').classList.add('hidden');
     $('rec-player').classList.add('hidden');
     $('rec-download').classList.add('hidden');
@@ -1552,6 +1701,8 @@ $('rec-start').onclick = async () => {
         if (merger) srcDisp.connect(merger, 0, 1); // Canal Direito = Sistema / Chamada
         else srcDisp.connect(dest);
         srcDisp.connect(analyser);
+      } else {
+        toast('Atenção: marque "Compartilhar áudio" no popup do navegador para captar vozes do SO.', 5000);
       }
     }
     const mic = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -1573,9 +1724,14 @@ $('rec-start').onclick = async () => {
 
     recorder = new MediaRecorder(mixedStream, { mimeType: mime });
     recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
-    recorder.onstop = () => {
+    recorder.onstop = async () => {
+      meetRecording = false;
       stopMeetingSpeech();
       cancelAnimationFrame(meterRaf);
+      const ctrl = liveOfflineCtrl;
+      liveOfflineCtrl = null;
+      const flushPromise = ctrl ? ctrl.stopAndFlush().catch(() => {}) : Promise.resolve();
+
       state.audioBlob = new Blob(chunks, { type: mime });
       const blobUrl = URL.createObjectURL(state.audioBlob);
       if (isVideo) {
@@ -1593,6 +1749,8 @@ $('rec-start').onclick = async () => {
       $('rec-download').classList.remove('hidden');
 
       clearInterval(timerId);
+      $('rec-state').textContent = 'Finalizando transcrição...';
+      await flushPromise;
       ctxAudio?.close().catch(() => {});
       streams.forEach(s => s.getTracks().forEach(t => t.stop()));
       $('rec-state').textContent = 'Gravado';
@@ -1604,7 +1762,9 @@ $('rec-start').onclick = async () => {
       $('btn-meet-transcribe-offline').disabled = false;
       safeAction(async () => {
         const saved = await saveRecordingToVault(state.audioBlob, mime, $('rec-timer').textContent, '', Boolean(meetingState.lastDualChannel));
-        if (saved?.id) await runOfflineTranscribeForRecording(saved.id);
+        if (saved?.id && meetingState.transcript.length === 0) {
+          await runOfflineTranscribeForRecording(saved.id);
+        }
       });
     };
 
@@ -1613,11 +1773,17 @@ $('rec-start').onclick = async () => {
     $('rec-upload').disabled = true; $('rec-mode').disabled = true;
     startTs = Date.now();
     timerId = setInterval(() => { $('rec-timer').textContent = formatMeetClock(Date.now() - startTs); }, 300);
-    $('rec-state').textContent = isVideo ? 'Gravando tela + transcrevendo...' : 'Gravando + transcrevendo...';
+    $('rec-state').textContent = isVideo ? 'Gravando tela + SO (offline)...' : 'Gravando + transcrevendo (offline)...';
     $('rec-start').classList.add('hidden'); $('rec-stop').classList.remove('hidden');
     startAudioMeter(analyser);
-    startMeetingSpeech();
+    if (state.info) {
+      liveOfflineCtrl = startLiveOfflineChunks(dest.stream, { dualChannel: meetingState.lastDualChannel });
+    } else {
+      startMeetingSpeech();
+    }
   } catch (e) {
+    meetRecording = false;
+    if (liveOfflineCtrl) { liveOfflineCtrl.stopAndFlush().catch(() => {}); liveOfflineCtrl = null; }
     stopMeetingSpeech();
     cancelAnimationFrame(meterRaf);
     streams.forEach(s => s.getTracks().forEach(t => t.stop()));
@@ -1866,7 +2032,7 @@ async function startVoice(){
  }
 }
 function stopVoice(){clearTimeout(voice.timer);if(voice.starting){voice.cancelled=true;return;}if(voice.recognition){voice.recognition.stop();return;}if(voice.recorder?.state==='recording'){voice.recorder.stop();voice.stream?.getTracks().forEach(t=>t.stop());}}
-async function finishRecordedVoice(mime){voice.active=false;voice.stream?.getTracks().forEach(t=>t.stop());voice.recorder=null;if(voice.cancelled){voiceUI('Ditado cancelado.');return;}const blob=new Blob(voice.chunks,{type:mime});if(!blob.size){voiceError('Nenhum áudio capturado.');voiceUI('Pronto para tentar novamente.');return;}voice.busy=true;voiceUI('Transcrevendo com '+voice.job.provider+'...');try{const audioBase64=await new Promise((res,rej)=>{const reader=new FileReader();reader.onload=()=>res(String(reader.result).split(',')[1]);reader.onerror=rej;reader.readAsDataURL(blob);});const r=await fetch('/api/voice/transcribe',{method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(120000),body:JSON.stringify({...voice.job,audioBase64,mimeType:mime})});const d=await r.json();if(!r.ok)throw new Error(d.error||'A transcrição falhou.');voice.finalText=d.text||'';if(!voice.finalText.trim())throw new Error('O provedor não retornou texto.');insertVoice(voice.finalText);await loadVoiceHistory();voiceUI('Ditado inserido no destino.');}catch(e){voiceError(e.message||'Não foi possível transcrever. Confira a conexão e os créditos.');}finally{voice.busy=false;voice.job=null;voice.chunks=[];voiceUI(voice.finalText?'Ditado inserido no destino.':'Pronto para tentar novamente.');}}
+async function finishRecordedVoice(mime){voice.active=false;voice.stream?.getTracks().forEach(t=>t.stop());voice.recorder=null;if(voice.cancelled){voiceUI('Ditado cancelado.');return;}const blob=new Blob(voice.chunks,{type:mime});if(!blob.size){voiceError('Nenhum áudio capturado.');voiceUI('Pronto para tentar novamente.');return;}voice.busy=true;voiceUI('Transcrevendo com '+voice.job.provider+'...');try{const audioBase64=await blobToBase64(blob);const r=await fetch('/api/voice/transcribe',{method:'POST',headers:{'Content-Type':'application/json'},signal:AbortSignal.timeout(120000),body:JSON.stringify({...voice.job,audioBase64,mimeType:mime})});const d=await r.json();if(!r.ok)throw new Error(d.error||'A transcrição falhou.');voice.finalText=d.text||'';if(!voice.finalText.trim())throw new Error('O provedor não retornou texto.');insertVoice(voice.finalText);await loadVoiceHistory();voiceUI('Ditado inserido no destino.');}catch(e){voiceError(e.message||'Não foi possível transcrever. Confira a conexão e os créditos.');}finally{voice.busy=false;voice.job=null;voice.chunks=[];voiceUI(voice.finalText?'Ditado inserido no destino.':'Pronto para tentar novamente.');}}
 async function toggleChatVoiceInline(){
   if(voice.active||voice.starting){stopVoice();return;}
   if(voice.busy){toast('Aguarde a transcrição atual.');return;}
@@ -2231,12 +2397,7 @@ document.addEventListener('pointerdown', (e) => {
 
 async function saveRecordingToVault(blob, mimeType, duration = '00:00', fallbackTitle = '', dualChannel = false) {
   if (!blob || !state.info) return null;
-  const dataBase64 = await new Promise((res, rej) => {
-    const reader = new FileReader();
-    reader.onload = () => res(String(reader.result || '').split(',')[1] || '');
-    reader.onerror = rej;
-    reader.readAsDataURL(blob);
-  });
+  const dataBase64 = await blobToBase64(blob);
   const participants = [...new Set(meetingState.transcript.map(t => t.speaker).concat(meetingState.speakers))].filter(Boolean);
   const r = await fetch('/api/recordings', {
     method: 'POST',

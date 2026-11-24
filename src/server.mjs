@@ -28,7 +28,12 @@ import {
   deleteRecording,
   deleteRecordingsBulk
 } from './recordings.mjs';
-import { getOfflineTranscriberStatus, runOfflineTranscription } from './transcribe-offline.mjs';
+import {
+  getOfflineTranscriberStatus,
+  runOfflineTranscription,
+  transcribeLiveChunk,
+  resetLiveTranscription
+} from './transcribe-offline.mjs';
 
 const projectRoot = resolve(fileURLToPath(new URL('../', import.meta.url)));
 const publicDir = join(projectRoot, 'public');
@@ -706,6 +711,25 @@ export async function startAyvuBrainServer({
 
       if (req.method === 'GET' && url.pathname === '/api/transcribe/status') {
         sendJson(200, await getOfflineTranscriberStatus());
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/transcribe/chunk') {
+        const body = await readJson(req, 8 * 1024 * 1024);
+        const sessionId = String(body.sessionId || 'default');
+        if (body.cmd === 'reset') {
+          const out = await resetLiveTranscription(sessionId);
+          sendJson(200, { ok: true, ...out });
+          return;
+        }
+        const out = await transcribeLiveChunk({
+          sessionId,
+          dataBase64: String(body.dataBase64 || ''),
+          offsetSec: Number(body.offsetSec || 0),
+          language: String(body.language || 'pt'),
+          dualChannel: body.dualChannel !== undefined ? Boolean(body.dualChannel) : true
+        });
+        sendJson(200, { ok: true, segments: out.segments || [] });
         return;
       }
 
