@@ -609,8 +609,8 @@ export async function startAyvuBrainServer({
             prefixes.push(`Session attached files saved in vault:\n${fileLines}`);
           }
         }
-        if (body.structuredQuestions) {
-          prefixes.push('Formatting preference: when asking questions, listing options, decisions or next steps, use clear Markdown checklists (- [ ] item) and concise bullet points (- item).');
+        if (body.structuredQuestions !== false) {
+          prefixes.push('Formatting preference: interpret the user intent automatically (conversation, summary, planning or Q&A). Whenever asking questions, listing options, decisions or next steps, structure them cleanly with Markdown checklists (- [ ] item) and concise bullet points (- item).');
         }
         if (prefixes.length) {
           prompt = `${prefixes.join('\n\n')}\n\n${prompt}`;
