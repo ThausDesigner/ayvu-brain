@@ -1,0 +1,17 @@
+{
+  "name": "ayvu-brain",
+  "version": "0.1.0",
+  "description": "AYVU Brain - Local-first desktop workspace for Second Brain notes, threads, bot-free meetings, parallel Git worktree agents and multi-AI (Claude, Codex/OpenAI, Gemini, Grok).",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "dev": "node src/server.mjs",
+    "test": "node --test",
+    "check": "node --check src/server.mjs"
+  },
+  "license": "MIT"
+}

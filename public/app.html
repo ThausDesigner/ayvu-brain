@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="pt-BR" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#09090B">
+<title>AYVU Brain · Workspace</title>
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090B;
+  --surface:#111114;
+  --surface-2:#18181B;
+  --surface-3:#222227;
+  --fg:#FAFAFA;
+  --muted:#A1A1AA;
+  --dim:#71717A;
+  --border:rgba(255,255,255,0.10);
+  --border-strong:rgba(255,255,255,0.20);
+  --white:#FFFFFF;
+  --black:#09090B;
+  --danger:#EF4444;
+  --ok:#22C55E;
+  --warn:#EAB308;
+  --radius:10px;
+  --sans:'Geist',system-ui,-apple-system,sans-serif;
+  --mono:'Geist Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.14) transparent}
+*::-webkit-scrollbar{width:6px;height:6px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:999px}
+*::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.28)}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:14px/1.6 var(--sans);overflow:hidden}
+::selection{background:var(--white);color:var(--black)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid rgba(255,255,255,.5);outline-offset:2px}
+
+.shell{display:grid;grid-template-columns:238px minmax(0,1fr);height:100vh}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:16px 12px;gap:14px;min-height:0}
+.brand{display:flex;align-items:center;gap:10px;padding:6px 8px;text-decoration:none;color:var(--fg);-webkit-app-region:drag}
+.brand img{width:24px;height:24px;flex:none}
+.brand-text strong{display:block;font-size:14px;font-weight:600;letter-spacing:-.2px;line-height:1.2}
+.brand-text span{display:block;font:11px var(--mono);color:var(--dim)}
+
+.cmd-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:8px 10px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:13px}
+.cmd-trigger:hover{border-color:var(--border-strong);color:var(--fg)}
+.kbd{font:11px var(--mono);padding:2px 6px;border-radius:5px;background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--muted)}
+
+.nav{display:flex;flex-direction:column;gap:3px;flex:1;overflow:auto}
+.nav button{display:flex;align-items:center;justify-content:space-between;width:100%;padding:9px 10px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--muted);text-align:left;font-size:13.5px;font-weight:500}
+.nav button:hover{background:rgba(255,255,255,.04);color:var(--fg)}
+.nav button.active{background:var(--surface-2);border-color:var(--border);color:var(--white)}
+.nav-left{display:flex;align-items:center;gap:9px}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--dim)}
+.nav button.active .nav-dot{background:var(--white)}
+
+.side-foot{border-top:1px solid var(--border);padding-top:12px;display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--muted)}
+.vault-chip{padding:8px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font:11px/1.4 var(--mono);color:var(--muted);overflow-wrap:anywhere}
+.vault-chip b{color:var(--fg);display:block;margin-bottom:2px}
+.side-link{display:block;text-align:center;padding:7px 10px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--muted);font-size:12.5px}
+.side-link:hover{border-color:var(--border-strong);color:var(--white)}
+
+.main{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--bg)}
+.topbar{height:54px;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex:none}
+.topbar h1{font-size:15px;font-weight:600;letter-spacing:-.2px;margin:0}
+.top-meta{display:flex;align-items:center;gap:10px;font:12px var(--mono);color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface);font:11.5px var(--mono);color:var(--muted)}
+.pill.live{color:#86EFAC;border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08)}
+
+.viewport{flex:1;overflow:auto;padding:24px}
+.view{display:none;max-width:1280px;margin:0 auto}
+.view.active{display:block}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.stat span{display:block;font:11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.stat strong{display:block;font-size:26px;font-weight:600;letter-spacing:-1px;margin-top:6px}
+
+.grid-2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+.grid-vault{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;min-height:calc(100vh - 110px)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+.card + .card{margin-top:16px}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.card h2{font-size:15px;font-weight:600;margin:0;letter-spacing:-.2px}
+.muted{color:var(--muted);font-size:12.5px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 14px;border-radius:8px;border:1px solid var(--white);background:var(--white);color:var(--black);font-size:13px;font-weight:600;text-decoration:none}
+.btn:hover{opacity:.9}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.sec{background:var(--surface-2);border-color:var(--border);color:var(--fg)}
+.btn.sec:hover{border-color:var(--border-strong)}
+.btn.danger{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.35);color:#FCA5A5}
+.btn.sm{padding:5px 10px;font-size:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+label.field{display:block;margin-bottom:12px}
+label.field > span{display:block;font:11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+input[type=text],input[type=password],input[type=date],select,textarea{
+  width:100%;padding:9px 11px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--fg)
+}
+input:focus,select:focus,textarea:focus{border-color:var(--border-strong);outline:none}
+textarea.code{font:12.5px/1.65 var(--mono);min-height:420px;resize:vertical}
+
+.list{list-style:none;margin:0;padding:0}
+.list-item{padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.list-item:last-child{border-bottom:0}
+.note-btn{display:block;width:100%;text-align:left;padding:8px 10px;border:1px solid transparent;border-radius:7px;background:transparent;color:var(--muted);font:12.5px var(--mono)}
+.note-btn:hover{background:rgba(255,255,255,.04);color:var(--fg)}
+.note-btn.active{background:var(--surface-2);border-color:var(--border);color:var(--white)}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font:11px var(--mono);border:1px solid var(--border);color:var(--muted);background:var(--surface-2)}
+.badge.ok{color:#86EFAC;border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08)}
+.badge.warn{color:#FDE047;border-color:rgba(234,179,8,.3);background:rgba(234,179,8,.08)}
+.badge.dirty{color:#FCA5A5;border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.08)}
+
+.chat-box{height:380px;overflow:auto;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:12px;margin-bottom:12px}
+.msg{max-width:88%;padding:10px 13px;border-radius:10px;font-size:13.5px;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.user{align-self:flex-end;background:var(--white);color:var(--black)}
+.msg.assistant{align-self:flex-start;background:var(--surface-2);border:1px solid var(--border);color:var(--fg)}
+.msg small{display:block;font:10.5px var(--mono);opacity:.65;margin-bottom:4px}
+
+.rec-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:14px}
+.timer{font:24px/1 var(--mono);letter-spacing:1px}
+canvas#meter{width:100%;height:42px;display:block;border-radius:6px;background:var(--surface-2);margin:12px 0}
+
+.diff-view{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font:12px/1.6 var(--mono);max-height:380px;overflow:auto;white-space:pre;margin-top:12px}
+.diff-add{color:#86EFAC}.diff-del{color:#FCA5A5}.diff-hunk{color:#93C5FD}
+
+.callout{padding:10px 13px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);font-size:12.5px;color:var(--muted);margin-top:12px}
+.callout.err{border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.1);color:#FCA5A5}
+.hidden{display:none!important}
+
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:flex-start;justify-content:center;padding-top:12vh;z-index:50}
+.modal-bg.open{display:flex}
+.modal{width:min(560px,92vw);background:var(--surface);border:1px solid var(--border-strong);border-radius:12px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+.modal input{border:0;border-bottom:1px solid var(--border);border-radius:0;padding:14px 16px;background:var(--surface);font-size:14px}
+.modal-list{max-height:320px;overflow:auto;padding:8px}
+.modal-item{display:flex;justify-content:space-between;align-items:center;width:100%;padding:9px 12px;border:0;border-radius:7px;background:transparent;color:var(--fg);text-align:left;font-size:13px}
+.modal-item:hover{background:var(--surface-2)}
+
+.toast{position:fixed;bottom:20px;right:20px;background:var(--white);color:var(--black);padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;display:none;z-index:60}
+.toast.show{display:block}
+
+@media(max-width:960px){
+  .shell{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .sidebar{flex-direction:row;align-items:center;overflow-x:auto;padding:10px}
+  .nav{flex-direction:row;flex:none}
+  .side-foot,.cmd-trigger{display:none}
+  .stats{grid-template-columns:1fr 1fr}
+  .grid-2,.grid-vault{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <a class="brand" href="/">
+      <img src="/icon.svg" alt="">
+      <div class="brand-text">
+        <strong>AYVU Brain</strong>
+        <span>v0.1.0 · brain.ayvu.org</span>
+      </div>
+    </a>
+
+    <button type="button" class="cmd-trigger" id="open-palette">
+      <span>Buscar nota ou ação...</span>
+      <span class="kbd">Ctrl K</span>
+    </button>
+
+    <nav class="nav" aria-label="Módulos">
+      <button type="button" data-view="overview" class="active"><span class="nav-left"><span class="nav-dot"></span>Overview & Fios</span><span class="kbd">1</span></button>
+      <button type="button" data-view="vault"><span class="nav-left"><span class="nav-dot"></span>Vault (Notas)</span><span class="kbd">2</span></button>
+      <button type="button" data-view="chat"><span class="nav-left"><span class="nav-dot"></span>Multi-IA Chat</span><span class="kbd">3</span></button>
+      <button type="button" data-view="meetings"><span class="nav-left"><span class="nav-dot"></span>Reuniões</span><span class="kbd">4</span></button>
+      <button type="button" data-view="agents"><span class="nav-left"><span class="nav-dot"></span>Agentes & Git</span><span class="kbd">5</span></button>
+      <button type="button" data-view="system"><span class="nav-left"><span class="nav-dot"></span>Sistema & Versão</span><span class="kbd">6</span></button>
+    </nav>
+
+    <div class="side-foot">
+      <div class="vault-chip">
+        <b id="side-vault-name">Conectando...</b>
+        <span id="side-vault-path"></span>
+      </div>
+      <a class="side-link" href="/">Ver site e sumário do projeto</a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <h1 id="view-title">Overview & Fios</h1>
+      <div class="top-meta">
+        <span class="pill live" id="top-status">Local-first · 127.0.0.1</span>
+        <span class="pill" id="top-version">v0.1.0</span>
+      </div>
+    </header>
+
+    <div class="viewport">
+      <!-- 1. OVERVIEW -->
+      <section class="view active" id="view-overview">
+        <div class="stats">
+          <div class="stat"><span>Notas no Vault</span><strong id="stat-notes">-</strong></div>
+          <div class="stat"><span>Fios ativos</span><strong id="stat-threads">-</strong></div>
+          <div class="stat"><span>Projetos Git</span><strong id="stat-repos">-</strong></div>
+          <div class="stat"><span>Provedores IA</span><strong>4</strong></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head">
+              <h2>Fios ativos</h2>
+              <button type="button" class="btn sec sm" id="btn-refresh-overview">Atualizar</button>
+            </div>
+            <ul class="list" id="overview-threads"></ul>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <h2>Estado atual (_memory/current-state.md)</h2>
+              <button type="button" class="btn sec sm" id="btn-edit-state">Abrir no editor</button>
+            </div>
+            <pre id="current-state-preview" style="margin:0;white-space:pre-wrap;font:12.5px/1.6 var(--mono);color:var(--muted);max-height:420px;overflow:auto"></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. VAULT -->
+      <section class="view" id="view-vault">
+        <div class="grid-vault">
+          <div class="card" style="display:flex;flex-direction:column;max-height:calc(100vh - 110px)">
+            <label class="field">
+              <span>Filtrar notas (.md)</span>
+              <input type="text" id="vault-filter" placeholder="Buscar por nome ou pasta...">
+            </label>
+            <div id="vault-list" style="overflow:auto;flex:1"></div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <h2 id="editor-path">Selecione uma nota</h2>
+              <div class="row">
+                <button type="button" class="btn sec sm" id="btn-send-chat" disabled>Anexar ao Chat</button>
+                <button type="button" class="btn sm" id="btn-save-note" disabled>Salvar nota</button>
+              </div>
+            </div>
+            <textarea id="note-editor" class="code" spellcheck="false" placeholder="Clique em uma nota na lista ao lado para ler ou editar..."></textarea>
+            <div id="vault-msg" class="callout hidden"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. MULTI-IA CHAT -->
+      <section class="view" id="view-chat">
+        <div class="grid-2" style="grid-template-columns:320px minmax(0,1fr)">
+          <div class="card">
+            <div class="card-head"><h2>Provedor (BYOK)</h2></div>
+            <label class="field">
+              <span>Provedor de IA</span>
+              <select id="chat-provider">
+                <option value="claude">Claude (Anthropic)</option>
+                <option value="openai">OpenAI / Codex</option>
+                <option value="gemini">Gemini (Google)</option>
+                <option value="grok">Grok (xAI)</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Modelo</span>
+              <input type="text" id="chat-model" value="claude-sonnet-4-5">
+            </label>
+            <label class="field">
+              <span>API Key (fica só no navegador)</span>
+              <input type="password" id="chat-key" autocomplete="off" placeholder="sk-ant-... / sk-... / AIza... / xai-...">
+            </label>
+            <label class="field">
+              <span>Anexar contexto do Vault</span>
+              <select id="chat-context"><option value="">Nenhum</option></select>
+            </label>
+            <div class="callout">A requisição passa pelo servidor local (127.0.0.1) direto ao provedor oficial sem erro de CORS. Nenhuma chave é gravada em disco.</div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h2>Conversa conectada ao Brain</h2>
+              <div class="row">
+                <button type="button" class="btn sec sm" id="btn-save-chat-note">Salvar último reply em _sessions/</button>
+                <button type="button" class="btn sec sm" id="btn-clear-chat">Limpar</button>
+              </div>
+            </div>
+            <div class="chat-box" id="chat-box">
+              <div class="msg assistant"><small>AYVU Brain</small>Escolha Claude, OpenAI/Codex, Gemini ou Grok, anexe uma nota ou fio do vault se quiser e mande sua pergunta.</div>
+            </div>
+            <div class="row">
+              <input type="text" id="chat-input" placeholder="Digite sua mensagem e aperte Enter..." style="flex:1">
+              <button type="button" class="btn" id="btn-send">Enviar</button>
+            </div>
+            <div id="chat-err" class="callout err hidden"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. REUNIÕES -->
+      <section class="view" id="view-meetings">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head">
+              <h2>Gravador sem bot</h2>
+              <span class="muted" id="rec-state">Pronto</span>
+            </div>
+            <div class="row" style="margin-bottom:12px">
+              <select id="rec-mode" style="max-width:220px">
+                <option value="both">Sistema / Aba + Microfone</option>
+                <option value="mic">Só Microfone</option>
+              </select>
+              <input type="file" id="rec-upload" accept="audio/*" style="max-width:240px;padding:6px">
+            </div>
+            <div class="rec-box">
+              <div class="row" style="justify-content:space-between">
+                <span class="timer" id="rec-timer">00:00</span>
+                <div class="row">
+                  <button type="button" class="btn sm" id="rec-start">Gravar</button>
+                  <button type="button" class="btn danger sm hidden" id="rec-stop">Parar</button>
+                </div>
+              </div>
+              <canvas id="meter" width="520" height="42"></canvas>
+              <audio id="rec-player" controls class="hidden" style="width:100%"></audio>
+            </div>
+            <label class="field">
+              <span>Título da reunião</span>
+              <input type="text" id="meet-title" placeholder="Discovery call - cliente">
+            </label>
+            <label class="field">
+              <span>Notas rápidas durante a call</span>
+              <textarea id="meet-notes" style="min-height:100px" placeholder="- Objetivo&#10;- Próximos passos"></textarea>
+            </label>
+            <div class="row">
+              <button type="button" class="btn" id="btn-meet-gemini" disabled>Transcrever + Resumir (Gemini)</button>
+              <button type="button" class="btn sec" id="btn-meet-manual">Montar nota manual</button>
+            </div>
+            <div id="meet-msg" class="callout hidden"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h2>Nota da reunião (.md)</h2>
+              <button type="button" class="btn sm" id="btn-meet-save" disabled>Salvar no Vault</button>
+            </div>
+            <textarea id="meet-output" class="code" spellcheck="false" placeholder="A nota estruturada em Markdown aparece aqui..."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. AGENTES & GIT -->
+      <section class="view" id="view-agents">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head"><h2>Novo Git Worktree isolado</h2></div>
+            <label class="field">
+              <span>Repositório em Projetos/</span>
+              <select id="ag-repo"></select>
+            </label>
+            <div class="grid-2">
+              <label class="field">
+                <span>Agente CLI</span>
+                <select id="ag-agent">
+                  <option value="claude">Claude Code (claude)</option>
+                  <option value="codex">Codex CLI (codex)</option>
+                  <option value="agy">Antigravity (agy)</option>
+                  <option value="gemini">Gemini CLI (gemini)</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Slug da tarefa</span>
+                <input type="text" id="ag-task" placeholder="nova-feature">
+              </label>
+            </div>
+            <button type="button" class="btn" id="btn-create-wt">Criar worktree isolado</button>
+            <div id="ag-msg" class="callout hidden"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h2>Repositórios & Worktrees</h2>
+              <button type="button" class="btn sec sm" id="btn-refresh-repos">Atualizar</button>
+            </div>
+            <ul class="list" id="ag-repos"></ul>
+          </div>
+        </div>
+
+        <div class="card hidden" id="ag-diff-card" style="margin-top:18px">
+          <div class="card-head">
+            <h2>Diff ao vivo</h2>
+            <span class="muted" id="ag-diff-path"></span>
+          </div>
+          <div id="ag-diff-view" class="diff-view"></div>
+        </div>
+      </section>
+
+      <!-- 6. SISTEMA -->
+      <section class="view" id="view-system">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head"><h2>Instalação & Versionamento</h2></div>
+            <ul class="list" id="sys-info"></ul>
+            <div class="row" style="margin-top:14px">
+              <button type="button" class="btn sec" id="btn-check-starter">Checar atualização remota</button>
+            </div>
+            <div id="sys-update-msg" class="callout hidden"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h2>Atalhos do teclado</h2></div>
+            <ul class="list">
+              <li class="list-item"><span>Command Palette (buscar nota ou módulo)</span><span class="kbd">Ctrl + K</span></li>
+              <li class="list-item"><span>Alternar módulos</span><span class="kbd">Ctrl + 1 .. 6</span></li>
+              <li class="list-item"><span>Salvar nota aberta no Vault</span><span class="kbd">Ctrl + S</span></li>
+              <li class="list-item"><span>Voltar versão via Git</span><span class="kbd">git checkout v0.1.0</span></li>
+            </ul>
+            <div class="callout">Para instalar como app nativo na barra de tarefas do Windows: no Edge/Chrome clique no ícone de <b>Instalar AYVU Brain</b> na barra de endereço (PWA Window Controls Overlay).</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- COMMAND PALETTE -->
+<div class="modal-bg" id="palette-bg">
+  <div class="modal">
+    <input type="text" id="palette-input" placeholder="Ir para módulo ou abrir nota do vault...">
+    <div class="modal-list" id="palette-list"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const state = { info: null, notes: [], threads: [], repos: [], currentNote: null, chatHistory: [], audioBlob: null };
+const viewTitles = {
+  overview: 'Overview & Fios',
+  vault: 'Vault (Notas Markdown)',
+  chat: 'Multi-IA Chat (Claude, OpenAI/Codex, Gemini, Grok)',
+  meetings: 'Reuniões sem bot',
+  agents: 'Agentes em paralelo (Git Worktrees)',
+  system: 'Sistema, Atalhos & Versionamento'
+};
+const providerModels = {
+  claude: 'claude-sonnet-4-5',
+  openai: 'gpt-4o-mini',
+  gemini: 'gemini-2.5-flash',
+  grok: 'grok-3-mini'
+};
+
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._id); t._id = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+function switchView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === `view-${name}`));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+  $('view-title').textContent = viewTitles[name] || name;
+}
+
+document.querySelectorAll('.nav button').forEach(b => b.addEventListener('click', () => switchView(b.dataset.view)));
+
+async function openNote(path) {
+  const res = await fetch(`/api/vault/note?path=${encodeURIComponent(path)}`);
+  const data = await res.json();
+  if (!res.ok) { toast(data.error || 'Erro ao abrir nota'); return; }
+  state.currentNote = data.path;
+  $('editor-path').textContent = data.path;
+  $('note-editor').value = data.content;
+  $('btn-save-note').disabled = false;
+  $('btn-send-chat').disabled = false;
+  document.querySelectorAll('.note-btn').forEach(b => b.classList.toggle('active', b.dataset.path === path));
+  switchView('vault');
+}
+
+function renderVaultList(filter = '') {
+  const q = filter.toLowerCase().trim();
+  const box = $('vault-list');
+  box.innerHTML = '';
+  const items = state.notes.filter(n => !q || n.path.toLowerCase().includes(q));
+  for (const n of items.slice(0, 120)) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = `note-btn${state.currentNote === n.path ? ' active' : ''}`;
+    btn.dataset.path = n.path;
+    btn.textContent = n.path;
+    btn.onclick = () => openNote(n.path);
+    box.appendChild(btn);
+  }
+}
+
+function renderOverview() {
+  $('stat-notes').textContent = state.notes.length;
+  $('stat-threads').textContent = state.threads.length;
+  $('stat-repos').textContent = state.repos.length;
+  const ul = $('overview-threads');
+  ul.innerHTML = '';
+  for (const t of state.threads) {
+    const li = document.createElement('li');
+    li.className = 'list-item';
+    li.innerHTML = `<div style="min-width:0"><div style="font-weight:600;font-size:13.5px"></div><div class="muted" style="font-family:var(--mono);font-size:11.5px"></div></div><div class="row"><span class="badge ${t.owner ? 'warn' : 'ok'}">${t.owner || 'livre'}</span><button type="button" class="btn sec sm">Abrir</button></div>`;
+    li.querySelector('div > div').textContent = t.title;
+    li.querySelector('.muted').textContent = t.path;
+    li.querySelector('button').onclick = () => openNote(t.path);
+    ul.appendChild(li);
+  }
+  const ctx = $('chat-context');
+  const prev = ctx.value;
+  ctx.innerHTML = '<option value="">Nenhum</option>';
+  for (const n of state.notes.slice(0, 80)) {
+    const o = document.createElement('option');
+    o.value = n.path; o.textContent = n.path;
+    ctx.appendChild(o);
+  }
+  if (prev) ctx.value = prev;
+}
+
+function renderRepos() {
+  const ul = $('ag-repos');
+  const sel = $('ag-repo');
+  const prev = sel.value;
+  ul.innerHTML = ''; sel.innerHTML = '';
+  for (const r of state.repos) {
+    const o = document.createElement('option'); o.value = r.name; o.textContent = `${r.name} (${r.branch})`; sel.appendChild(o);
+    const li = document.createElement('li');
+    li.className = 'list-item';
+    li.style.flexDirection = 'column';
+    li.style.alignItems = 'stretch';
+    const top = document.createElement('div');
+    top.className = 'row';
+    top.style.justifyContent = 'space-between';
+    top.innerHTML = `<b>${r.name}</b><div class="row"><span class="badge">${r.branch}</span><span class="badge ${r.dirtyCount ? 'dirty' : 'ok'}">${r.dirtyCount ? r.dirtyCount + ' mod' : 'limpo'}</span><button type="button" class="btn sec sm">Diff</button></div>`;
+    top.querySelector('button').onclick = () => inspectDiff(r.path);
+    li.appendChild(top);
+    const extra = (r.worktrees || []).filter(w => w.path.toLowerCase() !== r.path.toLowerCase());
+    for (const w of extra) {
+      const wr = document.createElement('div');
+      wr.className = 'row';
+      wr.style.justifyContent = 'space-between';
+      wr.style.marginTop = '8px';
+      wr.style.paddingLeft = '12px';
+      wr.style.borderLeft = '2px solid var(--border)';
+      wr.innerHTML = `<span class="muted" style="font-family:var(--mono);font-size:11.5px">${w.branch || w.head}</span><div class="row"><button type="button" class="btn sec sm" data-a="d">Diff</button><button type="button" class="btn sec sm" data-a="t">Terminal</button><button type="button" class="btn danger sm" data-a="r">Remover</button></div>`;
+      wr.querySelector('[data-a="d"]').onclick = () => inspectDiff(w.path);
+      wr.querySelector('[data-a="t"]').onclick = () => launchTerm(w.path);
+      wr.querySelector('[data-a="r"]').onclick = () => removeWt(r.name, w.path);
+      li.appendChild(wr);
+    }
+    ul.appendChild(li);
+  }
+  if (prev) sel.value = prev;
+}
+
+async function inspectDiff(path) {
+  const res = await fetch(`/api/diff?path=${encodeURIComponent(path)}`);
+  const data = await res.json();
+  if (!res.ok) { toast(data.error || 'Erro no diff'); return; }
+  $('ag-diff-card').classList.remove('hidden');
+  $('ag-diff-path').textContent = data.path;
+  const view = $('ag-diff-view');
+  view.innerHTML = '';
+  const text = data.diff || data.status || 'Working tree limpo.';
+  for (const line of text.split('\n')) {
+    const d = document.createElement('div');
+    if (line.startsWith('+') && !line.startsWith('+++')) d.className = 'diff-add';
+    else if (line.startsWith('-') && !line.startsWith('---')) d.className = 'diff-del';
+    else if (line.startsWith('@@') || line.startsWith('diff --git')) d.className = 'diff-hunk';
+    d.textContent = line;
+    view.appendChild(d);
+  }
+}
+
+async function launchTerm(path) {
+  const res = await fetch('/api/launch', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ worktreePath: path }) });
+  if (res.ok) toast('Terminal aberto no worktree.');
+}
+
+async function removeWt(repo, worktreePath) {
+  const res = await fetch('/api/worktree/remove', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ repo, worktreePath }) });
+  const d = await res.json();
+  if (!res.ok) { toast(d.error || 'Erro ao remover'); return; }
+  toast('Worktree removido.');
+  await loadAll();
+}
+
+async function loadAll() {
+  const [info, tree, threads, repos] = await Promise.all([
+    fetch('/api/info').then(r => r.json()),
+    fetch('/api/vault/tree').then(r => r.json()),
+    fetch('/api/threads').then(r => r.json()),
+    fetch('/api/repos').then(r => r.json())
+  ]);
+  state.info = info;
+  state.notes = tree.notes || [];
+  state.threads = threads.items || [];
+  state.repos = repos.items || [];
+
+  $('side-vault-name').textContent = info.vaultName;
+  $('side-vault-path').textContent = info.vaultRoot;
+  $('top-version').textContent = `${info.tag} · ${info.commit}`;
+
+  $('sys-info').innerHTML = `
+    <li class="list-item"><span class="muted">Domínio alvo</span><span class="badge">${info.domain}</span></li>
+    <li class="list-item"><span class="muted">Versão / Commit</span><span class="badge">${info.version} (${info.commit})</span></li>
+    <li class="list-item"><span class="muted">Vault conectado</span><span class="muted" style="font-family:var(--mono)">${info.vaultRoot}</span></li>
+    <li class="list-item"><span class="muted">Pasta de Worktrees</span><span class="muted" style="font-family:var(--mono)">${info.worktreeRoot}</span></li>
+  `;
+
+  renderOverview();
+  renderVaultList($('vault-filter').value);
+  renderRepos();
+
+  const cs = await fetch('/api/vault/note?path=_memory/current-state.md');
+  if (cs.ok) $('current-state-preview').textContent = (await cs.json()).content;
+}
+
+$('vault-filter').addEventListener('input', e => renderVaultList(e.target.value));
+$('btn-refresh-overview').onclick = loadAll;
+$('btn-refresh-repos').onclick = loadAll;
+$('btn-edit-state').onclick = () => openNote('_memory/current-state.md');
+$('btn-send-chat').onclick = () => { if (state.currentNote) { $('chat-context').value = state.currentNote; switchView('chat'); toast('Nota anexada ao contexto.'); } };
+
+$('btn-save-note').onclick = async () => {
+  if (!state.currentNote) return;
+  const res = await fetch('/api/vault/note', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path: state.currentNote, content: $('note-editor').value })
+  });
+  const d = await res.json();
+  if (!res.ok) { $('vault-msg').textContent = d.error; $('vault-msg').className = 'callout err'; return; }
+  $('vault-msg').className = 'callout hidden';
+  toast(`Salvo: ${d.path}`);
+};
+
+// CHAT
+$('chat-provider').addEventListener('change', () => {
+  const p = $('chat-provider').value;
+  $('chat-model').value = providerModels[p];
+  $('chat-key').value = sessionStorage.getItem(`ayvu-key-${p}`) || '';
+});
+
+function appendChat(role, label, text) {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  const sm = document.createElement('small'); sm.textContent = label;
+  div.appendChild(sm);
+  div.appendChild(document.createTextNode(text));
+  $('chat-box').appendChild(div);
+  $('chat-box').scrollTop = $('chat-box').scrollHeight;
+}
+
+async function sendChat() {
+  const text = $('chat-input').value.trim();
+  const provider = $('chat-provider').value;
+  const apiKey = $('chat-key').value.trim();
+  if (!text) return;
+  if (!apiKey) { $('chat-err').textContent = 'Informe a API Key do provedor escolhido.'; $('chat-err').classList.remove('hidden'); return; }
+  $('chat-err').classList.add('hidden');
+  sessionStorage.setItem(`ayvu-key-${provider}`, apiKey);
+  $('chat-input').value = '';
+  state.chatHistory.push({ role: 'user', content: text });
+  appendChat('user', 'Você', text);
+  $('btn-send').disabled = true;
+  try {
+    const res = await fetch('/api/ai/chat', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        provider, apiKey, model: $('chat-model').value.trim(),
+        contextPath: $('chat-context').value || '',
+        messages: state.chatHistory
+      })
+    });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error || 'Erro no provedor');
+    state.chatHistory.push({ role: 'assistant', content: d.reply });
+    appendChat('assistant', `${d.provider}/${d.model}`, d.reply);
+  } catch (err) {
+    $('chat-err').textContent = err.message;
+    $('chat-err').classList.remove('hidden');
+  } finally {
+    $('btn-send').disabled = false;
+  }
+}
+$('btn-send').onclick = sendChat;
+$('chat-input').addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(); });
+$('btn-clear-chat').onclick = () => { state.chatHistory = []; $('chat-box').innerHTML = ''; };
+$('btn-save-chat-note').onclick = async () => {
+  const last = [...state.chatHistory].reverse().find(m => m.role === 'assistant');
+  if (!last) { toast('Nenhuma resposta para salvar.'); return; }
+  const res = await fetch('/api/meetings/save', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title: 'ai-chat-note', content: `---\ntags: [ai-note]\nstatus: active\ncreated: ${new Date().toISOString().slice(0,10)}\n---\n\n# AI Chat Note\n\n${last.content}\n` })
+  });
+  const d = await res.json();
+  toast(res.ok ? `Salvo em ${d.path}` : d.error);
+};
+
+// MEETINGS
+let recorder, chunks = [], streams = [], ctxAudio, timerId, startTs;
+$('rec-start').onclick = async () => {
+  try {
+    chunks = []; streams = [];
+    ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
+    const dest = ctxAudio.createMediaStreamDestination();
+    if ($('rec-mode').value === 'both') {
+      const disp = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+      streams.push(disp); disp.getVideoTracks().forEach(t => t.stop());
+      if (disp.getAudioTracks().length) ctxAudio.createMediaStreamSource(new MediaStream(disp.getAudioTracks())).connect(dest);
+    }
+    const mic = await navigator.mediaDevices.getUserMedia({ audio: true });
+    streams.push(mic); ctxAudio.createMediaStreamSource(mic).connect(dest);
+    recorder = new MediaRecorder(dest.stream, { mimeType: 'audio/webm;codecs=opus', audioBitsPerSecond: 32000 });
+    recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+    recorder.onstop = () => {
+      state.audioBlob = new Blob(chunks, { type: 'audio/webm' });
+      $('rec-player').src = URL.createObjectURL(state.audioBlob);
+      $('rec-player').classList.remove('hidden');
+      $('btn-meet-gemini').disabled = false;
+      clearInterval(timerId);
+      streams.forEach(s => s.getTracks().forEach(t => t.stop()));
+      $('rec-state').textContent = 'Gravado';
+      $('rec-start').classList.remove('hidden'); $('rec-stop').classList.add('hidden');
+    };
+    recorder.start(1000);
+    startTs = Date.now();
+    timerId = setInterval(() => {
+      const s = Math.floor((Date.now() - startTs) / 1000);
+      $('rec-timer').textContent = `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+    }, 300);
+    $('rec-state').textContent = 'Gravando...';
+    $('rec-start').classList.add('hidden'); $('rec-stop').classList.remove('hidden');
+  } catch (e) { toast(e.message || 'Erro ao gravar'); }
+};
+$('rec-stop').onclick = () => { if (recorder && recorder.state !== 'inactive') recorder.stop(); };
+$('rec-upload').onchange = (e) => {
+  const f = e.target.files?.[0];
+  if (!f) return;
+  state.audioBlob = f;
+  $('rec-player').src = URL.createObjectURL(f);
+  $('rec-player').classList.remove('hidden');
+  $('btn-meet-gemini').disabled = false;
+};
+$('btn-meet-manual').onclick = () => {
+  const day = new Date().toISOString().slice(0, 10);
+  const title = $('meet-title').value.trim() || 'Reunião';
+  $('meet-output').value = `---\ntags: [meeting]\nstatus: active\ncreated: ${day}\nupdated: ${day}\n---\n\n# ${title}\n\n## Resumo\n\n## Decisões\n\n## Próximos passos\n\n- [ ] \n\n## Minhas notas\n\n${$('meet-notes').value.trim() || '_Sem notas._'}\n`;
+  $('btn-meet-save').disabled = false;
+};
+$('btn-meet-gemini').onclick = async () => {
+  const key = sessionStorage.getItem('ayvu-key-gemini') || prompt('Cole sua Gemini API key (fica só na sessão):');
+  if (!key || !state.audioBlob) return;
+  sessionStorage.setItem('ayvu-key-gemini', key.trim());
+  $('meet-msg').textContent = 'Transcrevendo e resumindo no Gemini...'; $('meet-msg').className = 'callout';
+  try {
+    const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onloadend = () => res(String(r.result).split(',')[1]); r.onerror = rej; r.readAsDataURL(state.audioBlob); });
+    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key.trim())}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ parts: [{ text: `Transcreva e gere uma nota Markdown limpa em português com YAML frontmatter (tags: [meeting], status: active, created: ${new Date().toISOString().slice(0,10)}) e seções Resumo, Decisões, Próximos passos e Transcrição. Notas manuais do usuário: ${$('meet-notes').value}` }, { inlineData: { mimeType: (state.audioBlob.type || 'audio/webm').split(';')[0], data: b64 } }] }] })
+    });
+    const d = await resp.json();
+    if (!resp.ok) throw new Error(d.error?.message || 'Erro no Gemini');
+    $('meet-output').value = d.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    $('btn-meet-save').disabled = false;
+    $('meet-msg').className = 'callout hidden';
+  } catch (err) {
+    $('meet-msg').textContent = err.message; $('meet-msg').className = 'callout err';
+  }
+};
+$('btn-meet-save').onclick = async () => {
+  const res = await fetch('/api/meetings/save', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title: $('meet-title').value.trim() || 'reuniao', content: $('meet-output').value })
+  });
+  const d = await res.json();
+  toast(res.ok ? `Reunião salva em ${d.path}` : d.error);
+  if (res.ok) loadAll();
+};
+
+// WORKTREES
+$('btn-create-wt').onclick = async () => {
+  const res = await fetch('/api/worktree/create', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ repo: $('ag-repo').value, agent: $('ag-agent').value, task: $('ag-task').value.trim() || 'task' })
+  });
+  const d = await res.json();
+  if (!res.ok) { $('ag-msg').textContent = d.error; $('ag-msg').className = 'callout err'; return; }
+  $('ag-msg').textContent = `Criado: ${d.branch} em ${d.path}`; $('ag-msg').className = 'callout';
+  await loadAll();
+};
+
+// SYSTEM CHECK
+$('btn-check-starter').onclick = async () => {
+  const res = await fetch('/api/starter/check');
+  const d = await res.json();
+  $('sys-update-msg').textContent = res.ok ? `Última release pública na Vercel: v${d.version} (${d.files} arquivos, SHA-256 ${d.sha256.slice(0,12)}...)` : (d.error || 'Falha');
+  $('sys-update-msg').className = res.ok ? 'callout' : 'callout err';
+};
+
+// COMMAND PALETTE & SHORTCUTS
+function renderPalette(q = '') {
+  const list = $('palette-list');
+  list.innerHTML = '';
+  const term = q.toLowerCase().trim();
+  const entries = [
+    ...Object.entries(viewTitles).map(([k, v]) => ({ label: `Ir para: ${v}`, meta: 'módulo', run: () => switchView(k) })),
+    ...state.notes.map(n => ({ label: n.path, meta: n.folder, run: () => openNote(n.path) }))
+  ].filter(e => !term || e.label.toLowerCase().includes(term)).slice(0, 14);
+  for (const e of entries) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'modal-item';
+    b.innerHTML = `<span></span><span class="kbd">${e.meta}</span>`;
+    b.firstChild.textContent = e.label;
+    b.onclick = () => { $('palette-bg').classList.remove('open'); e.run(); };
+    list.appendChild(b);
+  }
+}
+$('open-palette').onclick = () => { $('palette-bg').classList.add('open'); $('palette-input').value = ''; renderPalette(''); $('palette-input').focus(); };
+$('palette-bg').onclick = (e) => { if (e.target === $('palette-bg')) $('palette-bg').classList.remove('open'); };
+$('palette-input').addEventListener('input', e => renderPalette(e.target.value));
+
+window.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); $('open-palette').click(); }
+  if (e.key === 'Escape') $('palette-bg').classList.remove('open');
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's' && state.currentNote) { e.preventDefault(); $('btn-save-note').click(); }
+  const map = { '1': 'overview', '2': 'vault', '3': 'chat', '4': 'meetings', '5': 'agents', '6': 'system' };
+  if ((e.ctrlKey || e.metaKey) && map[e.key]) { e.preventDefault(); switchView(map[e.key]); }
+});
+
+loadAll();
+</script>
+</body>
+</html>

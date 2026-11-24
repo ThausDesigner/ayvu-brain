@@ -1,0 +1,18 @@
+{
+  "name": "AYVU Brain",
+  "short_name": "AYVU Brain",
+  "description": "Local-first Second Brain workspace: Markdown vault, threads, bot-free meetings, parallel coding agents and multi-AI.",
+  "start_url": "/app",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#09090B",
+  "theme_color": "#09090B",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

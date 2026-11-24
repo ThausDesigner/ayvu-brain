@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="pt-BR" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#09090B">
+<meta name="description" content="AYVU Brain: aplicativo local-first do seu Segundo Cérebro. Notas Markdown, fios multi-IA, reuniões sem bot, Git worktrees e conexão com Claude, Codex, Gemini e Grok.">
+<title>AYVU Brain · Seu Segundo Cérebro como aplicativo local</title>
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090B;
+  --surface:#111114;
+  --surface-2:#18181B;
+  --fg:#FAFAFA;
+  --muted:#A1A1AA;
+  --dim:#71717A;
+  --border:rgba(255,255,255,0.10);
+  --border-strong:rgba(255,255,255,0.22);
+  --white:#FFFFFF;
+  --black:#09090B;
+  --ok:#22C55E;
+  --sans:'Geist',system-ui,-apple-system,sans-serif;
+  --mono:'Geist Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.14) transparent}
+*::-webkit-scrollbar{width:6px;height:6px}
+*::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:999px}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.65 var(--sans)}
+::selection{background:var(--white);color:var(--black)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+
+.nav-wrap{position:sticky;top:0;z-index:30;background:rgba(9,9,11,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1240px;margin:auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.3px}
+.brand img{width:26px;height:26px}
+.brand small{font:11px var(--mono);color:var(--dim);padding:2px 7px;border:1px solid var(--border);border-radius:999px}
+.nav-links{display:flex;gap:22px;align-items:center;font-size:13.5px;color:var(--muted)}
+.nav-links a:hover{color:var(--white)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:8px;border:1px solid var(--white);background:var(--white);color:var(--black);font-size:13.5px;font-weight:600}
+.btn:hover{opacity:.9}
+.btn.sec{background:var(--surface-2);border-color:var(--border);color:var(--fg)}
+.btn.sec:hover{border-color:var(--border-strong)}
+
+.container{max-width:1240px;margin:auto;padding:0 24px}
+section{padding:84px 0;border-bottom:1px solid var(--border)}
+.eyebrow{font:11.5px var(--mono);color:var(--muted);letter-spacing:1.4px;text-transform:uppercase;margin:0 0 14px}
+h1{font:clamp(38px,5vw,64px)/1.04 var(--sans);letter-spacing:-2.2px;font-weight:600;margin:0 0 18px}
+h2{font:clamp(26px,3vw,38px)/1.12 var(--sans);letter-spacing:-1.2px;font-weight:600;margin:0 0 12px}
+.lead{font-size:17px;color:var(--muted);max-width:580px;margin:0 0 28px}
+
+/* HERO */
+.hero{padding:76px 0 88px;display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+.hero-meta{margin-top:20px;display:flex;gap:18px;flex-wrap:wrap;font:12px var(--mono);color:var(--dim)}
+.window-mock{background:var(--surface);border:1px solid var(--border-strong);border-radius:12px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.65)}
+.win-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);background:#0D0D10;font:11.5px var(--mono);color:var(--dim)}
+.win-dots{display:flex;gap:6px}
+.win-dots span{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.16)}
+.win-body{display:grid;grid-template-columns:145px minmax(0,1fr);min-height:310px}
+.win-side{border-right:1px solid var(--border);padding:12px;display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--muted)}
+.win-side .on{background:var(--surface-2);color:var(--white);border:1px solid var(--border);border-radius:6px;padding:6px 8px}
+.win-side span{padding:6px 8px}
+.win-main{padding:16px;display:flex;flex-direction:column;gap:10px}
+.mini-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mini-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px}
+.mini-card small{display:block;font:10px var(--mono);color:var(--dim);text-transform:uppercase}
+.mini-card b{display:block;font-size:18px;margin-top:4px}
+.mini-line{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;font:12px var(--mono);color:var(--muted)}
+.tag-ok{color:#86EFAC;font-size:11px;padding:2px 7px;border-radius:999px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.28)}
+
+/* SUMÁRIO INTERATIVO DA INTERFACE */
+.summary-grid{display:grid;grid-template-columns:340px minmax(0,1fr);gap:24px;margin-top:34px;align-items:start}
+.tab-list{display:flex;flex-direction:column;gap:8px}
+.tab-btn{width:100%;text-align:left;padding:14px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--muted);transition:border-color .15s,background .15s}
+.tab-btn strong{display:flex;justify-content:space-between;align-items:center;color:var(--fg);font-size:14.5px;margin-bottom:4px}
+.tab-btn small{display:block;font-size:12.5px;line-height:1.45}
+.tab-btn[aria-selected=true]{background:var(--surface-2);border-color:var(--white)}
+.kbd{font:11px var(--mono);padding:2px 6px;border-radius:5px;background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--muted)}
+
+.stage-panel{background:var(--surface);border:1px solid var(--border-strong);border-radius:12px;padding:26px}
+.stage-panel h3{font-size:20px;margin:0 0 8px;letter-spacing:-.4px}
+.stage-panel p{color:var(--muted);margin:0 0 18px}
+.stage-screen{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px;font:12.5px/1.65 var(--mono);color:#D4D4D8;margin-bottom:18px;white-space:pre-wrap}
+.bullets{display:grid;grid-template-columns:1fr 1fr;gap:10px;list-style:none;margin:0;padding:0}
+.bullets li{padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--muted)}
+.bullets li b{color:var(--fg);display:block;margin-bottom:2px}
+
+/* PROVEDORES */
+.filter-row{display:flex;gap:8px;margin:22px 0 24px;flex-wrap:wrap}
+.filter-row button{padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:13px}
+.filter-row button[aria-pressed=true]{background:var(--white);color:var(--black);border-color:var(--white);font-weight:600}
+.provider-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.provider-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.provider-card h3{margin:0;font-size:16px}
+.provider-card p{margin:0;font-size:13px;color:var(--muted);flex:1}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.b-chip{font:11px var(--mono);padding:3px 8px;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--muted)}
+.b-chip.on{color:var(--white);border-color:var(--border-strong)}
+
+/* ARQUITETURA + VERSIONAMENTO */
+.arch-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;margin-top:30px;align-items:center}
+.svg-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px}
+.ver-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px}
+.code-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;font:12.5px/1.7 var(--mono);color:#E4E4E7;overflow-x:auto;margin:14px 0}
+details{border-top:1px solid var(--border);padding:12px 0}
+summary{font-weight:600;cursor:pointer;font-size:14px}
+details p{margin:8px 0 0;font-size:13.5px;color:var(--muted)}
+
+/* FOOTER ESTRUTURADO */
+footer{padding:64px 0 36px;background:#070709}
+.foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.foot-col h4{font:11.5px var(--mono);text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin:0 0 14px}
+.foot-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;font-size:13.5px;color:var(--muted)}
+.foot-col a:hover{color:var(--white)}
+.foot-bottom{padding-top:22px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:12px var(--mono);color:var(--dim)}
+
+@media(max-width:980px){
+  .hero,.summary-grid,.arch-grid,.provider-grid,.foot-grid{grid-template-columns:1fr}
+  .bullets{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="nav-wrap">
+  <div class="nav-inner">
+    <a class="brand" href="#">
+      <img src="/icon.svg" alt="">
+      <span>AYVU Brain</span>
+      <small>v0.1.0</small>
+    </a>
+    <nav class="nav-links" aria-label="Navegação principal">
+      <a href="#sumario">Sumário da interface</a>
+      <a href="#provedores">Provedores de IA</a>
+      <a href="#arquitetura">Arquitetura</a>
+      <a href="#versionamento">Versionamento</a>
+    </nav>
+    <a class="btn" href="/app">Abrir AYVU Brain</a>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">BRAIN.AYVU.ORG · LOCAL-FIRST · OPEN-SOURCE</p>
+      <h1>Seu Segundo Cérebro como aplicativo instalado.</h1>
+      <p class="lead">Uma única interface no design system AYVU reunindo notas Markdown, fios multi-IA, gravação de reuniões sem bot, Git worktrees paralelos e conexão direta com Claude, Codex, Gemini e Grok.</p>
+      <div class="actions">
+        <a class="btn" href="/app">Abrir Workspace Local (/app)</a>
+        <a class="btn sec" href="#sumario">Explorar sumário da interface</a>
+      </div>
+      <div class="hero-meta">
+        <span>Zero Electron (~35 MB RAM)</span>
+        <span>Arquivos .md 100% seus</span>
+        <span>Pronto para PWA / Tauri v2</span>
+      </div>
+    </div>
+
+    <div class="window-mock" aria-label="Prévia da interface AYVU Brain">
+      <div class="win-bar">
+        <div class="win-dots"><span></span><span></span><span></span></div>
+        <span>AYVU Brain · 127.0.0.1:4190</span>
+        <span class="kbd">Ctrl K</span>
+      </div>
+      <div class="win-body">
+        <div class="win-side">
+          <div class="on">Overview & Fios</div>
+          <span>Vault (Notas)</span>
+          <span>Multi-IA Chat</span>
+          <span>Reuniões</span>
+          <span>Agentes & Git</span>
+          <span>Sistema</span>
+        </div>
+        <div class="win-main">
+          <div class="mini-cards">
+            <div class="mini-card"><small>Vault</small><b>.md</b></div>
+            <div class="mini-card"><small>Provedores</small><b>4 IAs</b></div>
+            <div class="mini-card"><small>Worktrees</small><b>Git</b></div>
+          </div>
+          <div class="mini-line"><span>_memory/current-state.md</span><span class="tag-ok">sincronizado</span></div>
+          <div class="mini-line"><span>agent/codex-hero-redesign</span><span class="tag-ok">worktree isolado</span></div>
+          <div class="mini-line"><span>2026-11-24-discovery-call.md</span><span class="tag-ok">sem bot</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sumario">
+    <p class="eyebrow">01 · SUMÁRIO DA INTERFACE</p>
+    <h2>Seis módulos, uma única janela e atalhos de teclado.</h2>
+    <p class="lead">Clique em cada módulo para ver o que ele resolve, os atalhos e como conversa com a pasta do seu vault.</p>
+
+    <div class="summary-grid">
+      <div class="tab-list" role="tablist" aria-label="Módulos do AYVU Brain">
+        <button type="button" class="tab-btn" role="tab" aria-selected="true" data-tab="overview">
+          <strong><span>1. Overview & Fios</span><span class="kbd">Ctrl 1</span></strong>
+          <small>Visão do estado atual, fios ativos e qual IA está usando cada frente.</small>
+        </button>
+        <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="vault">
+          <strong><span>2. Vault (Notas Markdown)</span><span class="kbd">Ctrl 2</span></strong>
+          <small>Leitor, busca instantânea e editor direto nos arquivos .md do disco.</small>
+        </button>
+        <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="chat">
+          <strong><span>3. Multi-IA Chat (BYOK)</span><span class="kbd">Ctrl 3</span></strong>
+          <small>Claude, OpenAI/Codex, Gemini e Grok com notas do vault no contexto.</small>
+        </button>
+        <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="meetings">
+          <strong><span>4. Reuniões sem bot</span><span class="kbd">Ctrl 4</span></strong>
+          <small>Captura áudio do sistema + mic, combina suas notas e salva em _sessions/.</small>
+        </button>
+        <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="agents">
+          <strong><span>5. Agentes & Git Worktrees</span><span class="kbd">Ctrl 5</span></strong>
+          <small>Cria worktrees isolados, exibe diff colorido e abre o terminal da CLI.</small>
+        </button>
+        <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="system">
+          <strong><span>6. Sistema & Atualização</span><span class="kbd">Ctrl 6</span></strong>
+          <small>Diagnóstico, atalhos, checagem remota e controle de versão Git.</small>
+        </button>
+      </div>
+
+      <div class="stage-panel" id="stage-panel">
+        <h3 id="st-title">Overview & Fios</h3>
+        <p id="st-desc">Centraliza o resumo de _memory/current-state.md e lista todos os fios ativos em _sync/fios/ (ou _sync/threads/) sem precisar caçar arquivos.</p>
+        <div class="stage-screen" id="st-screen"></div>
+        <ul class="bullets" id="st-bullets"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="provedores">
+    <p class="eyebrow">02 · PROVEDORES DE IA</p>
+    <h2>Conectado aos 4 principais provedores sem vendor lock-in.</h2>
+    <p class="lead">Suporte a BYOK via API no servidor local (zero erro de CORS, chaves nunca salvas em disco) e lançamento direto das CLIs oficiais em worktrees isolados.</p>
+
+    <div class="filter-row" role="group" aria-label="Filtrar provedores">
+      <button type="button" data-filter="all" aria-pressed="true">Todos (4)</button>
+      <button type="button" data-filter="api" aria-pressed="false">API BYOK no Chat</button>
+      <button type="button" data-filter="cli" aria-pressed="false">CLI Local em Worktrees</button>
+    </div>
+
+    <div class="provider-grid" id="provider-grid">
+      <article class="provider-card" data-caps="api cli">
+        <h3>Claude (Anthropic)</h3>
+        <p>Chat via Anthropic Messages API no painel Multi-IA e execução de tarefas de código via <code>claude</code> (Claude Code) em worktrees isolados.</p>
+        <div class="badges"><span class="b-chip on">API BYOK</span><span class="b-chip on">CLI claude</span></div>
+      </article>
+      <article class="provider-card" data-caps="api cli">
+        <h3>Codex / OpenAI</h3>
+        <p>Chat e transcrição via OpenAI API e execução paralela de engenharia via <code>codex</code> (Codex CLI) com revisão de diff ao vivo.</p>
+        <div class="badges"><span class="b-chip on">API BYOK</span><span class="b-chip on">CLI codex</span></div>
+      </article>
+      <article class="provider-card" data-caps="api cli">
+        <h3>Gemini (Google)</h3>
+        <p>Chat, transcrição e resumo de áudio em uma única chamada via Gemini API, além de <code>agy</code> (Antigravity) e <code>gemini</code> no terminal.</p>
+        <div class="badges"><span class="b-chip on">API + Áudio</span><span class="b-chip on">CLI agy / gemini</span></div>
+      </article>
+      <article class="provider-card" data-caps="api">
+        <h3>Grok (xAI)</h3>
+        <p>Conectado via API oficial da xAI (<code>api.x.ai/v1</code>) direto no painel Multi-IA com contexto do vault. Sem CLI proprietário necessário.</p>
+        <div class="badges"><span class="b-chip on">API xAI BYOK</span><span class="b-chip">OpenAI-compat</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="arquitetura">
+    <p class="eyebrow">03 · ARQUITETURA LOCAL-FIRST</p>
+    <h2>Programa instalado no SO, memória solta em Markdown.</h2>
+    <div class="arch-grid">
+      <div class="svg-card">
+        <svg viewBox="0 0 600 280" width="100%" fill="none" role="img" aria-label="Diagrama da arquitetura AYVU Brain">
+          <rect x="16" y="20" width="170" height="82" rx="10" fill="#18181B" stroke="rgba(255,255,255,0.22)"/>
+          <text x="34" y="52" fill="#FAFAFA" font-family="Geist, sans-serif" font-size="14" font-weight="600">brain.ayvu.org</text>
+          <text x="34" y="74" fill="#A1A1AA" font-family="Geist Mono, monospace" font-size="11">Site, releases e SHA-256</text>
+
+          <rect x="215" y="20" width="170" height="82" rx="10" fill="#FFFFFF"/>
+          <text x="233" y="52" fill="#09090B" font-family="Geist, sans-serif" font-size="14" font-weight="700">AYVU Brain App</text>
+          <text x="233" y="74" fill="#3F3F46" font-family="Geist Mono, monospace" font-size="11">PWA / Tauri · 127.0.0.1</text>
+
+          <rect x="414" y="20" width="170" height="82" rx="10" fill="#18181B" stroke="rgba(255,255,255,0.22)"/>
+          <text x="432" y="52" fill="#FAFAFA" font-family="Geist, sans-serif" font-size="14" font-weight="600">4 Provedores IA</text>
+          <text x="432" y="74" fill="#A1A1AA" font-family="Geist Mono, monospace" font-size="11">Claude·Codex·Gemini·Grok</text>
+
+          <line x1="186" y1="61" x2="215" y2="61" stroke="rgba(255,255,255,0.35)" stroke-dasharray="4 4"/>
+          <line x1="385" y1="61" x2="414" y2="61" stroke="rgba(255,255,255,0.35)"/>
+          <line x1="300" y1="102" x2="300" y2="164" stroke="rgba(255,255,255,0.35)"/>
+
+          <rect x="75" y="164" width="210" height="92" rx="10" fill="#111114" stroke="rgba(255,255,255,0.22)"/>
+          <text x="95" y="196" fill="#FAFAFA" font-family="Geist, sans-serif" font-size="14" font-weight="600">Pasta do Vault (.md)</text>
+          <text x="95" y="218" fill="#A1A1AA" font-family="Geist Mono, monospace" font-size="11">_knowledge · _sync · _sessions</text>
+          <text x="95" y="236" fill="#86EFAC" font-family="Geist Mono, monospace" font-size="10.5">Obsidian + GitHub Privado</text>
+
+          <rect x="315" y="164" width="210" height="92" rx="10" fill="#111114" stroke="rgba(255,255,255,0.22)"/>
+          <text x="335" y="196" fill="#FAFAFA" font-family="Geist, sans-serif" font-size="14" font-weight="600">Git Worktrees isolados</text>
+          <text x="335" y="218" fill="#A1A1AA" font-family="Geist Mono, monospace" font-size="11">~/.second-brain-worktrees/</text>
+          <text x="335" y="236" fill="#93C5FD" font-family="Geist Mono, monospace" font-size="10.5">Fora do Vault e do Drive</text>
+        </svg>
+      </div>
+
+      <div>
+        <div class="ver-box">
+          <h3 style="margin:0 0 8px">Regras de segurança herdadas</h3>
+          <p class="muted" style="margin:0 0 14px">Nenhuma ponte local exposta na internet sem autenticação. O servidor roda exclusivamente em <code>127.0.0.1</code>.</p>
+          <details open>
+            <summary>Nunca varre Drive/ nem node_modules/</summary>
+            <p>A listagem do vault usa uma allowlist fechada das pastas de Markdown, ignorando symlinks e repositórios pesados.</p>
+          </details>
+          <details>
+            <summary>Bloqueio automático de chaves no Markdown</summary>
+            <p>Qualquer tentativa de salvar um arquivo contendo padrões de API key (Anthropic, OpenAI, Gemini, xAI, GitHub) é recusada antes de tocar no disco.</p>
+          </details>
+          <details>
+            <summary>Pronto para virar .exe / .dmg com Tauri v2</summary>
+            <p>A interface já é 100% desacoplada e leve. Quando validada no dia a dia, basta empacotar via GitHub Actions sem sobrecarregar seus 8 GB de RAM.</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="versionamento">
+    <p class="eyebrow">04 · VERSIONAMENTO E ROLLBACK</p>
+    <h2>Cada marco versionado com Git tag para voltar atrás em segundos.</h2>
+    <div class="arch-grid">
+      <div class="ver-box">
+        <h3 style="margin:0 0 6px">Como voltar para uma versão anterior</h3>
+        <p class="muted" style="margin:0">O projeto mora em <code>Projetos/ayvu-brain</code> com repositório Git próprio, separado do vault. Toda versão ganha uma tag imutável.</p>
+        <pre class="code-block"># Listar versões salvas
+git tag -l
+
+# Voltar para a versão inicial v0.1.0
+git checkout v0.1.0
+
+# Voltar para a versão mais recente
+git checkout main</pre>
+      </div>
+      <div class="ver-box">
+        <h3 style="margin:0 0 10px">Histórico de versões</h3>
+        <details open>
+          <summary>v0.1.0 · Base AYVU Brain (Design System + 6 Módulos)</summary>
+          <p>Workspace local unificado em 127.0.0.1:4190, site explicativo com sumário interativo, editor Markdown do vault, chat BYOK (Claude, OpenAI/Codex, Gemini, Grok), gravador de reuniões sem bot e orquestrador de Git worktrees.</p>
+        </details>
+        <details>
+          <summary>Próximo marco planejado · v0.2.0 (Tauri v2 + brain.ayvu.org)</summary>
+          <p>Empacotamento nativo via GitHub Actions (.exe/.dmg), atalho global do SO e publicação da página oficial no domínio brain.ayvu.org.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <a class="brand" href="#" style="margin-bottom:12px">
+          <img src="/icon.svg" alt="">
+          <span>AYVU Brain</span>
+        </a>
+        <p class="muted" style="max-width:320px;margin:0">Workspace local-first da AYVU para operar seu Segundo Cérebro, reuniões e agentes de código sem prender sua memória em plataformas fechadas.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="#sumario">Sumário da interface</a></li>
+          <li><a href="#provedores">Provedores de IA</a></li>
+          <li><a href="#arquitetura">Arquitetura</a></li>
+          <li><a href="#versionamento">Versionamento</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Módulos do App</h4>
+        <ul>
+          <li><a href="/app">Overview & Fios</a></li>
+          <li><a href="/app">Editor de Vault (.md)</a></li>
+          <li><a href="/app">Multi-IA (Claude · Codex · Gemini · Grok)</a></li>
+          <li><a href="/app">Reuniões & Git Worktrees</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Ecossistema</h4>
+        <ul>
+          <li><span>Domínio planejado: brain.ayvu.org</span></li>
+          <li><a href="https://second-brain-starter-sigma.vercel.app" target="_blank" rel="noopener">Second Brain Starter (Vercel)</a></li>
+          <li><span>Licença: MIT (Open-source)</span></li>
+          <li><span>Execução: 100% Local-first</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>AYVU Brain · v0.1.0 · MIT</span>
+      <span>Design System AYVU · Local-first Markdown Memory</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const tabData = {
+  overview: {
+    title: '1. Overview & Fios',
+    desc: 'Lê _memory/current-state.md e todos os fios ativos em _sync/fios/ (ou _sync/threads/), mostrando contadores do vault e qual IA está responsável por cada frente.',
+    screen: `> Vault: Brain (C:\\Users\\matha\\Documents\\Brain)\n> Fios ativos: 11   |   Projetos Git: 17   |   Provedores: 4\n\n[livre]   fio-aurelius-bank.md      -> Abrir no editor\n[livre]   fio-saas-folden.md        -> Abrir no editor\n[claude]  fio-realm.md              -> Abrir no editor`,
+    bullets: [
+      ['Sincronizado com o disco', 'Lê seus arquivos reais sem duplicar dados em banco proprietário.'],
+      ['Acesso em 1 clique', 'Clique em qualquer fio para abrir direto no editor Markdown.']
+    ]
+  },
+  vault: {
+    title: '2. Vault (Notas Markdown)',
+    desc: 'Navegação e busca instantânea somente nas pastas seguras de notas (_knowledge, _sync, _decisions, _sessions, _pipeline), ignorando Drive/ e node_modules/.',
+    screen: `Filtro: "pricing"\n  _knowledge/business/pricing.md\n  _decisions/2026-11-13-precos-servicos-gringos.md\n\n[Ctrl+S] Salvar direto no disco   |   [Anexar ao Chat] Enviar nota como contexto`,
+    bullets: [
+      ['Edição limpa', 'Salva direto no .md preservando compatibilidade total com Obsidian.'],
+      ['Proteção contra segredos', 'Bloqueia o salvamento se detectar chaves de API no texto.']
+    ]
+  },
+  chat: {
+    title: '3. Multi-IA Chat (BYOK)',
+    desc: 'Converse com Claude, OpenAI/Codex, Gemini ou Grok direto da mesma interface, anexando qualquer nota ou fio do vault como contexto.',
+    screen: `Provedor: Claude (claude-sonnet-4-5) | OpenAI | Gemini | Grok (xAI)\nContexto anexado: _memory/current-state.md\n\nProxy local 127.0.0.1 -> API oficial (sem erro de CORS, chave só na sessão)`,
+    bullets: [
+      ['4 provedores unificados', 'Troque de modelo sem perder a conversa nem sair do vault.'],
+      ['Salvar resposta como nota', 'Botão direto para gravar o resultado em _sessions/.']
+    ]
+  },
+  meetings: {
+    title: '4. Reuniões sem bot',
+    desc: 'Captura áudio do sistema/aba e microfone via Web Audio API sem colocar bot na call, combina com suas notas manuais e salva em Markdown.',
+    screen: `[REC 18:42] Sistema/Aba + Microfone (32 kbps Opus)\nNotas manuais: "- Escopo inicial US$ 5k"\n-> Transcrever + Resumir (Gemini) -> _sessions/2026-11-24-discovery-call.md`,
+    bullets: [
+      ['Zero trial, zero bot', 'Roda no seu navegador local com sua própria chave de API.'],
+      ['Pronto para Obsidian', 'Gera frontmatter YAML, Resumo, Decisões, Action Items e Transcrição.']
+    ]
+  },
+  agents: {
+    title: '5. Agentes & Git Worktrees',
+    desc: 'Versão leve do Emdash: lista seus projetos em Projetos/, cria worktrees isolados por agente, mostra diffs coloridos e abre o terminal no diretório certo.',
+    screen: `Repo: aurelius-bank (main) · limpo\n  └─ agent/codex-hero-fix  -> [Diff] [Terminal] [Remover]\n\nWorktrees ficam fora do vault (~/.second-brain-worktrees/)`,
+    bullets: [
+      ['Paralelismo sem conflito', 'Cada agente trabalha na sua própria branch e pasta isolada.'],
+      ['Diff ao vivo', 'Revise alterações linha por linha antes de fazer merge.']
+    ]
+  },
+  system: {
+    title: '6. Sistema, Atalhos & Versão',
+    desc: 'Mostra versão/commit atual, verifica atualizações remotas com SHA-256 e centraliza os atalhos globais do teclado.',
+    screen: `AYVU Brain v0.1.0 · Domínio: brain.ayvu.org\nCtrl+K      Command Palette\nCtrl+1..6   Alternar módulos\nCtrl+S      Salvar nota atual`,
+    bullets: [
+      ['Instalável no Windows', 'Manifest PWA pronto para instalar como janela dedicada no Edge/Chrome.'],
+      ['Rollback garantido', 'Versionado em Git próprio com tags imutáveis (v0.1.0, v0.2.0...).']
+    ]
+  }
+};
+
+function renderTab(key) {
+  const d = tabData[key];
+  document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === key)));
+  document.getElementById('st-title').textContent = d.title;
+  document.getElementById('st-desc').textContent = d.desc;
+  document.getElementById('st-screen').textContent = d.screen;
+  document.getElementById('st-bullets').innerHTML = d.bullets.map(([h, p]) => `<li><b>${h}</b>${p}</li>`).join('');
+}
+document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => renderTab(b.dataset.tab)));
+renderTab('overview');
+
+document.querySelectorAll('[data-filter]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const f = btn.dataset.filter;
+    document.querySelectorAll('[data-filter]').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+    document.querySelectorAll('.provider-card').forEach(card => {
+      const show = f === 'all' || card.dataset.caps.includes(f);
+      card.style.display = show ? 'flex' : 'none';
+    });
+  });
+});
+</script>
+</body>
+</html>
