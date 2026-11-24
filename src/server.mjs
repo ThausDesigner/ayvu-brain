@@ -17,26 +17,6 @@ import {
   readSessionAttachment,
   removeSessionAttachment
 } from './sessions.mjs';
-import {
-  listRecordings,
-  saveRecording,
-  getRecordingMeta,
-  getRecordingFilePath,
-  updateRecordingMeta,
-  renameRecordingVoices,
-  readRecordingFile,
-  deleteRecording,
-  deleteRecordingsBulk
-} from './recordings.mjs';
-import {
-  getOfflineTranscriberStatus,
-  runOfflineTranscription,
-  transcribeLiveChunk,
-  resetLiveTranscription,
-  startSystemAudioCapture,
-  pollSystemAudioCapture,
-  stopSystemAudioCapture
-} from './transcribe-offline.mjs';
 
 const projectRoot = resolve(fileURLToPath(new URL('../', import.meta.url)));
 const publicDir = join(projectRoot, 'public');
@@ -679,7 +659,7 @@ export async function startAyvuBrainServer({
         return;
       }
 
-      if (req.method === 'POST' && url.pathname === '/api/meetings/save') {
+      if (req.method === 'POST' && url.pathname === '/api/notes/save') {
         const body = await readJson(req);
         const saved = await saveUniqueNote({
           vaultRoot: layout.vaultRoot,
@@ -690,133 +670,6 @@ export async function startAyvuBrainServer({
         });
         sendJson(201, { ok: true, ...saved });
         return;
-      }
-
-      if (req.method === 'GET' && url.pathname === '/api/recordings') {
-        const items = await listRecordings(layout.vaultRoot);
-        sendJson(200, { items });
-        return;
-      }
-
-      if (req.method === 'POST' && url.pathname === '/api/recordings') {
-        const body = await readJson(req, 128 * 1024 * 1024);
-        const recording = await saveRecording(layout.vaultRoot, body);
-        sendJson(201, { ok: true, recording });
-        return;
-      }
-
-      if (req.method === 'POST' && url.pathname === '/api/recordings/bulk-delete') {
-        const body = await readJson(req);
-        const result = await deleteRecordingsBulk(layout.vaultRoot, body.ids);
-        sendJson(200, result);
-        return;
-      }
-
-      if (req.method === 'GET' && url.pathname === '/api/transcribe/status') {
-        sendJson(200, await getOfflineTranscriberStatus());
-        return;
-      }
-
-      if (req.method === 'POST' && url.pathname === '/api/transcribe/chunk') {
-        const body = await readJson(req, 8 * 1024 * 1024);
-        const sessionId = String(body.sessionId || 'default');
-        if (body.cmd === 'reset') {
-          const out = await resetLiveTranscription(sessionId);
-          sendJson(200, { ok: true, ...out });
-          return;
-        }
-        const out = await transcribeLiveChunk({
-          sessionId,
-          dataBase64: String(body.dataBase64 || ''),
-          offsetSec: Number(body.offsetSec || 0),
-          language: String(body.language || 'pt'),
-          dualChannel: body.dualChannel !== undefined ? Boolean(body.dualChannel) : true,
-          micOnly: Boolean(body.micOnly)
-        });
-        sendJson(200, { ok: true, segments: out.segments || [] });
-        return;
-      }
-
-      if (req.method === 'POST' && url.pathname === '/api/system-audio/start') {
-        const body = await readJson(req);
-        const out = await startSystemAudioCapture({
-          sessionId: String(body.sessionId || ''),
-          language: String(body.language || 'pt'),
-          model: String(body.model || 'base')
-        });
-        sendJson(200, out);
-        return;
-      }
-
-      if (req.method === 'GET' && url.pathname === '/api/system-audio/poll') {
-        const sid = url.searchParams.get('sessionId') || '';
-        const cursor = Number(url.searchParams.get('cursor') || 0);
-        sendJson(200, pollSystemAudioCapture(sid, cursor));
-        return;
-      }
-
-      if (req.method === 'POST' && url.pathname === '/api/system-audio/stop') {
-        const body = await readJson(req);
-        const out = await stopSystemAudioCapture(String(body.sessionId || ''), Number(body.cursor || 0));
-        sendJson(200, out);
-        return;
-      }
-
-      const recTranscribeMatch = url.pathname.match(/^\/api\/recordings\/([^/]+)\/transcribe$/);
-      if (recTranscribeMatch && req.method === 'POST') {
-        const recId = decodeURIComponent(recTranscribeMatch[1]);
-        const body = await readJson(req);
-        const { mediaPath, meta } = await getRecordingFilePath(layout.vaultRoot, recId);
-        const out = await runOfflineTranscription({
-          inputPath: mediaPath,
-          language: body.language || 'pt',
-          dualChannel: body.dualChannel !== undefined ? Boolean(body.dualChannel) : Boolean(meta.dualChannel),
-          model: body.model || 'small'
-        });
-        const saved = await updateRecordingMeta(layout.vaultRoot, recId, {
-          voices: out.voices || [],
-          participants: (out.voices || []).map(v => v.name),
-          transcript: out.transcript || [],
-          transcribeEngine: out.engine || 'faster-whisper-small-offline'
-        });
-        sendJson(200, { ok: true, recording: saved });
-        return;
-      }
-
-      const recRenameMatch = url.pathname.match(/^\/api\/recordings\/([^/]+)\/rename-voices$/);
-      if (recRenameMatch && req.method === 'POST') {
-        const recId = decodeURIComponent(recRenameMatch[1]);
-        const body = await readJson(req);
-        const saved = await renameRecordingVoices(layout.vaultRoot, recId, body.voiceMap || {});
-        sendJson(200, { ok: true, recording: saved });
-        return;
-      }
-
-      const recMetaMatch = url.pathname.match(/^\/api\/recordings\/([^/]+)\/meta$/);
-      if (recMetaMatch && req.method === 'GET') {
-        const meta = await getRecordingMeta(layout.vaultRoot, decodeURIComponent(recMetaMatch[1]));
-        sendJson(200, { recording: meta });
-        return;
-      }
-
-      const recItemMatch = url.pathname.match(/^\/api\/recordings\/([^/]+)$/);
-      if (recItemMatch) {
-        const recId = decodeURIComponent(recItemMatch[1]);
-        if (req.method === 'GET') {
-          const { buffer, meta } = await readRecordingFile(layout.vaultRoot, recId);
-          res.writeHead(200, {
-            'Content-Type': meta.mimeType || 'video/webm',
-            'Content-Disposition': `inline; filename="${(meta.filename || recId + '.webm').replaceAll('"', '')}"`,
-            'Cache-Control': 'no-store'
-          });
-          res.end(buffer);
-          return;
-        }
-        if (req.method === 'DELETE') {
-          const removed = await deleteRecording(layout.vaultRoot, recId);
-          sendJson(200, removed);
-          return;
-        }
       }
 
       if (req.method === 'GET' && url.pathname === '/api/repos') {
