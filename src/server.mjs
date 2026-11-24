@@ -21,10 +21,14 @@ import {
   listRecordings,
   saveRecording,
   getRecordingMeta,
+  getRecordingFilePath,
+  updateRecordingMeta,
+  renameRecordingVoices,
   readRecordingFile,
   deleteRecording,
   deleteRecordingsBulk
 } from './recordings.mjs';
+import { getOfflineTranscriberStatus, runOfflineTranscription } from './transcribe-offline.mjs';
 
 const projectRoot = resolve(fileURLToPath(new URL('../', import.meta.url)));
 const publicDir = join(projectRoot, 'public');
@@ -697,6 +701,41 @@ export async function startAyvuBrainServer({
         const body = await readJson(req);
         const result = await deleteRecordingsBulk(layout.vaultRoot, body.ids);
         sendJson(200, result);
+        return;
+      }
+
+      if (req.method === 'GET' && url.pathname === '/api/transcribe/status') {
+        sendJson(200, await getOfflineTranscriberStatus());
+        return;
+      }
+
+      const recTranscribeMatch = url.pathname.match(/^\/api\/recordings\/([^/]+)\/transcribe$/);
+      if (recTranscribeMatch && req.method === 'POST') {
+        const recId = decodeURIComponent(recTranscribeMatch[1]);
+        const body = await readJson(req);
+        const { mediaPath, meta } = await getRecordingFilePath(layout.vaultRoot, recId);
+        const out = await runOfflineTranscription({
+          inputPath: mediaPath,
+          language: body.language || 'pt',
+          dualChannel: body.dualChannel !== undefined ? Boolean(body.dualChannel) : Boolean(meta.dualChannel),
+          model: body.model || 'small'
+        });
+        const saved = await updateRecordingMeta(layout.vaultRoot, recId, {
+          voices: out.voices || [],
+          participants: (out.voices || []).map(v => v.name),
+          transcript: out.transcript || [],
+          transcribeEngine: out.engine || 'faster-whisper-small-offline'
+        });
+        sendJson(200, { ok: true, recording: saved });
+        return;
+      }
+
+      const recRenameMatch = url.pathname.match(/^\/api\/recordings\/([^/]+)\/rename-voices$/);
+      if (recRenameMatch && req.method === 'POST') {
+        const recId = decodeURIComponent(recRenameMatch[1]);
+        const body = await readJson(req);
+        const saved = await renameRecordingVoices(layout.vaultRoot, recId, body.voiceMap || {});
+        sendJson(200, { ok: true, recording: saved });
         return;
       }
 

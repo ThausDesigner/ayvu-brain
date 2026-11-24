@@ -77,6 +77,8 @@ export async function saveRecording(vaultRoot, input) {
     mimeType,
     size: buffer.length,
     duration: String(input.duration || '00:00'),
+    dualChannel: Boolean(input.dualChannel),
+    voices: Array.isArray(input.voices) ? input.voices : [],
     participants: Array.isArray(input.participants) ? input.participants.map(String) : [],
     transcript: Array.isArray(input.transcript) ? input.transcript : [],
     notes: String(input.notes || ''),
@@ -86,6 +88,51 @@ export async function saveRecording(vaultRoot, input) {
   };
   await fs.writeFile(metaPath, JSON.stringify(meta, null, 2) + '\n', 'utf8');
   return meta;
+}
+
+export async function updateRecordingMeta(vaultRoot, id, patch) {
+  const { metaPath } = safeRecordingPaths(vaultRoot, id);
+  const current = JSON.parse(await fs.readFile(metaPath, 'utf8'));
+  const updated = {
+    ...current,
+    ...patch,
+    id: current.id,
+    updatedAt: new Date().toISOString()
+  };
+  await fs.writeFile(metaPath, JSON.stringify(updated, null, 2) + '\n', 'utf8');
+  return updated;
+}
+
+export async function renameRecordingVoices(vaultRoot, id, voiceMap) {
+  const { metaPath } = safeRecordingPaths(vaultRoot, id);
+  const current = JSON.parse(await fs.readFile(metaPath, 'utf8'));
+  const map = (voiceMap && typeof voiceMap === 'object') ? voiceMap : {};
+  const transcript = (Array.isArray(current.transcript) ? current.transcript : []).map(seg => {
+    const vid = seg.voiceId || seg.speaker || 'Voz 1';
+    const nextName = String(map[vid] || '').trim() || seg.speaker || vid;
+    return { ...seg, voiceId: vid, speaker: nextName };
+  });
+  const voices = (Array.isArray(current.voices) ? current.voices : []).map(v => {
+    const nextName = String(map[v.voiceId] || '').trim() || v.name || v.voiceId;
+    return { ...v, name: nextName };
+  });
+  const participants = [...new Set(transcript.map(s => s.speaker).filter(Boolean))];
+  const updated = {
+    ...current,
+    voices,
+    participants,
+    transcript,
+    updatedAt: new Date().toISOString()
+  };
+  await fs.writeFile(metaPath, JSON.stringify(updated, null, 2) + '\n', 'utf8');
+  return updated;
+}
+
+export async function getRecordingFilePath(vaultRoot, id) {
+  const meta = await getRecordingMeta(vaultRoot, id);
+  const ext = meta.ext || extname(meta.filename || '.webm') || '.webm';
+  const { mediaPath } = safeRecordingPaths(vaultRoot, id, ext);
+  return { mediaPath, meta };
 }
 
 export async function getRecordingMeta(vaultRoot, id) {

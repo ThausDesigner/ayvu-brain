@@ -377,6 +377,20 @@ body{
 .meet-live-spk{color:#d8c8ff;font-weight:500;flex-shrink:0}
 .meet-live-interim{font-size:11.5px;color:#9ea6c0;font-style:italic;min-height:16px;margin-top:6px}
 .rec-video{width:100%;max-height:220px;border-radius:12px;background:#050608;margin-top:8px;border:1px solid #ffffff12}
+/* Tela de transcrição offline por vozes enumeradas (Voz 1, Voz 2, Voz 3...) */
+.voices-board{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.voices-rename-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));gap:8px}
+.voice-rename-card{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:12px;border:1px solid #ffffff14;background:#101219}
+.voice-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:999px;font-size:10.5px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.voice-rename-card input{flex:1;min-width:0;padding:5px 8px;font-size:12px;border-radius:8px}
+.voice-filter-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.voice-feed{display:flex;flex-direction:column;gap:8px;max-height:380px;overflow:auto;padding-right:2px}
+.voice-utterance{display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:13px;border:1px solid #ffffff10;border-left:3px solid var(--vcol,#b78bfa);background:#0d0f16;transition:background .15s,border-color .15s}
+.voice-utterance:hover{background:#141722;border-color:#ffffff20}
+.voice-utt-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11.5px}
+.voice-utt-time{font-family:var(--mono);font-size:10.5px;color:#9da5bd;background:#ffffff08;border:1px solid #ffffff12;border-radius:6px;padding:2px 6px;cursor:pointer}
+.voice-utt-time:hover{color:#fff;border-color:#b78bfa66}
+.voice-utt-text{font-size:13px;color:#e6e9f5;line-height:1.55}
 /* Dock esquerdo contextual de gravações na página de Reuniões */
 .dock-panel{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
 .dock-panel.hidden{display:none!important}
@@ -504,7 +518,8 @@ body{
               <textarea id="meet-notes" style="min-height:84px" placeholder="- Objetivo&#10;- Próximos passos"></textarea>
             </label>
             <div class="row" style="flex-wrap:wrap;gap:8px">
-              <button type="button" class="btn" id="btn-meet-cli" disabled>Estruturar ata (CLI local)</button>
+              <button type="button" class="btn" id="btn-meet-transcribe-offline" disabled>Transcrever offline (Voz 1, 2, 3...)</button>
+              <button type="button" class="btn sec" id="btn-meet-cli" disabled>Estruturar ata (CLI local)</button>
               <button type="button" class="btn sec" id="btn-meet-manual">Montar nota</button>
             </div>
             <div id="meet-msg" class="callout hidden"></div>
@@ -512,10 +527,28 @@ body{
 
           <div class="card">
             <div class="card-head">
-              <h2>Nota da reunião (.md)</h2>
-              <button type="button" class="btn sm" id="btn-meet-save" disabled>Salvar no Vault</button>
+              <h2>Transcrição por voz & Nota (.md)</h2>
+              <div class="row">
+                <button type="button" class="btn sec sm" id="btn-toggle-meet-md">Ver Markdown</button>
+                <button type="button" class="btn sm" id="btn-meet-save" disabled>Salvar no Vault</button>
+              </div>
             </div>
-            <textarea aria-label="Nota da reunião em Markdown" id="meet-output" class="code" spellcheck="false" placeholder="A nota estruturada em Markdown aparece aqui..."></textarea>
+            <div class="voices-board" id="voices-board">
+              <div>
+                <div class="row" style="justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:6px">
+                  <span style="font-size:12px;color:#b0b1bd">Vozes detectadas — dê o nome de cada pessoa ao final</span>
+                  <button type="button" class="btn sec sm hidden" id="btn-apply-voice-names">Aplicar nomes</button>
+                </div>
+                <div class="voices-rename-grid" id="voices-rename-grid">
+                  <span class="muted" style="font-size:12px">Grave ou abra uma reunião para detectar Voz 1, Voz 2, Voz 3...</span>
+                </div>
+              </div>
+              <div class="voice-filter-bar" id="voice-filter-bar"></div>
+              <div class="voice-feed" id="voice-feed">
+                <div class="empty-state">As falas transcritas separadas por cada voz aparecem aqui.</div>
+              </div>
+            </div>
+            <textarea aria-label="Nota da reunião em Markdown" id="meet-output" class="code hidden" spellcheck="false" style="margin-top:12px;min-height:320px" placeholder="A nota estruturada em Markdown aparece aqui..."></textarea>
           </div>
         </div>
       </section>
@@ -1495,11 +1528,15 @@ $('rec-start').onclick = async () => {
 
     const mode = $('rec-mode').value;
     ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
+    const isDual = (mode === 'screen' || mode === 'both');
     const dest = ctxAudio.createMediaStreamDestination();
+    const merger = isDual ? ctxAudio.createChannelMerger(2) : null;
+    if (merger) merger.connect(dest);
     const analyser = ctxAudio.createAnalyser();
     analyser.fftSize = 128;
 
     let videoTrack = null;
+    let hasSystemAudio = false;
     if (mode === 'screen' || mode === 'both') {
       const disp = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
       streams.push(disp);
@@ -1510,16 +1547,20 @@ $('rec-start').onclick = async () => {
         disp.getVideoTracks().forEach(t => t.stop());
       }
       if (disp.getAudioTracks().length) {
+        hasSystemAudio = true;
         const srcDisp = ctxAudio.createMediaStreamSource(new MediaStream(disp.getAudioTracks()));
-        srcDisp.connect(dest);
+        if (merger) srcDisp.connect(merger, 0, 1); // Canal Direito = Sistema / Chamada
+        else srcDisp.connect(dest);
         srcDisp.connect(analyser);
       }
     }
     const mic = await navigator.mediaDevices.getUserMedia({ audio: true });
     streams.push(mic);
     const srcMic = ctxAudio.createMediaStreamSource(mic);
-    srcMic.connect(dest);
+    if (merger) srcMic.connect(merger, 0, 0); // Canal Esquerdo = Microfone (Voz 1)
+    else srcMic.connect(dest);
     srcMic.connect(analyser);
+    meetingState.lastDualChannel = isDual && hasSystemAudio;
 
     const mixedStream = new MediaStream([
       ...(videoTrack ? [videoTrack] : []),
@@ -1560,7 +1601,11 @@ $('rec-start').onclick = async () => {
       $('meet-output').value = buildMeetingMarkdown();
       $('btn-meet-save').disabled = false;
       $('btn-meet-cli').disabled = false;
-      safeAction(() => saveRecordingToVault(state.audioBlob, mime, $('rec-timer').textContent));
+      $('btn-meet-transcribe-offline').disabled = false;
+      safeAction(async () => {
+        const saved = await saveRecordingToVault(state.audioBlob, mime, $('rec-timer').textContent, '', Boolean(meetingState.lastDualChannel));
+        if (saved?.id) await runOfflineTranscribeForRecording(saved.id);
+      });
     };
 
     meetRecording = true;
@@ -2184,8 +2229,8 @@ document.addEventListener('pointerdown', (e) => {
   if (openRecMenu && !openRecMenu.contains(e.target) && !e.target.closest('.rec-opt-btn')) closeRecMenu();
 });
 
-async function saveRecordingToVault(blob, mimeType, duration = '00:00', fallbackTitle = '') {
-  if (!blob || !state.info) return;
+async function saveRecordingToVault(blob, mimeType, duration = '00:00', fallbackTitle = '', dualChannel = false) {
+  if (!blob || !state.info) return null;
   const dataBase64 = await new Promise((res, rej) => {
     const reader = new FileReader();
     reader.onload = () => res(String(reader.result || '').split(',')[1] || '');
@@ -2200,6 +2245,8 @@ async function saveRecordingToVault(blob, mimeType, duration = '00:00', fallback
       title: $('meet-title').value.trim() || fallbackTitle || 'Reunião',
       mimeType: mimeType || blob.type || 'video/webm',
       duration,
+      dualChannel: Boolean(dualChannel),
+      voices: meetingState.voices || [],
       participants,
       transcript: meetingState.transcript,
       notes: $('meet-notes').value || '',
@@ -2209,8 +2256,10 @@ async function saveRecordingToVault(blob, mimeType, duration = '00:00', fallback
   const d = await r.json();
   if (!r.ok) throw new Error(d.error || 'Erro ao salvar gravação.');
   state.activeRecordingId = d.recording.id;
+  $('btn-meet-transcribe-offline').disabled = false;
   await loadRecordings();
   toast(`Gravação salva: ${d.recording.title}`);
+  return d.recording;
 }
 
 async function loadRecordings() {
@@ -2344,11 +2393,14 @@ async function openRecordingItem(rec) {
       meetingState.speakers = [...new Set([...meta.participants, ...meetingState.speakers])];
       renderSpeakersBar();
     }
+    meetingState.voices = Array.isArray(meta.voices) ? meta.voices : [];
     meetingState.transcript = Array.isArray(meta.transcript) ? meta.transcript : [];
     renderMeetingTranscript();
+    renderVoicesBoard();
     $('meet-output').value = buildMeetingMarkdown();
     $('btn-meet-save').disabled = false;
     $('btn-meet-cli').disabled = false;
+    $('btn-meet-transcribe-offline').disabled = false;
   } catch {}
   renderRecordingsList($('recording-filter')?.value || '');
 }
@@ -2392,6 +2444,210 @@ $('rec-select-all').addEventListener('change', (e) => {
 });
 $('btn-rec-bulk-delete').onclick = () => safeAction(deleteSelectedRecordings);
 $('btn-refresh-sessions').onclick = () => safeAction(() => $('dock-recordings').classList.contains('hidden') ? loadSessions() : loadRecordings());
+
+// TELA DE FALAS POR VOZ ENUMERADA (VOZ 1, VOZ 2, VOZ 3...) + RENOMEAÇÃO EM LOTE + MOTOR OFFLINE
+const VOICE_COLORS = ['#ff7eb6', '#6eb6ff', '#6ef3d6', '#ffb86c', '#b78bfa', '#f9e28b'];
+meetingState.voices = [];
+meetingState.voiceFilter = 'all';
+
+function voiceColor(voiceId, index = 0) {
+  const num = Number(String(voiceId || '').match(/\d+/)?.[0] || index + 1);
+  return VOICE_COLORS[(Math.max(1, num) - 1) % VOICE_COLORS.length];
+}
+
+function seekMeetingMedia(sec) {
+  const s = Number(sec || 0);
+  const vid = $('rec-video-player');
+  const aud = $('rec-player');
+  const target = (vid && !vid.classList.contains('hidden')) ? vid : (aud && !aud.classList.contains('hidden') ? aud : null);
+  if (!target) return;
+  try { target.currentTime = s; target.play().catch(() => {}); } catch {}
+}
+
+function renderVoicesBoard() {
+  const renameGrid = $('voices-rename-grid');
+  const filterBar = $('voice-filter-bar');
+  const feed = $('voice-feed');
+  const applyBtn = $('btn-apply-voice-names');
+  if (!renameGrid || !filterBar || !feed) return;
+
+  const map = new Map();
+  for (const v of meetingState.voices || []) {
+    map.set(v.voiceId, { voiceId: v.voiceId, name: v.name || v.voiceId });
+  }
+  for (const seg of meetingState.transcript || []) {
+    const vid = seg.voiceId || seg.speaker || 'Voz 1';
+    if (!map.has(vid)) map.set(vid, { voiceId: vid, name: seg.speaker || vid });
+  }
+  const voices = [...map.values()];
+
+  renameGrid.replaceChildren();
+  filterBar.replaceChildren();
+  feed.replaceChildren();
+
+  if (!voices.length) {
+    applyBtn?.classList.add('hidden');
+    renameGrid.innerHTML = '<span class="muted" style="font-size:12px">Grave ou abra uma reunião para detectar Voz 1, Voz 2, Voz 3...</span>';
+    feed.innerHTML = '<div class="empty-state">As falas transcritas separadas por cada voz aparecem aqui.</div>';
+    return;
+  }
+
+  applyBtn?.classList.remove('hidden');
+
+  voices.forEach((v, idx) => {
+    const col = voiceColor(v.voiceId, idx);
+    const card = document.createElement('div');
+    card.className = 'voice-rename-card';
+    const badge = document.createElement('span');
+    badge.className = 'voice-badge';
+    badge.style.background = col + '22';
+    badge.style.color = col;
+    badge.style.border = `1px solid ${col}55`;
+    badge.textContent = v.voiceId;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.dataset.voiceId = v.voiceId;
+    input.value = v.name === v.voiceId ? '' : v.name;
+    input.placeholder = `Nome da ${v.voiceId}`;
+    input.ariaLabel = `Nome para ${v.voiceId}`;
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); safeAction(applyVoiceNames); } });
+    card.append(badge, input);
+    renameGrid.append(card);
+  });
+
+  // Filtros por voz
+  const mkFilter = (key, label) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'mcp-cat-btn' + (meetingState.voiceFilter === key ? ' active' : '');
+    b.textContent = label;
+    b.onclick = () => { meetingState.voiceFilter = key; renderVoicesBoard(); };
+    filterBar.append(b);
+  };
+  mkFilter('all', `Todas (${meetingState.transcript.length})`);
+  voices.forEach(v => {
+    const count = meetingState.transcript.filter(s => (s.voiceId || s.speaker) === v.voiceId).length;
+    mkFilter(v.voiceId, `${v.name || v.voiceId} (${count})`);
+  });
+
+  const visible = meetingState.transcript.filter(s => meetingState.voiceFilter === 'all' || (s.voiceId || s.speaker) === meetingState.voiceFilter);
+  if (!visible.length) {
+    feed.innerHTML = '<div class="empty-state">Nenhuma fala para este filtro.</div>';
+    return;
+  }
+
+  for (const seg of visible) {
+    const vid = seg.voiceId || seg.speaker || 'Voz 1';
+    const col = voiceColor(vid);
+    const utt = document.createElement('div');
+    utt.className = 'voice-utterance';
+    utt.style.setProperty('--vcol', col);
+    const head = document.createElement('div');
+    head.className = 'voice-utt-head';
+    const left = document.createElement('div');
+    left.className = 'row';
+    const badge = document.createElement('span');
+    badge.className = 'voice-badge';
+    badge.style.background = col + '22';
+    badge.style.color = col;
+    badge.style.border = `1px solid ${col}55`;
+    badge.textContent = seg.speaker || vid;
+    left.append(badge);
+    if (seg.speaker && seg.speaker !== vid) {
+      const sub = document.createElement('span');
+      sub.className = 'muted';
+      sub.style.fontSize = '10.5px';
+      sub.textContent = vid;
+      left.append(sub);
+    }
+    const timeBtn = document.createElement('button');
+    timeBtn.type = 'button';
+    timeBtn.className = 'voice-utt-time';
+    timeBtn.textContent = seg.time || '00:00';
+    timeBtn.title = 'Pular gravação para este momento';
+    timeBtn.onclick = () => seekMeetingMedia(seg.start || 0);
+    head.append(left, timeBtn);
+
+    const text = document.createElement('div');
+    text.className = 'voice-utt-text';
+    text.textContent = seg.text;
+
+    utt.append(head, text);
+    feed.append(utt);
+  }
+}
+
+async function applyVoiceNames() {
+  const voiceMap = {};
+  document.querySelectorAll('#voices-rename-grid input[data-voice-id]').forEach(inp => {
+    const vid = inp.dataset.voiceId;
+    const val = inp.value.trim();
+    if (vid) voiceMap[vid] = val || vid;
+  });
+
+  if (state.activeRecordingId) {
+    const r = await fetch(`/api/recordings/${encodeURIComponent(state.activeRecordingId)}/rename-voices`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ voiceMap })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || 'Erro ao renomear vozes.');
+    meetingState.voices = d.recording.voices || [];
+    meetingState.transcript = d.recording.transcript || [];
+  } else {
+    meetingState.voices = (meetingState.voices || []).map(v => ({ ...v, name: voiceMap[v.voiceId] || v.name }));
+    meetingState.transcript = (meetingState.transcript || []).map(s => {
+      const vid = s.voiceId || s.speaker || 'Voz 1';
+      return { ...s, voiceId: vid, speaker: voiceMap[vid] || s.speaker };
+    });
+  }
+  renderMeetingTranscript();
+  renderVoicesBoard();
+  $('meet-output').value = buildMeetingMarkdown();
+  toast('Nomes das vozes aplicados em toda a transcrição.');
+}
+
+async function runOfflineTranscribeForRecording(recId) {
+  const id = recId || state.activeRecordingId;
+  if (!id) { toast('Grave ou selecione uma reunião primeiro.'); return; }
+  $('btn-meet-transcribe-offline').disabled = true;
+  $('meet-msg').textContent = 'Transcrevendo e separando Voz 1, Voz 2, Voz 3... 100% offline (sem API)...';
+  $('meet-msg').className = 'callout';
+  try {
+    const r = await fetch(`/api/recordings/${encodeURIComponent(id)}/transcribe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ language: $('meet-lang')?.value || 'pt-BR' })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || 'Falha na transcrição offline.');
+    meetingState.voices = d.recording.voices || [];
+    meetingState.transcript = d.recording.transcript || [];
+    meetingState.voiceFilter = 'all';
+    renderMeetingTranscript();
+    renderVoicesBoard();
+    $('meet-output').value = buildMeetingMarkdown();
+    $('btn-meet-save').disabled = false;
+    $('btn-meet-cli').disabled = false;
+    $('meet-msg').className = 'callout hidden';
+    toast(`Transcrição offline concluída: ${meetingState.voices.length} voz(es) detectada(s).`);
+  } catch (err) {
+    $('meet-msg').textContent = err.message;
+    $('meet-msg').className = 'callout err';
+  } finally {
+    $('btn-meet-transcribe-offline').disabled = false;
+  }
+}
+
+$('btn-apply-voice-names').onclick = () => safeAction(applyVoiceNames);
+$('btn-meet-transcribe-offline').onclick = () => safeAction(() => runOfflineTranscribeForRecording(state.activeRecordingId));
+$('btn-toggle-meet-md').onclick = () => {
+  const showingMd = !$('meet-output').classList.contains('hidden');
+  $('meet-output').classList.toggle('hidden', showingMd);
+  $('voices-board').classList.toggle('hidden', !showingMd);
+  $('btn-toggle-meet-md').textContent = showingMd ? 'Ver Markdown' : 'Ver Falas por voz';
+};
 
 initAuthGate();
 loadAll();loadCliStatus();loadSessions();loadRecordings();loadMcpCatalog();
