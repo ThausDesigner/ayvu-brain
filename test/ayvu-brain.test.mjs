@@ -35,6 +35,17 @@ test('AYVU Brain serves site, app, vault tree, note save and rejects secrets or 
     const info = await (await fetch(`${running.url}/api/info`)).json();
     assert.equal(info.domain, 'brain.ayvu.org');
     assert.equal(info.threadsDir, '_sync/fios');
+    assert.equal(info.voiceShortcut, 'Ctrl+Space');
+
+    const vAdd = await fetch(`${running.url}/api/voice/history`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: 'Teste de ditado embutido', provider: 'webspeech' })
+    });
+    assert.equal(vAdd.status, 201);
+    const vList = await (await fetch(`${running.url}/api/voice/history`)).json();
+    assert.equal(vList.items.length, 1);
+    assert.equal(vList.items[0].text, 'Teste de ditado embutido');
 
     const tree = await (await fetch(`${running.url}/api/vault/tree`)).json();
     assert.ok(tree.notes.some(n => n.path === '_memory/current-state.md'));

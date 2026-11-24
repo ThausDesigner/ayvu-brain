@@ -3,6 +3,7 @@ node_modules/
 .env.local
 dist/
 .local/
+docs/ui-references/
 *.log
 
 .vercel

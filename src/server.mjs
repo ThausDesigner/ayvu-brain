@@ -253,7 +253,57 @@ async function callProviderChat({ provider, apiKey, model, systemPrompt, message
   throw new Error('Unsupported provider. Use claude, openai, gemini or grok.');
 }
 
-function readJson(req, limit = 3 * 1024 * 1024) {
+async function callVoiceTranscribe({ provider = 'groq', apiKey, audioBase64, mimeType = 'audio/webm', language = '' }) {
+  if (!apiKey || !String(apiKey).trim()) throw new Error('API key is required for BYOK voice transcription.');
+  if (!audioBase64 || typeof audioBase64 !== 'string') throw new Error('Audio payload is required.');
+  const key = String(apiKey).trim();
+  const cleanMime = String(mimeType || 'audio/webm').split(';')[0];
+  const ext = cleanMime.includes('wav') ? 'wav' : cleanMime.includes('mp3') || cleanMime.includes('mpeg') ? 'mp3' : cleanMime.includes('mp4') || cleanMime.includes('m4a') ? 'm4a' : 'webm';
+  const buffer = Buffer.from(audioBase64, 'base64');
+
+  if (provider === 'gemini') {
+    const model = 'gemini-2.5-flash';
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+    const langHint = language ? ` Language hint: ${language}.` : '';
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{
+          parts: [
+            { text: `Transcribe this short voice dictation accurately. Return ONLY the clean spoken text without commentary or markdown.${langHint}` },
+            { inlineData: { mimeType: cleanMime, data: audioBase64 } }
+          ]
+        }]
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || `Gemini transcription error (${res.status})`);
+    const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join(' ').trim() || '';
+    return { text, provider: 'gemini', model };
+  }
+
+  if (provider === 'groq' || provider === 'openai') {
+    const base = provider === 'groq' ? 'https://api.groq.com/openai/v1' : 'https://api.openai.com/v1';
+    const model = provider === 'groq' ? 'whisper-large-v3-turbo' : 'gpt-4o-mini-transcribe';
+    const form = new FormData();
+    form.append('file', new Blob([buffer], { type: cleanMime }), `dictation.${ext}`);
+    form.append('model', model);
+    if (language && language !== 'auto') form.append('language', language.slice(0, 2).toLowerCase());
+    const res = await fetch(`${base}/audio/transcriptions`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${key}` },
+      body: form
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || `${provider} transcription error (${res.status})`);
+    return { text: String(data.text || '').trim(), provider, model };
+  }
+
+  throw new Error('Unsupported voice provider. Use groq, gemini or openai.');
+}
+
+function readJson(req, limit = 16 * 1024 * 1024) {
   return new Promise((res, rej) => {
     const chunks = [];
     let size = 0;
@@ -278,6 +328,7 @@ export async function startAyvuBrainServer({
   port = Number(process.env.PORT || 4190)
 } = {}) {
   const layout = await detectVaultLayout(vaultRoot);
+  const voiceHistory = [];
 
   const server = createServer(async (req, res) => {
     const sendJson = (status, data) => {
@@ -314,6 +365,7 @@ export async function startAyvuBrainServer({
           tag: tag.ok ? tag.stdout : 'v0.2.0',
           ...layout,
           worktreeRoot,
+          voiceShortcut: 'Ctrl+Space',
           platform: process.platform
         });
         return;
@@ -438,6 +490,39 @@ export async function startAyvuBrainServer({
           messages: body.messages
         });
         sendJson(200, out);
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/voice/transcribe') {
+        const body = await readJson(req);
+        const result = await callVoiceTranscribe({
+          provider: body.provider || 'groq',
+          apiKey: body.apiKey,
+          audioBase64: body.audioBase64,
+          mimeType: body.mimeType,
+          language: body.language || ''
+        });
+        if (result.text) {
+          voiceHistory.unshift({ id: Date.now().toString(36), text: result.text, provider: result.provider, createdAt: new Date().toISOString() });
+          if (voiceHistory.length > 30) voiceHistory.length = 30;
+        }
+        sendJson(200, result);
+        return;
+      }
+
+      if (req.method === 'GET' && url.pathname === '/api/voice/history') {
+        sendJson(200, { items: voiceHistory });
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/voice/history') {
+        const body = await readJson(req);
+        const text = String(body.text || '').trim();
+        if (!text) throw new Error('Voice text cannot be empty.');
+        const item = { id: Date.now().toString(36), text, provider: String(body.provider || 'webspeech'), createdAt: new Date().toISOString() };
+        voiceHistory.unshift(item);
+        if (voiceHistory.length > 30) voiceHistory.length = 30;
+        sendJson(201, { ok: true, item });
         return;
       }
 
