@@ -39,8 +39,9 @@ button{font:inherit;cursor:pointer}
 .nav-wrap{position:sticky;top:0;z-index:30;background:rgba(9,9,11,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
 .nav-inner{max-width:1240px;margin:auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.3px}
-.brand img{width:26px;height:26px}
-.brand small{font:11px var(--mono);color:var(--dim);padding:2px 7px;border:1px solid var(--border);border-radius:999px}
+.brand-box{width:28px;height:28px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:#000;display:inline-flex;align-items:center;justify-content:center;overflow:hidden}
+.brand-box img{width:20px;height:20px}
+.brand small{font:600 10.5px var(--mono);color:#FCD34D;padding:2px 7px;border:1px solid rgba(245,158,11,.35);background:rgba(245,158,11,.14);border-radius:6px}
 .nav-links{display:flex;gap:22px;align-items:center;font-size:13.5px;color:var(--muted)}
 .nav-links a:hover{color:var(--white)}
 
@@ -134,9 +135,9 @@ footer{padding:64px 0 36px;background:#070709}
 <header class="nav-wrap">
   <div class="nav-inner">
     <a class="brand" href="#">
-      <img src="/icon.svg" alt="">
+      <span class="brand-box"><img src="/icon.svg" alt=""></span>
       <span>AYVU Brain</span>
-      <small>v0.1.0</small>
+      <small>v0.2.0 · WINDOWS</small>
     </a>
     <nav class="nav-links" aria-label="Navegação principal">
       <a href="#sumario">Sumário da interface</a>
@@ -155,13 +156,14 @@ footer{padding:64px 0 36px;background:#070709}
       <h1>Seu Segundo Cérebro como aplicativo instalado.</h1>
       <p class="lead">Uma única interface no design system AYVU reunindo notas Markdown, fios multi-IA, gravação de reuniões sem bot, Git worktrees paralelos e conexão direta com Claude, Codex, Gemini e Grok.</p>
       <div class="actions">
-        <a class="btn" href="/app">Abrir Workspace Local (/app)</a>
-        <a class="btn sec" href="#sumario">Explorar sumário da interface</a>
+        <a class="btn" href="/app">Abrir Workspace (/app)</a>
+        <a class="btn sec" href="#versionamento">Instalar no Windows</a>
+        <a class="btn sec" href="#sumario">Sumário da interface</a>
       </div>
       <div class="hero-meta">
+        <span>App instalado no Windows (Menu Iniciar + Desktop)</span>
         <span>Zero Electron (~35 MB RAM)</span>
         <span>Arquivos .md 100% seus</span>
-        <span>Pronto para PWA / Tauri v2</span>
       </div>
     </div>
 
@@ -331,26 +333,26 @@ footer{padding:64px 0 36px;background:#070709}
     <h2>Cada marco versionado com Git tag para voltar atrás em segundos.</h2>
     <div class="arch-grid">
       <div class="ver-box">
-        <h3 style="margin:0 0 6px">Como voltar para uma versão anterior</h3>
-        <p class="muted" style="margin:0">O projeto mora em <code>Projetos/ayvu-brain</code> com repositório Git próprio, separado do vault. Toda versão ganha uma tag imutável.</p>
-        <pre class="code-block"># Listar versões salvas
+        <h3 style="margin:0 0 6px">Instalar no Windows & voltar versão</h3>
+        <p class="muted" style="margin:0">Cria atalho no Menu Iniciar e na Área de Trabalho com o ícone da AYVU e abre como janela desktop dedicada (sem barra de navegador).</p>
+        <pre class="code-block"># Instalar no Windows (Menu Iniciar + Desktop)
+git clone https://github.com/ThausDesigner/ayvu-brain
+cd ayvu-brain
+npm run install:windows
+
+# Voltar para uma versão anterior a qualquer momento
 git tag -l
-
-# Voltar para a versão inicial v0.1.0
-git checkout v0.1.0
-
-# Voltar para a versão mais recente
-git checkout main</pre>
+git checkout v0.1.0</pre>
       </div>
       <div class="ver-box">
         <h3 style="margin:0 0 10px">Histórico de versões</h3>
         <details open>
-          <summary>v0.1.0 · Base AYVU Brain (Design System + 6 Módulos)</summary>
-          <p>Workspace local unificado em 127.0.0.1:4190, site explicativo com sumário interativo, editor Markdown do vault, chat BYOK (Claude, OpenAI/Codex, Gemini, Grok), gravador de reuniões sem bot e orquestrador de Git worktrees.</p>
+          <summary>v0.2.0 · Design System AYVU + Instalador nativo Windows</summary>
+          <p>Símbolo oficial da AYVU, badges amber, ícones minimalistas na sidebar, instalador Windows (Menu Iniciar + Desktop + janela dedicada 1440x900 sem console) e modo prévia web em brain.ayvu.org.</p>
         </details>
         <details>
-          <summary>Próximo marco planejado · v0.2.0 (Tauri v2 + brain.ayvu.org)</summary>
-          <p>Empacotamento nativo via GitHub Actions (.exe/.dmg), atalho global do SO e publicação da página oficial no domínio brain.ayvu.org.</p>
+          <summary>v0.1.0 / v0.1.1 · Base AYVU Brain (6 Módulos + Vercel)</summary>
+          <p>Workspace local unificado em 127.0.0.1:4190, site explicativo com sumário interativo, editor Markdown do vault, chat BYOK (Claude, OpenAI/Codex, Gemini, Grok), gravador de reuniões sem bot e orquestrador de Git worktrees.</p>
         </details>
       </div>
     </div>
@@ -362,7 +364,7 @@ git checkout main</pre>
     <div class="foot-grid">
       <div class="foot-col">
         <a class="brand" href="#" style="margin-bottom:12px">
-          <img src="/icon.svg" alt="">
+          <span class="brand-box"><img src="/icon.svg" alt=""></span>
           <span>AYVU Brain</span>
         </a>
         <p class="muted" style="max-width:320px;margin:0">Workspace local-first da AYVU para operar seu Segundo Cérebro, reuniões e agentes de código sem prender sua memória em plataformas fechadas.</p>
@@ -396,7 +398,7 @@ git checkout main</pre>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>AYVU Brain · v0.1.0 · MIT</span>
+      <span>AYVU Brain · v0.2.0 · MIT</span>
       <span>Design System AYVU · Local-first Markdown Memory</span>
     </div>
   </div>
