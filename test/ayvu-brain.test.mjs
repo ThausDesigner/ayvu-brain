@@ -37,6 +37,10 @@ test('AYVU Brain serves site, app, vault tree, note save and rejects secrets or 
     assert.equal(info.threadsDir, '_sync/fios');
     assert.equal(info.voiceShortcut, 'Ctrl+Space');
 
+    const cliStatus = await (await fetch(`${running.url}/api/cli/status`)).json();
+    assert.equal(cliStatus.engines.length, 3);
+    assert.deepEqual(cliStatus.engines.map(e => e.id), ['claude', 'codex', 'agy']);
+
     const vAdd = await fetch(`${running.url}/api/voice/history`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

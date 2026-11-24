@@ -253,6 +253,73 @@ async function callProviderChat({ provider, apiKey, model, systemPrompt, message
   throw new Error('Unsupported provider. Use claude, openai, gemini or grok.');
 }
 
+function checkCliInstalled(name) {
+  const probe = process.platform === 'win32'
+    ? spawnSync('where.exe', [name], { shell: false, encoding: 'utf8' })
+    : spawnSync('which', [name], { shell: false, encoding: 'utf8' });
+  const first = (probe.stdout || '').split(/\r?\n/).map(s => s.trim()).find(Boolean) || '';
+  return { id: name, installed: !probe.error && probe.status === 0 && Boolean(first), path: first };
+}
+
+function runLocalCliAgent({ engine, prompt, cwd, continueSession = false }) {
+  return new Promise((resolveRun, rejectRun) => {
+    const cleanPrompt = String(prompt || '').trim();
+    if (!cleanPrompt) { rejectRun(new Error('Prompt cannot be empty.')); return; }
+
+    let cmd;
+    let args;
+    const isWin = process.platform === 'win32';
+
+    if (engine === 'claude') {
+      cmd = isWin ? 'cmd.exe' : 'claude';
+      const claudeArgs = continueSession ? ['-c', '-p', cleanPrompt] : ['-p', cleanPrompt];
+      args = isWin ? ['/d', '/s', '/c', 'claude.cmd', ...claudeArgs] : claudeArgs;
+    } else if (engine === 'codex') {
+      cmd = isWin ? 'cmd.exe' : 'codex';
+      const codexArgs = continueSession ? ['exec', 'resume', '--last', cleanPrompt] : ['exec', cleanPrompt];
+      args = isWin ? ['/d', '/s', '/c', 'codex.cmd', ...codexArgs] : codexArgs;
+    } else if (engine === 'agy' || engine === 'gemini') {
+      cmd = isWin ? 'agy.exe' : 'agy';
+      args = continueSession ? ['-c', '-p', cleanPrompt] : ['-p', cleanPrompt];
+    } else {
+      rejectRun(new Error('Unsupported local CLI engine. Use claude, codex or agy.'));
+      return;
+    }
+
+    const started = Date.now();
+    const child = spawn(cmd, args, {
+      cwd,
+      shell: false,
+      stdio: ['ignore', 'pipe', 'pipe'],
+      windowsHide: true
+    });
+
+    let stdout = '';
+    let stderr = '';
+    const timer = setTimeout(() => {
+      child.kill();
+      rejectRun(new Error(`Local ${engine} timed out after 180s.`));
+    }, 180000);
+
+    child.stdout.on('data', chunk => { stdout += chunk.toString('utf8'); });
+    child.stderr.on('data', chunk => { stderr += chunk.toString('utf8'); });
+    child.on('error', err => { clearTimeout(timer); rejectRun(new Error(`Could not start ${engine}: ${err.message}`)); });
+    child.on('close', code => {
+      clearTimeout(timer);
+      if (code !== 0 && !stdout.trim()) {
+        rejectRun(new Error(stderr.trim() || `${engine} exited with code ${code}.`));
+        return;
+      }
+      resolveRun({
+        reply: stdout.trim() || stderr.trim(),
+        engine,
+        cwd,
+        durationMs: Date.now() - started
+      });
+    });
+  });
+}
+
 async function callVoiceTranscribe({ provider = 'groq', apiKey, audioBase64, mimeType = 'audio/webm', language = '' }) {
   if (!apiKey || !String(apiKey).trim()) throw new Error('API key is required for BYOK voice transcription.');
   if (!audioBase64 || typeof audioBase64 !== 'string') throw new Error('Audio payload is required.');
@@ -471,6 +538,35 @@ export async function startAyvuBrainServer({
           launched = true;
         }
         sendJson(200, { ok: true, launched, path: target });
+        return;
+      }
+
+      if (req.method === 'GET' && url.pathname === '/api/cli/status') {
+        const engines = [
+          { ...checkCliInstalled('claude'), label: 'Claude Code', mode: 'local-cli' },
+          { ...checkCliInstalled('codex'), label: 'OpenAI Codex', mode: 'local-cli' },
+          { ...checkCliInstalled('agy'), label: 'Gemini (Antigravity)', mode: 'local-cli' }
+        ];
+        sendJson(200, { engines });
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/cli/chat') {
+        const body = await readJson(req);
+        const engine = String(body.engine || 'agy').toLowerCase();
+        const cwd = body.cwd ? isAllowedRepoPath(body.cwd, layout.projectsDir, worktreeRoot) : layout.vaultRoot;
+        let prompt = String(body.prompt || '').trim();
+        if (body.contextPath) {
+          const { rel } = validateSafeRelPath(layout.vaultRoot, body.contextPath);
+          prompt = `Context file in vault: ${rel}.\n\n${prompt}`;
+        }
+        const result = await runLocalCliAgent({
+          engine,
+          prompt,
+          cwd,
+          continueSession: Boolean(body.continueSession)
+        });
+        sendJson(200, result);
         return;
       }
 
