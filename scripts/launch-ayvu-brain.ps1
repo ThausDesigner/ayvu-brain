@@ -6,16 +6,33 @@ param(
 )
 
 $ErrorActionPreference = 'SilentlyContinue'
-$projectRoot = Split-Path -Parent $PSScriptRoot
-if (-not $VaultPath) {
-  $VaultPath = Split-Path -Parent (Split-Path -Parent $projectRoot)
+$appRoot = Split-Path -Parent $PSScriptRoot
+$installDir = Join-Path $env:LOCALAPPDATA "AYVU Brain"
+$configPath = Join-Path $installDir "config.json"
+
+if ((-not $VaultPath) -and (Test-Path $configPath)) {
+  try {
+    $cfg = Get-Content $configPath -Raw | ConvertFrom-Json
+    if ($cfg.vaultPath) { $VaultPath = $cfg.vaultPath }
+    if ($cfg.port -and $Port -eq 4190) { $Port = [int]$cfg.port }
+  } catch {}
 }
+
+if (-not $VaultPath) {
+  $candidate = Split-Path -Parent (Split-Path -Parent $appRoot)
+  if ((Test-Path (Join-Path $candidate "_sync")) -or (Test-Path (Join-Path $candidate "_memory"))) {
+    $VaultPath = $candidate
+  } else {
+    $VaultPath = Join-Path ([Environment]::GetFolderPath("MyDocuments")) "Brain"
+  }
+}
+
 $url = "http://127.0.0.1:$Port/app"
 
 $listening = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
 if (-not $listening) {
-  $serverScript = Join-Path $projectRoot "src\server.mjs"
-  Start-Process node -WindowStyle Hidden -WorkingDirectory $projectRoot -ArgumentList "`"$serverScript`"", "--vault", "`"$VaultPath`"", "--port", "$Port"
+  $serverScript = Join-Path $appRoot "src\server.mjs"
+  Start-Process node -WindowStyle Hidden -WorkingDirectory $appRoot -ArgumentList "`"$serverScript`"", "--vault", "`"$VaultPath`"", "--port", "$Port"
   for ($i = 0; $i -lt 30; $i++) {
     Start-Sleep -Milliseconds 300
     $listening = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue
@@ -23,13 +40,13 @@ if (-not $listening) {
   }
 }
 
-$profileDir = Join-Path $env:LOCALAPPDATA "AYVU Brain\browser-profile"
+$profileDir = Join-Path $installDir "browser-profile"
 New-Item -ItemType Directory -Force -Path $profileDir | Out-Null
 
 $chrome = "${env:ProgramFiles}\Google\Chrome\Application\chrome.exe"
 $chromeX86 = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
-$edge = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
-$edge64 = "${env:ProgramFiles}\Microsoft\Edge\Application\msedge.exe"
+$edge = "${env:ProgramFiles}\Microsoft\Edge\Application\msedge.exe"
+$edge64 = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
 
 $browser = @($chrome, $chromeX86, $edge64, $edge) | Where-Object { Test-Path $_ } | Select-Object -First 1
 

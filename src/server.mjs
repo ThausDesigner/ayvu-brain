@@ -469,6 +469,7 @@ export async function startAyvuBrainServer({
         '/index.html': ['index.html', 'text/html; charset=utf-8'],
         '/app': ['app.html', 'text/html; charset=utf-8'],
         '/app.html': ['app.html', 'text/html; charset=utf-8'],
+        '/auth.js': ['auth.js', 'text/javascript; charset=utf-8'],
         '/icon.svg': ['icon.svg', 'image/svg+xml'],
         '/manifest.webmanifest': ['manifest.webmanifest', 'application/manifest+json']
       };
