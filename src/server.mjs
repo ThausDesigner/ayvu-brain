@@ -616,10 +616,10 @@ export async function startAyvuBrainServer({
         const tag = runGit(['describe', '--tags', '--abbrev=0'], projectRoot);
         sendJson(200, {
           app: 'AYVU Brain',
-          version: '0.3.0',
+          version: '0.4.0',
           domain: 'brain.ayvu.org',
           commit: git.ok ? git.stdout : 'dev',
-          tag: tag.ok ? tag.stdout : 'v0.3.0',
+          tag: tag.ok ? tag.stdout : 'v0.4.0',
           ...layout,
           appRoot: projectRoot,
           worktreeRoot,
