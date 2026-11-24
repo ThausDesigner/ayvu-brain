@@ -17,6 +17,14 @@ import {
   readSessionAttachment,
   removeSessionAttachment
 } from './sessions.mjs';
+import {
+  listRecordings,
+  saveRecording,
+  getRecordingMeta,
+  readRecordingFile,
+  deleteRecording,
+  deleteRecordingsBulk
+} from './recordings.mjs';
 
 const projectRoot = resolve(fileURLToPath(new URL('../', import.meta.url)));
 const publicDir = join(projectRoot, 'public');
@@ -670,6 +678,53 @@ export async function startAyvuBrainServer({
         });
         sendJson(201, { ok: true, ...saved });
         return;
+      }
+
+      if (req.method === 'GET' && url.pathname === '/api/recordings') {
+        const items = await listRecordings(layout.vaultRoot);
+        sendJson(200, { items });
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/recordings') {
+        const body = await readJson(req, 128 * 1024 * 1024);
+        const recording = await saveRecording(layout.vaultRoot, body);
+        sendJson(201, { ok: true, recording });
+        return;
+      }
+
+      if (req.method === 'POST' && url.pathname === '/api/recordings/bulk-delete') {
+        const body = await readJson(req);
+        const result = await deleteRecordingsBulk(layout.vaultRoot, body.ids);
+        sendJson(200, result);
+        return;
+      }
+
+      const recMetaMatch = url.pathname.match(/^\/api\/recordings\/([^/]+)\/meta$/);
+      if (recMetaMatch && req.method === 'GET') {
+        const meta = await getRecordingMeta(layout.vaultRoot, decodeURIComponent(recMetaMatch[1]));
+        sendJson(200, { recording: meta });
+        return;
+      }
+
+      const recItemMatch = url.pathname.match(/^\/api\/recordings\/([^/]+)$/);
+      if (recItemMatch) {
+        const recId = decodeURIComponent(recItemMatch[1]);
+        if (req.method === 'GET') {
+          const { buffer, meta } = await readRecordingFile(layout.vaultRoot, recId);
+          res.writeHead(200, {
+            'Content-Type': meta.mimeType || 'video/webm',
+            'Content-Disposition': `inline; filename="${(meta.filename || recId + '.webm').replaceAll('"', '')}"`,
+            'Cache-Control': 'no-store'
+          });
+          res.end(buffer);
+          return;
+        }
+        if (req.method === 'DELETE') {
+          const removed = await deleteRecording(layout.vaultRoot, recId);
+          sendJson(200, removed);
+          return;
+        }
       }
 
       if (req.method === 'GET' && url.pathname === '/api/repos') {

@@ -363,7 +363,43 @@ body{
 .user-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px}
 .user-logout{border:0;background:transparent;color:#9da3b8;cursor:pointer;font-size:11px;padding:2px 5px;border-radius:6px}
 .user-logout:hover{color:#fff;background:#ffffff12}
-</style><link rel="stylesheet" href="/router-ui.css"></head><body><a class="skip-link" href="#workspace">Pular para o conteúdo</a><div class="shell"><button class="sidebar-backdrop" id="sidebar-backdrop" aria-label="Fechar sessões" type="button"></button><header class="topbar" aria-label="Barra superior da dashboard"><div class="top-left"><button class="icon-btn mobile-toggle" id="mobile-menu" type="button" aria-label="Abrir sessões" aria-controls="sidebar" aria-expanded="false"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button><a class="brand" href="/" aria-label="AYVU Brain, página inicial"><img src="/icon.svg" width="28" height="28" alt=""><span class="brand-text"><strong>AYVU <em>Brain</em></strong></span></a></div><nav class="nav top-nav" aria-label="Módulos"><button type="button" data-view="overview" class="active" aria-label="Visão geral" aria-current="page"><svg class="ico lucide lucide-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" /></svg><span class="nav-text">Visão geral</span><span class="kbd">1</span></button><button type="button" data-view="vault" aria-label="Vault"><svg class="ico lucide lucide-book-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg><span class="nav-text">Vault</span><span class="kbd">2</span></button><button type="button" data-view="chat" aria-label="Multi-IA Chat"><svg class="ico lucide lucide-messages-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1" /></svg><span class="nav-text">Multi-IA Chat</span><span class="kbd">3</span></button><button type="button" data-view="mcp" aria-label="MCPs"><svg class="ico lucide lucide-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-5" /><path d="M9 8V2" /><path d="M15 8V2" /><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z" /></svg><span class="nav-text">MCPs</span><span class="kbd">4</span></button><button type="button" data-view="meetings" aria-label="Reuniões"><svg class="ico lucide lucide-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></svg><span class="nav-text">Reuniões</span><span class="kbd">5</span></button><button type="button" data-view="agents" aria-label="Agentes & Git"><svg class="ico lucide lucide-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6a9 9 0 0 0-9 9V3" /><circle cx="18" cy="6" r="3" /><circle cx="6" cy="18" r="3" /></svg><span class="nav-text">Agentes & Git</span><span class="kbd">6</span></button><button type="button" data-view="system" aria-label="Sistema"><svg class="ico lucide lucide-settings-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 17H5" /><path d="M19 7h-9" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" /></svg><span class="nav-text">Sistema</span><span class="kbd">7</span></button></nav><div class="top-right"><button class="top-search-btn" type="button" id="open-palette" aria-label="Buscar notas e ações"><svg class="ico lucide lucide-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg><span>Buscar</span><span class="kbd">Ctrl K</span></button><div class="user-chip hidden" id="user-chip"><span class="user-avatar" id="user-avatar" aria-hidden="true">U</span><span class="user-name" id="user-name">Conta</span><button class="user-logout" id="btn-logout" type="button" title="Sair da conta">Sair</button></div><div class="top-meta"><span class="pill live" id="top-status">Conectando ao vault</span><span class="pill" id="top-version">v0.3.0</span></div></div></header><div class="workspace-body"><aside class="sidebar sessions-dock" id="sidebar" aria-label="Sessões conectadas ao vault"><div class="sessions-rail-bar"><button class="icon-btn" id="expand-sidebar" type="button" aria-label="Expandir barra de sessões" title="Expandir sessões"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button><button class="icon-btn" id="rail-new-session" type="button" aria-label="Nova sessão" title="Nova sessão"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg></button></div><div class="sessions-dock-head"><div class="sessions-dock-title"><strong>Sessões · Vault</strong><span class="badge" id="sessions-count">0</span></div><div class="sessions-dock-actions"><button class="icon-btn" id="btn-refresh-sessions" type="button" aria-label="Atualizar sessões" title="Atualizar sessões"><svg class="ico lucide lucide-refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></svg></button><button class="icon-btn" id="collapse-sidebar" type="button" aria-label="Recolher sessões" title="Recolher sessões"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button></div></div><button class="sessions-new-btn" id="btn-new-session" type="button"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Nova sessão CLI</button><input type="text" class="sessions-search" id="session-filter" placeholder="Filtrar sessões no vault..." aria-label="Filtrar sessões no vault"><div class="sessions-list" id="sessions-list"><div class="empty-state">Nenhuma sessão salva ainda.</div></div><div class="side-tree"><div class="tree-heading"><span>Fios recentes</span><span>↳</span></div><div class="tree-items" id="recent-threads"><span class="tree-empty">Conectando...</span></div></div><div class="side-foot"><div class="vault-chip"><span class="vault-avatar" aria-hidden="true">B</span><div class="vault-info"><b id="side-vault-name">Conectando...</b><span id="side-vault-path">Workspace local</span></div></div></div></aside><main class="main" id="workspace" tabindex="-1"><div class="subbar"><div class="breadcrumbs"><span class="workspace-crumb">Workspace</span><svg class="ico lucide lucide-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg><h1 id="view-title">Visão geral</h1></div></div><div class="viewport"><div id="preview-banner" class="callout preview-banner hidden" role="status"><p><b>Workspace desconectado.</b> Inicie o AYVU Brain no computador para acessar seus arquivos.</p><a class="btn sec sm" href="/#instalar">Ver instalação</a></div><section class="view active" id="view-overview"><div class="page-intro"><div><p class="eyebrow">Seu workspace</p><h2>Um lugar para continuar.</h2><p>Contexto, conversas e trabalho. Tudo no seu Brain.</p></div><button class="btn" type="button" data-go="chat"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Nova conversa</button></div>
+/* Reuniões sem API: falantes, transcrição ao vivo e gravação de tela */
+.speakers-bar{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px;align-items:center}
+.speaker-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;border:1px solid #ffffff16;background:#ffffff05;color:#bcc2d8;font:inherit;font-size:11.5px;cursor:pointer;transition:all .18s ease}
+.speaker-chip:hover{border-color:#b78bfa55;color:#fff}
+.speaker-chip.active{border-color:transparent;background:linear-gradient(135deg,#2a263e,#181a26) padding-box,var(--rainbow-conic) border-box;color:#fff;box-shadow:0 4px 14px -6px #ff7eb655,0 4px 14px -6px #6eb6ff55}
+.speaker-chip .spk-dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.speaker-add-row{display:flex;gap:6px;align-items:center;margin-bottom:10px}
+.speaker-add-row input{flex:1;min-width:0;padding:7px 10px;font-size:12px}
+.meet-live-box{margin-top:10px;padding:10px 12px;border-radius:12px;border:1px solid #ffffff12;background:#0a0b10;max-height:170px;overflow:auto;font-size:12px;line-height:1.6;color:#d6dcf0;display:flex;flex-direction:column;gap:6px}
+.meet-live-entry{display:flex;gap:8px;align-items:baseline}
+.meet-live-time{font-family:var(--mono);font-size:10.5px;color:#878ea4;flex-shrink:0}
+.meet-live-spk{color:#d8c8ff;font-weight:500;flex-shrink:0}
+.meet-live-interim{font-size:11.5px;color:#9ea6c0;font-style:italic;min-height:16px;margin-top:6px}
+.rec-video{width:100%;max-height:220px;border-radius:12px;background:#050608;margin-top:8px;border:1px solid #ffffff12}
+/* Dock esquerdo contextual de gravações na página de Reuniões */
+.dock-panel{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
+.dock-panel.hidden{display:none!important}
+.rec-bulk-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 9px;border-radius:11px;border:1px solid #ff7e8838;background:#ff5a6b14;font-size:11px;color:#ffd2d6}
+.rec-bulk-bar.hidden{display:none!important}
+.rec-bulk-bar label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.rec-bulk-bar input{accent-color:#ff7e88}
+.rec-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:13px;border:1px solid #ffffff0a;background:#ffffff03;color:#c9ccda;position:relative;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}
+.rec-item:hover{background:#ffffff08;border-color:#b78bfa44;transform:translateX(2px)}
+.rec-item.active{background:linear-gradient(125deg,#2a2c38,#191b24) padding-box,var(--rainbow-conic) border-box;border-color:transparent;color:#fff}
+.rec-item input.rec-check{accent-color:#b8a5f8;width:14px;height:14px;cursor:pointer;flex-shrink:0}
+.rec-item-body{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}
+.rec-item-title{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rec-item-meta{font-size:10px;color:#898da0;display:flex;gap:6px;flex-wrap:wrap}
+.rec-opt-btn{width:26px;height:26px;border-radius:8px;border:1px solid transparent;background:transparent;color:#9da2b6;display:grid;place-items:center;cursor:pointer;flex-shrink:0}
+.rec-opt-btn:hover{background:#ffffff12;border-color:#ffffff1c;color:#fff}
+.rec-opt-btn .ico{width:14px;height:14px}
+.rec-opt-menu{position:fixed;z-index:110;min-width:148px;padding:5px;border-radius:12px;border:1px solid #ffffff20;background:linear-gradient(145deg,#22242e,#14151c);box-shadow:0 16px 42px #000b;display:flex;flex-direction:column;gap:2px}
+.rec-opt-menu button,.rec-opt-menu a{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:8px;border:0;background:transparent;color:#d8dce9;font:inherit;font-size:12px;text-align:left;text-decoration:none;cursor:pointer}
+.rec-opt-menu button:hover,.rec-opt-menu a:hover{background:#ffffff10;color:#fff}
+.rec-opt-menu button.danger-item{color:#ff9ba3}
+.rec-opt-menu button.danger-item:hover{background:#ff5a6b22;color:#ffd0d5}
+</style><link rel="stylesheet" href="/router-ui.css"></head><body><a class="skip-link" href="#workspace">Pular para o conteúdo</a><div class="shell"><button class="sidebar-backdrop" id="sidebar-backdrop" aria-label="Fechar sessões" type="button"></button><header class="topbar" aria-label="Barra superior da dashboard"><div class="top-left"><button class="icon-btn mobile-toggle" id="mobile-menu" type="button" aria-label="Abrir sessões" aria-controls="sidebar" aria-expanded="false"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button><a class="brand" href="/" aria-label="AYVU Brain, página inicial"><img src="/icon.svg" width="28" height="28" alt=""><span class="brand-text"><strong>AYVU <em>Brain</em></strong></span></a></div><nav class="nav top-nav" aria-label="Módulos"><button type="button" data-view="overview" class="active" aria-label="Visão geral" aria-current="page"><svg class="ico lucide lucide-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" /></svg><span class="nav-text">Visão geral</span><span class="kbd">1</span></button><button type="button" data-view="vault" aria-label="Vault"><svg class="ico lucide lucide-book-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg><span class="nav-text">Vault</span><span class="kbd">2</span></button><button type="button" data-view="chat" aria-label="Multi-IA Chat"><svg class="ico lucide lucide-messages-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1" /></svg><span class="nav-text">Multi-IA Chat</span><span class="kbd">3</span></button><button type="button" data-view="mcp" aria-label="MCPs"><svg class="ico lucide lucide-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-5" /><path d="M9 8V2" /><path d="M15 8V2" /><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z" /></svg><span class="nav-text">MCPs</span><span class="kbd">4</span></button><button type="button" data-view="meetings" aria-label="Reuniões"><svg class="ico lucide lucide-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></svg><span class="nav-text">Reuniões</span><span class="kbd">5</span></button><button type="button" data-view="agents" aria-label="Agentes & Git"><svg class="ico lucide lucide-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6a9 9 0 0 0-9 9V3" /><circle cx="18" cy="6" r="3" /><circle cx="6" cy="18" r="3" /></svg><span class="nav-text">Agentes & Git</span><span class="kbd">6</span></button><button type="button" data-view="system" aria-label="Sistema"><svg class="ico lucide lucide-settings-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 17H5" /><path d="M19 7h-9" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" /></svg><span class="nav-text">Sistema</span><span class="kbd">7</span></button></nav><div class="top-right"><button class="top-search-btn" type="button" id="open-palette" aria-label="Buscar notas e ações"><svg class="ico lucide lucide-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg><span>Buscar</span><span class="kbd">Ctrl K</span></button><div class="user-chip hidden" id="user-chip"><span class="user-avatar" id="user-avatar" aria-hidden="true">U</span><span class="user-name" id="user-name">Conta</span><button class="user-logout" id="btn-logout" type="button" title="Sair da conta">Sair</button></div><div class="top-meta"><span class="pill live" id="top-status">Conectando ao vault</span><span class="pill" id="top-version">v0.3.0</span></div></div></header><div class="workspace-body"><aside class="sidebar sessions-dock" id="sidebar" aria-label="Sessões conectadas ao vault"><div class="sessions-rail-bar"><button class="icon-btn" id="expand-sidebar" type="button" aria-label="Expandir barra de sessões" title="Expandir sessões"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button><button class="icon-btn" id="rail-new-session" type="button" aria-label="Nova sessão" title="Nova sessão"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg></button></div><div class="sessions-dock-head"><div class="sessions-dock-title"><strong id="dock-title">Sessões · Vault</strong><span class="badge" id="sessions-count">0</span><span class="badge hidden" id="recordings-count">0</span></div><div class="sessions-dock-actions"><button class="icon-btn" id="btn-refresh-sessions" type="button" aria-label="Atualizar lista" title="Atualizar"><svg class="ico lucide lucide-refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></svg></button><button class="icon-btn" id="collapse-sidebar" type="button" aria-label="Recolher barra lateral" title="Recolher"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button></div></div><div class="dock-panel" id="dock-sessions"><button class="sessions-new-btn" id="btn-new-session" type="button"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Nova sessão CLI</button><input type="text" class="sessions-search" id="session-filter" placeholder="Filtrar sessões no vault..." aria-label="Filtrar sessões no vault"><div class="sessions-list" id="sessions-list"><div class="empty-state">Nenhuma sessão salva ainda.</div></div></div><div class="dock-panel hidden" id="dock-recordings"><div class="rec-bulk-bar hidden" id="rec-bulk-bar"><label><input type="checkbox" id="rec-select-all"><span id="rec-selected-label">0 selecionada(s)</span></label><button type="button" class="btn danger sm" id="btn-rec-bulk-delete">Apagar selecionadas</button></div><input type="text" class="sessions-search" id="recording-filter" placeholder="Filtrar gravações..." aria-label="Filtrar gravações"><div class="sessions-list" id="recordings-list"><div class="empty-state">Nenhuma gravação salva ainda.</div></div></div><div class="side-tree"><div class="tree-heading"><span>Fios recentes</span><span>↳</span></div><div class="tree-items" id="recent-threads"><span class="tree-empty">Conectando...</span></div></div><div class="side-foot"><div class="vault-chip"><span class="vault-avatar" aria-hidden="true">B</span><div class="vault-info"><b id="side-vault-name">Conectando...</b><span id="side-vault-path">Workspace local</span></div></div></div></aside><main class="main" id="workspace" tabindex="-1"><div class="subbar"><div class="breadcrumbs"><span class="workspace-crumb">Workspace</span><svg class="ico lucide lucide-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg><h1 id="view-title">Visão geral</h1></div></div><div class="viewport"><div id="preview-banner" class="callout preview-banner hidden" role="status"><p><b>Workspace desconectado.</b> Inicie o AYVU Brain no computador para acessar seus arquivos.</p><a class="btn sec sm" href="/#instalar">Ver instalação</a></div><section class="view active" id="view-overview"><div class="page-intro"><div><p class="eyebrow">Seu workspace</p><h2>Um lugar para continuar.</h2><p>Contexto, conversas e trabalho. Tudo no seu Brain.</p></div><button class="btn" type="button" data-go="chat"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Nova conversa</button></div>
 <div class="stats"><div class="stat"><span>Notas no vault</span><span class="stat-icon"><svg class="ico lucide lucide-book-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg></span><strong id="stat-notes">···</strong><small>Arquivos Markdown</small></div><div class="stat"><span>Fios em aberto</span><span class="stat-icon"><svg class="ico lucide lucide-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6a9 9 0 0 0-9 9V3" /><circle cx="18" cy="6" r="3" /><circle cx="6" cy="18" r="3" /></svg></span><strong id="stat-threads">···</strong><small>Frentes de trabalho</small></div><div class="stat"><span>Projetos Git</span><span class="stat-icon"><svg class="ico lucide lucide-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg></span><strong id="stat-repos">···</strong><small>Repositórios locais</small></div><div class="stat"><span>IAs locais</span><span class="stat-icon"><svg class="ico lucide lucide-messages-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1" /></svg></span><strong id="stat-providers">3</strong><small>Claude · Codex · Antigravity</small></div></div>
 <div class="grid-2 overview-grid"><div class="card"><div class="card-head"><h3>Fios do workspace <span class="count-label" id="thread-count"></span></h3><button class="icon-btn" id="btn-refresh-overview" type="button" aria-label="Atualizar workspace" title="Atualizar workspace"><svg class="ico lucide lucide-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" /></svg></button></div><div class="table-head"><span>Frente de trabalho</span><span>Responsável</span></div><ul class="list" id="overview-threads"><li class="empty-state">Lendo os fios do vault...</li></ul></div>
 <div class="card memory-card"><div class="card-head"><h3>Memória do workspace</h3><span class="badge">Markdown</span></div><div class="memory-file"><svg class="ico lucide lucide-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg>_memory/current-state.md</div><pre id="current-state-preview" class="memory-preview">Carregando o estado atual...</pre><div class="memory-footer"><span>Direto do seu vault</span><button class="btn sec sm" id="btn-edit-state" type="button">Abrir nota <svg class="ico lucide lucide-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></button></div></div></div>
@@ -417,42 +453,59 @@ body{
   </div>
   <div id="mcp-msg" class="callout hidden"></div>
   <div class="mcp-grid" id="mcp-grid"><div class="empty-state">Vasculhando Claude, Codex e Antigravity...</div></div>
-</section><section class="view" id="view-meetings"><div class="view-heading"><h2>Reuniões que viram memória.</h2><p>Capture áudio, registre suas notas e salve o que importa.</p></div>
+</section><section class="view" id="view-meetings"><div class="view-heading"><h2>Reuniões que viram memória.</h2><p>Grave tela e áudio da chamada com transcrição ao vivo por participante — sem bot e sem chave de API.</p></div>
         <div class="grid-2">
           <div class="card">
             <div class="card-head">
-              <h2>Gravador sem bot</h2>
+              <h2>Gravação & Transcrição ao vivo</h2>
               <span class="muted" id="rec-state">Pronto</span>
             </div>
-            <div class="row" style="margin-bottom:12px">
-              <select aria-label="Fonte de áudio" id="rec-mode" style="max-width:220px">
-                <option value="both">Sistema / Aba + Microfone</option>
+            <div class="row" style="margin-bottom:10px;flex-wrap:wrap;gap:8px">
+              <select aria-label="Modo de captura" id="rec-mode" style="max-width:240px">
+                <option value="screen">Tela / Aba + Áudio + Microfone</option>
+                <option value="both">Só Áudio (Aba + Microfone)</option>
                 <option value="mic">Só Microfone</option>
               </select>
-              <input type="file" aria-label="Importar arquivo de áudio" id="rec-upload" accept="audio/*" style="max-width:240px;padding:6px">
+              <select aria-label="Idioma da transcrição" id="meet-lang" style="max-width:155px">
+                <option value="pt-BR">Português (BR)</option>
+                <option value="en-US">English (US)</option>
+              </select>
+              <input type="file" aria-label="Importar gravação" id="rec-upload" accept="audio/*,video/*" style="max-width:220px;padding:6px">
             </div>
             <div class="rec-box">
-              <div class="row" style="justify-content:space-between">
+              <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
                 <span class="timer" id="rec-timer">00:00</span>
                 <div class="row">
-                  <button type="button" class="btn sm" id="rec-start">Gravar</button>
+                  <button type="button" class="btn sm" id="rec-start">Gravar + Transcrever</button>
                   <button type="button" class="btn danger sm hidden" id="rec-stop">Parar</button>
+                  <a class="btn sec sm hidden" id="rec-download" download="reuniao.webm">Baixar vídeo</a>
                 </div>
               </div>
               <canvas id="meter" width="520" height="42"></canvas>
-              <audio id="rec-player" controls class="hidden" style="width:100%"></audio>
+              <video id="rec-video-player" controls class="rec-video hidden"></video>
+              <audio id="rec-player" controls class="hidden" style="width:100%;margin-top:8px"></audio>
             </div>
-            <label class="field">
+            <div style="margin-top:12px">
+              <span style="display:block;font-size:12px;color:#b0b1bd;margin-bottom:4px">Quem está falando agora (clique ou Alt + 1..9)</span>
+              <div class="speakers-bar" id="meet-speakers-bar"></div>
+              <div class="speaker-add-row">
+                <input type="text" id="meet-speaker-input" placeholder="Adicionar participante (ex: João, Maria)..." aria-label="Nome do participante">
+                <button type="button" class="btn sec sm" id="btn-add-speaker">Adicionar</button>
+              </div>
+            </div>
+            <div class="meet-live-box" id="meet-live-box"><span class="muted">A transcrição ao vivo com nome de quem fala aparece aqui durante a gravação.</span></div>
+            <div class="meet-live-interim" id="meet-live-interim" aria-live="polite"></div>
+            <label class="field" style="margin-top:10px">
               <span>Título da reunião</span>
               <input type="text" id="meet-title" placeholder="Discovery call - cliente">
             </label>
             <label class="field">
               <span>Notas rápidas durante a call</span>
-              <textarea id="meet-notes" style="min-height:100px" placeholder="- Objetivo&#10;- Próximos passos"></textarea>
+              <textarea id="meet-notes" style="min-height:84px" placeholder="- Objetivo&#10;- Próximos passos"></textarea>
             </label>
-            <div class="row">
-              <button type="button" class="btn" id="btn-meet-gemini" disabled>Transcrever + Resumir (Gemini)</button>
-              <button type="button" class="btn sec" id="btn-meet-manual">Montar nota manual</button>
+            <div class="row" style="flex-wrap:wrap;gap:8px">
+              <button type="button" class="btn" id="btn-meet-cli" disabled>Estruturar ata (CLI local)</button>
+              <button type="button" class="btn sec" id="btn-meet-manual">Montar nota</button>
             </div>
             <div id="meet-msg" class="callout hidden"></div>
           </div>
@@ -637,6 +690,17 @@ function switchView(name) {
   document.querySelector('.viewport').scrollTop = 0;
   history.replaceState(null,'', '#'+name);
   if(name!=='chat') closeChatConfig();
+  syncLeftDock(name);
+}
+
+function syncLeftDock(viewName){
+  const isMeetings=viewName==='meetings';
+  $('dock-sessions')?.classList.toggle('hidden',isMeetings);
+  $('dock-recordings')?.classList.toggle('hidden',!isMeetings);
+  $('sessions-count')?.classList.toggle('hidden',isMeetings);
+  $('recordings-count')?.classList.toggle('hidden',!isMeetings);
+  if($('dock-title'))$('dock-title').textContent=isMeetings?'Gravações':'Sessões · Vault';
+  if(isMeetings)safeAction(loadRecordings);
 }
 
 document.querySelectorAll('.nav button').forEach(b => b.addEventListener('click', () => switchView(b.dataset.view)));
@@ -1223,78 +1287,360 @@ $('btn-save-chat-note').onclick = async () => {
   toast(res.ok ? `Salvo em ${d.path}` : d.error);
 };
 
-// MEETINGS
-let recorder, chunks = [], streams = [], ctxAudio, timerId, startTs;
+// MEETINGS (ZERO API KEY: GRAVAÇÃO DE TELA/ÁUDIO + TRANSCRIÇÃO AO VIVO POR FALANTE + ATA VIA CLI LOCAL)
+let recorder, chunks = [], streams = [], ctxAudio, timerId, startTs, meterRaf, meetRec, meetRecording = false;
+const meetingState = {
+  speakers: ['Thaus', 'Cliente', 'Participante 2'],
+  activeSpeaker: 'Thaus',
+  transcript: []
+};
+
+function formatMeetClock(ms = 0) {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+}
+
+function renderSpeakersBar() {
+  const bar = $('meet-speakers-bar');
+  if (!bar) return;
+  bar.replaceChildren();
+  meetingState.speakers.forEach((name, idx) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'speaker-chip' + (meetingState.activeSpeaker === name ? ' active' : '');
+    b.innerHTML = `<span class="spk-dot"></span><span></span><span class="kbd" style="font-size:9.5px;padding:1px 4px">${idx + 1}</span>`;
+    b.querySelectorAll('span')[1].textContent = name;
+    b.onclick = () => {
+      meetingState.activeSpeaker = name;
+      renderSpeakersBar();
+      if (meetRecording) toast(`Falante ativo: ${name}`);
+    };
+    bar.append(b);
+  });
+}
+
+function addMeetingSpeaker(rawName) {
+  const name = String(rawName || '').trim().slice(0, 40);
+  if (!name) return;
+  if (!meetingState.speakers.includes(name)) meetingState.speakers.push(name);
+  meetingState.activeSpeaker = name;
+  renderSpeakersBar();
+}
+
+function renderMeetingTranscript() {
+  const box = $('meet-live-box');
+  if (!box) return;
+  if (!meetingState.transcript.length) {
+    box.innerHTML = '<span class="muted">A transcrição ao vivo com nome de quem fala aparece aqui durante a gravação.</span>';
+    return;
+  }
+  box.replaceChildren();
+  for (const item of meetingState.transcript) {
+    const row = document.createElement('div');
+    row.className = 'meet-live-entry';
+    row.innerHTML = `<span class="meet-live-time">[${escapeHtml(item.time)}]</span><span class="meet-live-spk">${escapeHtml(item.speaker)}:</span><span></span>`;
+    row.lastChild.textContent = item.text;
+    box.append(row);
+  }
+  box.scrollTop = box.scrollHeight;
+  $('btn-meet-cli').disabled = false;
+  $('btn-meet-save').disabled = false;
+}
+
+function buildMeetingMarkdown() {
+  const day = new Date().toISOString().slice(0, 10);
+  const title = $('meet-title').value.trim() || 'Reunião';
+  const participants = [...new Set(meetingState.transcript.map(t => t.speaker).concat(meetingState.speakers))].filter(Boolean);
+  const transcriptMd = meetingState.transcript.length
+    ? meetingState.transcript.map(t => `- \`[${t.time}]\` **${t.speaker}:** ${t.text}`).join('\n')
+    : '_Sem transcrição capturada._';
+  return [
+    '---',
+    'tags: [meeting]',
+    'status: active',
+    `participants: [${participants.join(', ')}]`,
+    `created: ${day}`,
+    `updated: ${day}`,
+    '---',
+    '',
+    `# ${title}`,
+    '',
+    '## Participantes',
+    ...participants.map(p => `- ${p}`),
+    '',
+    '## Resumo',
+    '',
+    '## Decisões',
+    '',
+    '## Próximos passos',
+    '',
+    '- [ ] ',
+    '',
+    '## Minhas notas',
+    '',
+    $('meet-notes').value.trim() || '_Sem notas._',
+    '',
+    '## Transcrição',
+    '',
+    transcriptMd,
+    ''
+  ].join('\n');
+}
+
+function startMeetingSpeech() {
+  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!Recognition) {
+    $('meet-live-interim').textContent = 'Reconhecimento nativo indisponível neste navegador (gravação de vídeo/áudio continua ativa).';
+    return;
+  }
+  const r = new Recognition();
+  meetRec = r;
+  r.lang = $('meet-lang')?.value || 'pt-BR';
+  r.continuous = true;
+  r.interimResults = true;
+  r.onresult = (e) => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const txt = String(e.results[i][0]?.transcript || '').trim();
+      if (!txt) continue;
+      if (e.results[i].isFinal) {
+        meetingState.transcript.push({
+          time: formatMeetClock(Date.now() - (startTs || Date.now())),
+          speaker: meetingState.activeSpeaker || 'Participante',
+          text: txt
+        });
+        renderMeetingTranscript();
+        $('meet-output').value = buildMeetingMarkdown();
+      } else {
+        interim += (interim ? ' ' : '') + txt;
+      }
+    }
+    $('meet-live-interim').textContent = interim ? `${meetingState.activeSpeaker}: ${interim}` : '';
+  };
+  r.onerror = (e) => {
+    if (e.error === 'no-speech' || e.error === 'aborted') return;
+    $('meet-live-interim').textContent = `Transcrição ao vivo: ${e.error}`;
+  };
+  r.onend = () => {
+    if (meetRecording) {
+      try { r.start(); } catch {}
+    } else {
+      $('meet-live-interim').textContent = '';
+    }
+  };
+  try { r.start(); } catch {}
+}
+
+function stopMeetingSpeech() {
+  meetRecording = false;
+  if (meetRec) {
+    try { meetRec.onend = null; meetRec.stop(); } catch {}
+    meetRec = null;
+  }
+  $('meet-live-interim').textContent = '';
+}
+
+function startAudioMeter(analyser) {
+  const canvas = $('meter');
+  if (!canvas || !analyser) return;
+  const ctx = canvas.getContext('2d');
+  const data = new Uint8Array(analyser.frequencyBinCount);
+  const draw = () => {
+    if (!meetRecording) return;
+    meterRaf = requestAnimationFrame(draw);
+    analyser.getByteFrequencyData(data);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const bars = 48;
+    const step = Math.max(1, Math.floor(data.length / bars));
+    const w = canvas.width / bars;
+    for (let i = 0; i < bars; i++) {
+      const v = data[i * step] / 255;
+      const h = Math.max(3, v * (canvas.height - 6));
+      ctx.fillStyle = `hsl(${(i * 7 + 260) % 360}, 85%, 72%)`;
+      ctx.fillRect(i * w + 2, (canvas.height - h) / 2, Math.max(2, w - 4), h);
+    }
+  };
+  draw();
+}
+
+renderSpeakersBar();
+$('btn-add-speaker').onclick = () => {
+  addMeetingSpeaker($('meet-speaker-input').value);
+  $('meet-speaker-input').value = '';
+  $('meet-speaker-input').focus();
+};
+$('meet-speaker-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); $('btn-add-speaker').click(); }
+});
+window.addEventListener('keydown', (e) => {
+  if (e.altKey && !e.ctrlKey && !e.metaKey && /^[1-9]$/.test(e.key) && $('view-meetings').classList.contains('active')) {
+    const idx = Number(e.key) - 1;
+    if (meetingState.speakers[idx]) {
+      e.preventDefault();
+      meetingState.activeSpeaker = meetingState.speakers[idx];
+      renderSpeakersBar();
+      toast(`Falante ativo: ${meetingState.activeSpeaker}`);
+    }
+  }
+});
+
 $('rec-start').onclick = async () => {
   try {
     chunks = []; streams = [];
+    meetingState.transcript = [];
+    renderMeetingTranscript();
+    $('rec-video-player').classList.add('hidden');
+    $('rec-player').classList.add('hidden');
+    $('rec-download').classList.add('hidden');
+
+    const mode = $('rec-mode').value;
     ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
     const dest = ctxAudio.createMediaStreamDestination();
-    if ($('rec-mode').value === 'both') {
+    const analyser = ctxAudio.createAnalyser();
+    analyser.fftSize = 128;
+
+    let videoTrack = null;
+    if (mode === 'screen' || mode === 'both') {
       const disp = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
-      streams.push(disp); disp.getVideoTracks().forEach(t => t.stop());
-      if (disp.getAudioTracks().length) ctxAudio.createMediaStreamSource(new MediaStream(disp.getAudioTracks())).connect(dest);
+      streams.push(disp);
+      if (mode === 'screen') {
+        videoTrack = disp.getVideoTracks()[0] || null;
+        if (videoTrack) videoTrack.onended = () => { if (recorder && recorder.state !== 'inactive') recorder.stop(); };
+      } else {
+        disp.getVideoTracks().forEach(t => t.stop());
+      }
+      if (disp.getAudioTracks().length) {
+        const srcDisp = ctxAudio.createMediaStreamSource(new MediaStream(disp.getAudioTracks()));
+        srcDisp.connect(dest);
+        srcDisp.connect(analyser);
+      }
     }
     const mic = await navigator.mediaDevices.getUserMedia({ audio: true });
-    streams.push(mic); ctxAudio.createMediaStreamSource(mic).connect(dest);
-    recorder = new MediaRecorder(dest.stream, { mimeType: 'audio/webm;codecs=opus', audioBitsPerSecond: 32000 });
+    streams.push(mic);
+    const srcMic = ctxAudio.createMediaStreamSource(mic);
+    srcMic.connect(dest);
+    srcMic.connect(analyser);
+
+    const mixedStream = new MediaStream([
+      ...(videoTrack ? [videoTrack] : []),
+      ...dest.stream.getAudioTracks()
+    ]);
+    const isVideo = Boolean(videoTrack);
+    const mime = isVideo
+      ? (['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'].find(m => MediaRecorder.isTypeSupported(m)) || 'video/webm')
+      : (['audio/webm;codecs=opus', 'audio/webm'].find(m => MediaRecorder.isTypeSupported(m)) || 'audio/webm');
+
+    recorder = new MediaRecorder(mixedStream, { mimeType: mime });
     recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
     recorder.onstop = () => {
-      state.audioBlob = new Blob(chunks, { type: 'audio/webm' });
-      $('rec-player').src = URL.createObjectURL(state.audioBlob);
-      $('rec-player').classList.remove('hidden');
-      $('btn-meet-gemini').disabled = false;
-      clearInterval(timerId);ctxAudio?.close().catch(()=>{});
+      stopMeetingSpeech();
+      cancelAnimationFrame(meterRaf);
+      state.audioBlob = new Blob(chunks, { type: mime });
+      const blobUrl = URL.createObjectURL(state.audioBlob);
+      if (isVideo) {
+        $('rec-video-player').src = blobUrl;
+        $('rec-video-player').classList.remove('hidden');
+        $('rec-download').textContent = 'Baixar vídeo';
+      } else {
+        $('rec-player').src = blobUrl;
+        $('rec-player').classList.remove('hidden');
+        $('rec-download').textContent = 'Baixar áudio';
+      }
+      const slug = ($('meet-title').value.trim() || 'reuniao').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      $('rec-download').href = blobUrl;
+      $('rec-download').download = `${new Date().toISOString().slice(0, 10)}-${slug}.webm`;
+      $('rec-download').classList.remove('hidden');
+
+      clearInterval(timerId);
+      ctxAudio?.close().catch(() => {});
       streams.forEach(s => s.getTracks().forEach(t => t.stop()));
-      $('rec-state').textContent = 'Gravado';$('rec-upload').disabled=false;$('rec-mode').disabled=false;
+      $('rec-state').textContent = 'Gravado';
+      $('rec-upload').disabled = false; $('rec-mode').disabled = false;
       $('rec-start').classList.remove('hidden'); $('rec-stop').classList.add('hidden');
+      $('meet-output').value = buildMeetingMarkdown();
+      $('btn-meet-save').disabled = false;
+      $('btn-meet-cli').disabled = false;
+      safeAction(() => saveRecordingToVault(state.audioBlob, mime, $('rec-timer').textContent));
     };
-    recorder.start(1000);$('rec-upload').disabled=true;$('rec-mode').disabled=true;
+
+    meetRecording = true;
+    recorder.start(1000);
+    $('rec-upload').disabled = true; $('rec-mode').disabled = true;
     startTs = Date.now();
-    timerId = setInterval(() => {
-      const s = Math.floor((Date.now() - startTs) / 1000);
-      $('rec-timer').textContent = `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
-    }, 300);
-    $('rec-state').textContent = 'Gravando...';
+    timerId = setInterval(() => { $('rec-timer').textContent = formatMeetClock(Date.now() - startTs); }, 300);
+    $('rec-state').textContent = isVideo ? 'Gravando tela + transcrevendo...' : 'Gravando + transcrevendo...';
     $('rec-start').classList.add('hidden'); $('rec-stop').classList.remove('hidden');
-  } catch (e) { streams.forEach(s=>s.getTracks().forEach(t=>t.stop())); await ctxAudio?.close().catch(()=>{}); toast(e.message || 'Erro ao gravar'); }
+    startAudioMeter(analyser);
+    startMeetingSpeech();
+  } catch (e) {
+    stopMeetingSpeech();
+    cancelAnimationFrame(meterRaf);
+    streams.forEach(s => s.getTracks().forEach(t => t.stop()));
+    await ctxAudio?.close().catch(() => {});
+    toast(e.message || 'Erro ao iniciar gravação');
+  }
 };
+
 $('rec-stop').onclick = () => { if (recorder && recorder.state !== 'inactive') recorder.stop(); };
+
 $('rec-upload').onchange = (e) => {
   const f = e.target.files?.[0];
   if (!f) return;
   state.audioBlob = f;
-  $('rec-player').src = URL.createObjectURL(f);
-  $('rec-player').classList.remove('hidden');
-  $('btn-meet-gemini').disabled = false;
+  const blobUrl = URL.createObjectURL(f);
+  if ((f.type || '').startsWith('video/')) {
+    $('rec-video-player').src = blobUrl;
+    $('rec-video-player').classList.remove('hidden');
+    $('rec-player').classList.add('hidden');
+  } else {
+    $('rec-player').src = blobUrl;
+    $('rec-player').classList.remove('hidden');
+    $('rec-video-player').classList.add('hidden');
+  }
+  $('btn-meet-cli').disabled = false;
+  toast('Gravação carregada.');
+  safeAction(() => saveRecordingToVault(f, f.type || 'video/webm', '00:00', f.name.replace(/\.[^.]+$/, '')));
 };
+
 $('btn-meet-manual').onclick = () => {
-  const day = new Date().toISOString().slice(0, 10);
-  const title = $('meet-title').value.trim() || 'Reunião';
-  $('meet-output').value = `---\ntags: [meeting]\nstatus: active\ncreated: ${day}\nupdated: ${day}\n---\n\n# ${title}\n\n## Resumo\n\n## Decisões\n\n## Próximos passos\n\n- [ ] \n\n## Minhas notas\n\n${$('meet-notes').value.trim() || '_Sem notas._'}\n`;
+  $('meet-output').value = buildMeetingMarkdown();
   $('btn-meet-save').disabled = false;
+  $('btn-meet-cli').disabled = false;
 };
-$('btn-meet-gemini').onclick = async () => {
-  const key = providerKeys.get('gemini');
-  if(!key){configureOptionalAPI('gemini');toast('Conecte o Gemini e volte à reunião para transcrever.');return;}
-  if (!key || !state.audioBlob) return;
-  providerKeys.set('gemini', key.trim()); updateProviders();
-  $('btn-meet-gemini').disabled=true;
-  $('meet-msg').textContent = 'Transcrevendo e resumindo no Gemini...'; $('meet-msg').className = 'callout';
+
+$('btn-meet-cli').onclick = async () => {
+  const rawMd = $('meet-output').value.trim() || buildMeetingMarkdown();
+  const hasContent = meetingState.transcript.length > 0 || $('meet-notes').value.trim().length > 0;
+  if (!hasContent) { toast('Grave a reunião ou escreva notas antes de estruturar a ata.'); return; }
+  $('btn-meet-cli').disabled = true;
+  $('meet-msg').textContent = 'Estruturando ata com sua CLI local (sem API key)...';
+  $('meet-msg').className = 'callout';
   try {
-    const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onloadend = () => res(String(r.result).split(',')[1]); r.onerror = rej; r.readAsDataURL(state.audioBlob); });
-    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key.trim())}`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: `Transcreva e gere uma nota Markdown limpa em português com YAML frontmatter (tags: [meeting], status: active, created: ${new Date().toISOString().slice(0,10)}) e seções Resumo, Decisões, Próximos passos e Transcrição. Notas manuais do usuário: ${$('meet-notes').value}` }, { inlineData: { mimeType: (state.audioBlob.type || 'audio/webm').split(';')[0], data: b64 } }] }] })
+    const prompt = [
+      'Organize esta reunião em uma ata Markdown limpa em português (BR) preservando o frontmatter YAML (tags: [meeting], status: active, participants, created, updated).',
+      'Estruture com: ## Participantes, ## Resumo (bullet points), ## Decisões, ## Próximos passos (checklist - [ ] item com responsável se mencionado) e ## Transcrição (mantendo os nomes de quem falou e os timestamps).',
+      'Não invente nada que não esteja nas notas ou na transcrição.',
+      '',
+      rawMd
+    ].join('\n');
+    const engine = $('chat-provider')?.value === 'auto' ? 'claude' : ($('chat-provider')?.value || 'claude');
+    const resp = await fetch('/api/cli/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ engine, prompt, structuredQuestions: true })
     });
     const d = await resp.json();
-    if (!resp.ok) throw new Error(d.error?.message || 'Erro no Gemini');
-    $('meet-output').value = d.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    if (!resp.ok) throw new Error(d.error || 'A CLI local não respondeu.');
+    $('meet-output').value = d.reply || rawMd;
     $('btn-meet-save').disabled = false;
     $('meet-msg').className = 'callout hidden';
+    toast('Ata estruturada pela CLI local.');
   } catch (err) {
-    $('meet-msg').textContent = err.message; $('meet-msg').className = 'callout err';
-  } finally { $('btn-meet-gemini').disabled=false; }
+    $('meet-msg').textContent = err.message;
+    $('meet-msg').className = 'callout err';
+  } finally {
+    $('btn-meet-cli').disabled = false;
+  }
 };
 $('btn-meet-save').onclick = async () => {
   const res = await fetch('/api/meetings/save', {
@@ -1825,6 +2171,228 @@ $('btn-logout').onclick=()=>safeAction(async()=>{
   toast('Sessão encerrada.');
 });
 
+// LISTA DE GRAVAÇÕES NA BARRA ESQUERDA (SELEÇÃO EM LOTE + MENU OPÇÕES)
+state.recordings = [];
+state.selectedRecordings = new Set();
+state.activeRecordingId = null;
+let openRecMenu = null;
+
+function closeRecMenu() {
+  if (openRecMenu) { openRecMenu.remove(); openRecMenu = null; }
+}
+document.addEventListener('pointerdown', (e) => {
+  if (openRecMenu && !openRecMenu.contains(e.target) && !e.target.closest('.rec-opt-btn')) closeRecMenu();
+});
+
+async function saveRecordingToVault(blob, mimeType, duration = '00:00', fallbackTitle = '') {
+  if (!blob || !state.info) return;
+  const dataBase64 = await new Promise((res, rej) => {
+    const reader = new FileReader();
+    reader.onload = () => res(String(reader.result || '').split(',')[1] || '');
+    reader.onerror = rej;
+    reader.readAsDataURL(blob);
+  });
+  const participants = [...new Set(meetingState.transcript.map(t => t.speaker).concat(meetingState.speakers))].filter(Boolean);
+  const r = await fetch('/api/recordings', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      title: $('meet-title').value.trim() || fallbackTitle || 'Reunião',
+      mimeType: mimeType || blob.type || 'video/webm',
+      duration,
+      participants,
+      transcript: meetingState.transcript,
+      notes: $('meet-notes').value || '',
+      dataBase64
+    })
+  });
+  const d = await r.json();
+  if (!r.ok) throw new Error(d.error || 'Erro ao salvar gravação.');
+  state.activeRecordingId = d.recording.id;
+  await loadRecordings();
+  toast(`Gravação salva: ${d.recording.title}`);
+}
+
+async function loadRecordings() {
+  try {
+    const d = await readApi('/api/recordings');
+    state.recordings = d.items || [];
+    const validIds = new Set(state.recordings.map(r => r.id));
+    for (const id of [...state.selectedRecordings]) {
+      if (!validIds.has(id)) state.selectedRecordings.delete(id);
+    }
+    $('recordings-count').textContent = state.recordings.length;
+    renderRecordingsList($('recording-filter')?.value || '');
+  } catch {
+    $('recordings-list').innerHTML = '<div class="empty-state">Conecte o servidor local para ver suas gravações.</div>';
+  }
+}
+
+function syncRecBulkBar() {
+  const count = state.selectedRecordings.size;
+  const bar = $('rec-bulk-bar');
+  if (!bar) return;
+  bar.classList.toggle('hidden', count === 0);
+  $('rec-selected-label').textContent = `${count} selecionada(s)`;
+  $('rec-select-all').checked = state.recordings.length > 0 && count === state.recordings.length;
+}
+
+function renderRecordingsList(filter = '') {
+  const list = $('recordings-list');
+  if (!list) return;
+  const q = String(filter || '').toLowerCase().trim();
+  const items = state.recordings.filter(r => !q || r.title.toLowerCase().includes(q));
+  list.replaceChildren();
+  syncRecBulkBar();
+  if (!items.length) {
+    list.innerHTML = `<div class="empty-state">${q ? 'Nenhuma gravação encontrada.' : 'Nenhuma gravação salva ainda.'}</div>`;
+    return;
+  }
+  for (const rec of items) {
+    const row = document.createElement('div');
+    row.className = 'rec-item' + (state.activeRecordingId === rec.id ? ' active' : '');
+    row.dataset.recId = rec.id;
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.className = 'rec-check';
+    cb.checked = state.selectedRecordings.has(rec.id);
+    cb.ariaLabel = 'Selecionar ' + rec.title;
+    cb.onclick = (e) => e.stopPropagation();
+    cb.onchange = () => {
+      if (cb.checked) state.selectedRecordings.add(rec.id);
+      else state.selectedRecordings.delete(rec.id);
+      syncRecBulkBar();
+    };
+
+    const body = document.createElement('div');
+    body.className = 'rec-item-body';
+    const title = document.createElement('span');
+    title.className = 'rec-item-title';
+    title.textContent = rec.title;
+    title.title = rec.title;
+    const meta = document.createElement('div');
+    meta.className = 'rec-item-meta';
+    const dt = rec.createdAt ? new Date(rec.createdAt).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
+    meta.textContent = `${rec.duration || '00:00'} · ${formatBytes(rec.size)}${dt ? ' · ' + dt : ''}`;
+    body.append(title, meta);
+
+    const optBtn = document.createElement('button');
+    optBtn.type = 'button';
+    optBtn.className = 'rec-opt-btn';
+    optBtn.ariaLabel = 'Opções de ' + rec.title;
+    optBtn.title = 'Opções';
+    optBtn.innerHTML = '<svg class="ico lucide lucide-more-vertical" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>';
+    optBtn.onclick = (e) => { e.stopPropagation(); openRecordingOptionsMenu(rec, optBtn); };
+
+    row.onclick = () => safeAction(() => openRecordingItem(rec));
+    row.append(cb, body, optBtn);
+    list.append(row);
+  }
+}
+
+function openRecordingOptionsMenu(rec, anchorBtn) {
+  closeRecMenu();
+  const menu = document.createElement('div');
+  menu.className = 'rec-opt-menu';
+  menu.setAttribute('role', 'menu');
+
+  const btnOpen = document.createElement('button');
+  btnOpen.type = 'button'; btnOpen.textContent = 'Reproduzir';
+  btnOpen.onclick = () => { closeRecMenu(); safeAction(() => openRecordingItem(rec)); };
+
+  const linkDl = document.createElement('a');
+  linkDl.href = apiUrl(rec.url); linkDl.download = rec.filename || `${rec.id}.webm`;
+  linkDl.textContent = 'Baixar gravação';
+  linkDl.onclick = () => closeRecMenu();
+
+  const btnDel = document.createElement('button');
+  btnDel.type = 'button'; btnDel.className = 'danger-item'; btnDel.textContent = 'Apagar';
+  btnDel.onclick = () => { closeRecMenu(); safeAction(() => deleteSingleRecording(rec.id, rec.title)); };
+
+  menu.append(btnOpen, linkDl, btnDel);
+  document.body.append(menu);
+  const r = anchorBtn.getBoundingClientRect();
+  menu.style.left = Math.max(8, Math.min(r.right - 148, innerWidth - 160)) + 'px';
+  menu.style.top = Math.min(r.bottom + 4, innerHeight - 130) + 'px';
+  openRecMenu = menu;
+}
+
+async function openRecordingItem(rec) {
+  state.activeRecordingId = rec.id;
+  const mediaUrl = apiUrl(rec.url);
+  if ((rec.mimeType || '').startsWith('video/')) {
+    $('rec-video-player').src = mediaUrl;
+    $('rec-video-player').classList.remove('hidden');
+    $('rec-player').classList.add('hidden');
+  } else {
+    $('rec-player').src = mediaUrl;
+    $('rec-player').classList.remove('hidden');
+    $('rec-video-player').classList.add('hidden');
+  }
+  $('rec-download').href = mediaUrl;
+  $('rec-download').download = rec.filename || `${rec.id}.webm`;
+  $('rec-download').classList.remove('hidden');
+  $('rec-timer').textContent = rec.duration || '00:00';
+  $('rec-state').textContent = 'Salva';
+  try {
+    const d = await readApi(`/api/recordings/${encodeURIComponent(rec.id)}/meta`);
+    const meta = d.recording;
+    $('meet-title').value = meta.title || '';
+    $('meet-notes').value = meta.notes || '';
+    if (Array.isArray(meta.participants) && meta.participants.length) {
+      meetingState.speakers = [...new Set([...meta.participants, ...meetingState.speakers])];
+      renderSpeakersBar();
+    }
+    meetingState.transcript = Array.isArray(meta.transcript) ? meta.transcript : [];
+    renderMeetingTranscript();
+    $('meet-output').value = buildMeetingMarkdown();
+    $('btn-meet-save').disabled = false;
+    $('btn-meet-cli').disabled = false;
+  } catch {}
+  renderRecordingsList($('recording-filter')?.value || '');
+}
+
+async function deleteSingleRecording(id, title) {
+  const r = await fetch(`/api/recordings/${encodeURIComponent(id)}`, { method: 'DELETE' });
+  if (!r.ok) { const d = await r.json().catch(() => ({})); toast(d.error || 'Erro ao apagar gravação.'); return; }
+  state.selectedRecordings.delete(id);
+  if (state.activeRecordingId === id) {
+    state.activeRecordingId = null;
+    $('rec-video-player').classList.add('hidden');
+    $('rec-player').classList.add('hidden');
+  }
+  await loadRecordings();
+  toast(`Gravação "${title}" apagada.`);
+}
+
+async function deleteSelectedRecordings() {
+  const ids = [...state.selectedRecordings];
+  if (!ids.length) return;
+  const r = await fetch('/api/recordings/bulk-delete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ids })
+  });
+  const d = await r.json();
+  if (!r.ok) { toast(d.error || 'Erro ao apagar gravações.'); return; }
+  for (const id of ids) {
+    state.selectedRecordings.delete(id);
+    if (state.activeRecordingId === id) state.activeRecordingId = null;
+  }
+  await loadRecordings();
+  toast(`${d.count} gravação(ões) apagada(s).`);
+}
+
+$('recording-filter').addEventListener('input', (e) => renderRecordingsList(e.target.value));
+$('rec-select-all').addEventListener('change', (e) => {
+  if (e.target.checked) state.recordings.forEach(r => state.selectedRecordings.add(r.id));
+  else state.selectedRecordings.clear();
+  renderRecordingsList($('recording-filter')?.value || '');
+});
+$('btn-rec-bulk-delete').onclick = () => safeAction(deleteSelectedRecordings);
+$('btn-refresh-sessions').onclick = () => safeAction(() => $('dock-recordings').classList.contains('hidden') ? loadSessions() : loadRecordings());
+
 initAuthGate();
-loadAll();loadCliStatus();loadSessions();loadMcpCatalog();
+loadAll();loadCliStatus();loadSessions();loadRecordings();loadMcpCatalog();
 </script><script src="/router-ui.js"></script></body></html>
