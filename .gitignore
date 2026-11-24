@@ -3,6 +3,7 @@ node_modules/
 .env.local
 dist/
 .local/
+.taste-skill/
 docs/ui-references/
 *.log
 

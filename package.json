@@ -13,6 +13,7 @@
     "install:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-windows.ps1",
     "uninstall:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/uninstall-windows.ps1",
     "test": "node --test",
+    "test:ui": "node scripts/verify-ui.mjs",
     "check": "node --check src/server.mjs"
   },
   "license": "MIT"
