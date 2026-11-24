@@ -158,12 +158,55 @@ html,body{background:#17181c}body{background:radial-gradient(ellipse at 12% -10%
 @media(max-width:900px){.topbar{flex-wrap:wrap;padding:10px 14px;gap:8px}.top-nav{order:3;width:100%}.workspace-body{--sidebar:230px;padding:10px}.mcp-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.shell{border-radius:0}.topbar{border-radius:0;padding:8px 12px}.mobile-toggle{display:inline-flex}.workspace-body{grid-template-columns:1fr;padding:8px}.sessions-dock{position:fixed;left:10px;top:68px;bottom:10px;width:min(300px,calc(100vw - 20px));z-index:50;transform:translateX(-120%);transition:transform .2s ease}.mobile-nav .sessions-dock{transform:translateX(0)}.collapsed .sessions-dock>*:not(.sessions-rail-bar){display:flex!important}.collapsed .sessions-rail-bar{display:none}.main{border-radius:16px}.viewport{padding:16px 14px}.self-ui-btn span{display:none}.top-search-btn span:not(.kbd){display:none}.mcp-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.composer-tools>div:first-child{display:flex!important;flex-wrap:wrap;gap:7px;width:100%}.composer-tools .select-control{flex:1 1 110px;min-width:0;max-width:100%}.context-control .select-control{max-width:100%;min-width:0}}
 </style><style id="ayvu-motion-strokes">
-/* Hovers táteis globais + strokes prismáticos animados com shadow e cores + feed de execução ao vivo */
+/* Hovers táteis globais + luzes rainbow prismáticas animadas com shadow + feed de execução ao vivo */
 @property --stroke-angle{syntax:'<angle>';inherits:false;initial-value:115deg}
+:root{
+  --rainbow-conic:conic-gradient(from var(--stroke-angle),#ff7eb6,#ffb86c,#f9e28b,#6ef3d6,#6eb6ff,#b78bfa,#ff7eb6);
+  --rainbow-line:linear-gradient(90deg,#ff7eb6,#ffb86c,#f9e28b,#6ef3d6,#6eb6ff,#b78bfa,#ff7eb6);
+}
 @keyframes stroke-orbit{to{--stroke-angle:475deg}}
+@keyframes rainbow-flow{0%{background-position:0% 50%}100%{background-position:200% 50%}}
 @keyframes stroke-dash{0%{stroke-dashoffset:48}50%{stroke-dashoffset:12}100%{stroke-dashoffset:48}}
 @keyframes live-step-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-@keyframes pulse-dot{0%,100%{transform:scale(.9);opacity:.75;box-shadow:0 0 0 0 #b7a0ff66}50%{transform:scale(1.15);opacity:1;box-shadow:0 0 12px 3px #86b9ff55}}
+@keyframes pulse-dot{0%,100%{transform:scale(.9);opacity:.8;box-shadow:0 0 8px #ff7eb666,0 0 14px #6eb6ff44}50%{transform:scale(1.18);opacity:1;box-shadow:0 0 12px #6ef3d688,0 0 20px #b78bfa66}}
+
+/* Luzes ambientes rainbow sutis no shell, barra superior, dock e emblema */
+body{
+  background:
+    radial-gradient(ellipse 46% 32% at 10% -6%,#ff7eb618,transparent 62%),
+    radial-gradient(ellipse 40% 30% at 52% -8%,#6ef3d614,transparent 65%),
+    radial-gradient(ellipse 46% 34% at 94% 4%,#6eb6ff1c,transparent 62%),
+    radial-gradient(ellipse 48% 36% at 88% 104%,#b78bfa1a,transparent 64%),
+    #131419!important
+}
+.topbar{
+  background:
+    radial-gradient(ellipse 35% 120% at 12% 0,#ff7eb614,transparent 70%),
+    radial-gradient(ellipse 35% 120% at 50% 0,#6ef3d612,transparent 70%),
+    radial-gradient(ellipse 35% 120% at 88% 0,#6eb6ff16,transparent 70%),
+    linear-gradient(180deg,#181920,#111217)!important
+}
+.sessions-dock{
+  background:
+    radial-gradient(ellipse 130% 42% at 0 0,#b78bfa1a,transparent 62%),
+    radial-gradient(ellipse 110% 38% at 100% 100%,#6ef3d612,transparent 65%),
+    linear-gradient(155deg,#1a1b22,#111218 72%)!important
+}
+.welcome-emblem:before{
+  background:conic-gradient(from var(--stroke-angle),#ff7eb638,#ffb86c30,#6ef3d638,#6eb6ff38,#b78bfa38,#ff7eb638)!important;
+  filter:blur(22px)!important;
+  animation:stroke-orbit 9s linear infinite
+}
+.stat:first-child{background:radial-gradient(ellipse at 100% 0,#ff7eb628,transparent 68%),linear-gradient(130deg,#222329,#131419)!important}
+.stat:nth-child(2){background:radial-gradient(ellipse at 100% 0,#ffb86c24,transparent 68%),linear-gradient(135deg,#1f2027,#121419)!important}
+.stat:nth-child(3){background:radial-gradient(ellipse at 100% 0,#6ef3d622,transparent 68%),linear-gradient(135deg,#1d1f26,#121419)!important}
+.stat:nth-child(4){background:radial-gradient(ellipse at 100% 0,#6eb6ff28,transparent 68%),linear-gradient(135deg,#1f2029,#131419)!important}
+.top-meta .live:before{
+  background:var(--rainbow-line)!important;
+  background-size:200% 100%!important;
+  animation:rainbow-flow 4s linear infinite;
+  box-shadow:0 0 10px #6ef3d688,0 0 16px #b78bfa55!important
+}
 
 /* Transições globais em controles e ícones */
 .card,.stat,.quick-card,.mcp-card,.provider-card,.local-cli-card,.session-item,.thread-row,.note-btn,.tree-item,.btn,.icon-btn,.top-search-btn,.sessions-new-btn,.voice-trigger,.mcp-cat-btn,.mcp-cli-pill,.att-chip,.suggestions button,.select-trigger{
@@ -171,98 +214,130 @@ html,body{background:#17181c}body{background:radial-gradient(ellipse at 12% -10%
 }
 .ico{transition:transform .2s cubic-bezier(.22,1,.36,1),filter .22s ease,color .18s ease}
 
-/* Hovers com stroke luminoso e shadow colorida nos cards */
+/* Hovers com stroke rainbow luminoso e shadow colorida nos cards */
 .stat:hover,.quick-card:hover,.mcp-card:hover,.provider-card:hover,.local-cli-card:hover{
   transform:translateY(-2px);
-  border-color:#b7a0ff44!important;
-  box-shadow:inset 0 1px #ffffff1a,0 12px 32px -12px #86b9ff38,0 6px 20px -10px #ff9d8226,0 0 0 1px #b7a0ff24!important
+  border-color:transparent!important;
+  background-image:linear-gradient(145deg,#1c1e27,#12131a 82%),var(--rainbow-conic)!important;
+  background-origin:border-box!important;
+  background-clip:padding-box,border-box!important;
+  box-shadow:inset 0 1px #ffffff1c,-6px -4px 24px -12px #ff7eb644,6px 6px 26px -12px #6eb6ff48,0 10px 28px -14px #6ef3d638!important
 }
 .stat:hover .stat-icon,.quick-card:hover>.ico:first-child,.mcp-card:hover h3,.provider-card:hover .provider-monogram{
-  color:#f4eeff;
-  filter:drop-shadow(0 0 8px #b7a0ff66)
+  color:#fff;
+  filter:drop-shadow(0 0 8px #6ef3d666) drop-shadow(0 0 12px #ff7eb655)
 }
 .card:hover{
-  border-color:#ffffff1c;
-  box-shadow:inset 0 1px #ffffff10,0 10px 28px -12px #86b9ff22
+  border-color:#ffffff20;
+  box-shadow:inset 0 1px #ffffff12,-4px 0 22px -14px #ff7eb628,4px 8px 26px -14px #6eb6ff30
 }
 
 /* Hovers nos itens de lista, sessões e navegação */
 .session-item:hover{
   transform:translateX(2px);
-  border-color:#b7a0ff3a;
-  box-shadow:inset 0 1px #ffffff12,0 6px 18px -10px #b7a0ff40
+  border-color:#b78bfa48;
+  box-shadow:inset 0 1px #ffffff14,-4px 0 16px -8px #ff7eb644,4px 4px 18px -10px #6eb6ff44
 }
 .session-item.active{
   border-color:transparent!important;
-  background:linear-gradient(125deg,#2a2c38,#191b24) padding-box,linear-gradient(var(--stroke-angle),#ff9d82aa,#b7a0ffaa,#86b9ffaa) border-box!important;
-  box-shadow:inset 0 1px #ffffff16,0 6px 20px -10px #b7a0ff55!important
+  background:linear-gradient(125deg,#2a2c38,#191b24) padding-box,var(--rainbow-conic) border-box!important;
+  box-shadow:inset 0 1px #ffffff18,-4px 0 18px -10px #ff7eb655,4px 4px 20px -10px #6eb6ff55!important;
+  animation:stroke-orbit 10s linear infinite
 }
 .thread-row:hover{background:#ffffff06!important;border-radius:10px;padding-left:8px;padding-right:8px}
 .note-btn:hover,.tree-item:hover{transform:translateX(2px);color:#f3f4fc;background:#ffffff08}
 .nav.top-nav button:hover:not(.active){
   transform:translateY(-1px);
-  border-color:#b7a0ff2e!important;
-  box-shadow:0 4px 14px -6px #86b9ff38
+  border-color:#b78bfa38!important;
+  box-shadow:-3px 2px 14px -6px #ff7eb640,3px 2px 14px -6px #6eb6ff40
 }
-.nav.top-nav button:hover .ico{color:#e6dcff!important;filter:drop-shadow(0 0 7px #b7a0ff66)}
+.nav.top-nav button:hover .ico{color:#fff!important;filter:drop-shadow(0 0 7px #6ef3d666)}
 .nav.top-nav button.active:before{
-  background:linear-gradient(90deg,#ff9d82,#b7a0ff,#86b9ff)!important;
-  box-shadow:0 0 14px #b7a0ff99,0 0 24px #86b9ff44!important
+  background:var(--rainbow-line)!important;
+  background-size:200% 100%!important;
+  animation:rainbow-flow 4s linear infinite;
+  box-shadow:0 0 12px #ff7eb688,0 0 20px #6eb6ff66!important
 }
 
-/* Botões e pílulas táteis com glow colorido */
+/* Botões e pílulas táteis com glow rainbow */
 .btn:hover:not(:disabled){
   transform:translateY(-1px);
-  box-shadow:inset 0 1px #fff,0 8px 22px -6px #b7a0ff55,0 4px 12px #0005
+  box-shadow:inset 0 1px #fff,-4px 4px 18px -6px #ff7eb666,4px 4px 20px -6px #6eb6ff66
 }
 .btn:active:not(:disabled),.icon-btn:active:not(:disabled),.sessions-new-btn:active,.top-search-btn:active{transform:scale(.97)}
 .btn.sec:hover:not(:disabled),.icon-btn:hover:not(:disabled),.top-search-btn:hover,.sessions-new-btn:hover,.voice-trigger:hover,.mcp-cat-btn:hover,.att-chip:hover,.suggestions button:hover{
   transform:translateY(-1px);
-  border-color:#b7a0ff44!important;
-  box-shadow:inset 0 1px #ffffff18,0 6px 18px -8px #86b9ff44,0 2px 10px -6px #ff9d8233
+  border-color:#b78bfa55!important;
+  box-shadow:inset 0 1px #ffffff1a,-4px 2px 16px -8px #ff7eb648,4px 4px 18px -8px #6eb6ff48
 }
 .icon-btn:hover .ico,.sessions-new-btn:hover .ico,.top-search-btn:hover .ico,.voice-trigger:hover .ico{
-  color:#efe8ff;
-  filter:drop-shadow(0 0 7px #b7a0ff66)
+  color:#fff;
+  filter:drop-shadow(0 0 6px #6ef3d677) drop-shadow(0 0 10px #b78bfa55)
 }
-.mcp-cli-pill:hover{transform:translateY(-1px);border-color:#b7a0ff48;box-shadow:0 4px 14px -6px #b7a0ff44}
-.mcp-cli-pill.on:hover{border-color:#7be0b077;box-shadow:0 4px 14px -6px #7be0b055}
+.composer .btn#btn-send{
+  background:var(--rainbow-line)!important;
+  background-size:220% 100%!important;
+  animation:rainbow-flow 5s linear infinite;
+  border-color:#ffffff55!important;
+  color:#0c0d14!important;
+  box-shadow:inset 0 1px #fff8,-3px 0 14px -4px #ff7eb688,3px 0 16px -4px #6eb6ff88!important
+}
+.composer .btn#btn-send:hover{
+  box-shadow:inset 0 1px #fff,-4px 0 22px -2px #ff7eb6aa,4px 0 22px -2px #6eb6ffaa!important
+}
+.mcp-cli-pill:hover{transform:translateY(-1px);border-color:#b78bfa55;box-shadow:0 4px 14px -6px #b78bfa55}
+.mcp-cli-pill.on:hover{border-color:#6ef3d688;box-shadow:0 4px 14px -6px #6ef3d666}
 
-/* Composer com stroke prismático animado */
+/* Luzes rainbow na barra de voz inline */
+.chat-voice-bar{
+  border-color:transparent!important;
+  background:linear-gradient(120deg,#1d192c,#131622) padding-box,var(--rainbow-conic) border-box!important;
+  box-shadow:inset 0 1px #ffffff16,-6px 0 20px -10px #ff7eb655,6px 0 22px -10px #6eb6ff55!important;
+  animation:stroke-orbit 5s linear infinite
+}
+.voice-bars i:nth-child(1){background:#ff7eb6!important}
+.voice-bars i:nth-child(2){background:#ffb86c!important}
+.voice-bars i:nth-child(3){background:#6ef3d6!important}
+.voice-bars i:nth-child(4){background:#6eb6ff!important}
+
+/* Composer com stroke e halo rainbow animado */
 .composer{
-  background:linear-gradient(#090b10,#090b10) padding-box,conic-gradient(from var(--stroke-angle),#ff9d82cc,#c986b688,#b7a0ff99,#86b9ffcc,#7be0b088,#ff9d82cc) border-box!important;
-  animation:stroke-orbit 12s linear infinite
+  background:linear-gradient(#090b10,#090b10) padding-box,var(--rainbow-conic) border-box!important;
+  animation:stroke-orbit 10s linear infinite
+}
+.composer:before{
+  box-shadow:-16px -12px 38px -18px #ff7eb688,0 -10px 34px -20px #6ef3d666,16px 12px 40px -18px #6eb6ff99!important
 }
 .composer:focus-within,.composer.is-thinking{
-  animation-duration:4.5s;
-  box-shadow:inset 0 1px #ffffff16,0 16px 44px -12px #0009,-8px -6px 32px -12px #ff9d8244,10px 8px 36px -12px #86b9ff55!important
+  animation-duration:4s;
+  box-shadow:inset 0 1px #ffffff18,0 16px 44px -12px #0009,-10px -6px 36px -12px #ff7eb666,0 10px 34px -14px #6ef3d655,10px 8px 38px -12px #6eb6ff66!important
 }
 
-/* Feed ao vivo de execução no Chat */
+/* Feed ao vivo de execução no Chat com luz rainbow */
 .msg-thinking{
   position:relative;
   padding:14px 16px;
   border-radius:18px;
   border:1.5px solid transparent;
-  background:linear-gradient(145deg,#151722,#0f1118) padding-box,conic-gradient(from var(--stroke-angle),#ff9d82dd,#b7a0ffdd,#86b9ffdd,#7be0b0cc,#ff9d82dd) border-box;
-  box-shadow:inset 0 1px #ffffff14,0 12px 34px -14px #b7a0ff55,0 6px 24px -14px #ff9d8244;
-  animation:stroke-orbit 3.6s linear infinite,live-step-in .22s ease-out;
+  background:linear-gradient(145deg,#151722,#0f1118) padding-box,var(--rainbow-conic) border-box;
+  box-shadow:inset 0 1px #ffffff16,-8px 0 28px -14px #ff7eb666,0 10px 28px -14px #6ef3d655,8px 4px 30px -14px #6eb6ff66;
+  animation:stroke-orbit 3.2s linear infinite,live-step-in .22s ease-out;
   max-width:100%
 }
 .thinking-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
 .thinking-title{display:flex;align-items:center;gap:9px;min-width:0;font-size:12.5px;font-weight:500;color:#f3f0ff}
-.thinking-ring{width:18px;height:18px;flex-shrink:0;filter:drop-shadow(0 0 8px #b7a0ff88)}
+.thinking-ring{width:18px;height:18px;flex-shrink:0;filter:drop-shadow(0 0 8px #ff7eb677) drop-shadow(0 0 10px #6eb6ff77)}
 .thinking-ring circle{stroke-dasharray:44;stroke-dashoffset:16;animation:stroke-dash 1.8s ease-in-out infinite;transform-origin:center}
 .thinking-timer{font-family:var(--mono);font-size:11px;color:#b8c2db;padding:2px 7px;border-radius:8px;background:#ffffff08;border:1px solid #ffffff12;flex-shrink:0}
-.thinking-stage{font-size:12px;color:#d6d2f5;display:flex;align-items:center;gap:8px}
-.thinking-dot{width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#ff9d82,#86b9ff);animation:pulse-dot 1.4s ease-in-out infinite;flex-shrink:0}
+.thinking-stage{font-size:12px;color:#e6e2ff;display:flex;align-items:center;gap:8px}
+.thinking-dot{width:7px;height:7px;border-radius:50%;background:var(--rainbow-line);background-size:200% 100%;animation:rainbow-flow 2.5s linear infinite,pulse-dot 1.4s ease-in-out infinite;flex-shrink:0}
 .thinking-log{margin:8px 0 0;padding:8px 10px;border-radius:10px;background:#090a10b8;border:1px solid #ffffff0d;display:flex;flex-direction:column;gap:4px;font-family:var(--mono);font-size:11px;color:#9da5bd;max-height:110px;overflow:auto}
 .thinking-log:empty{display:none}
 .thinking-log-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:live-step-in .18s ease-out}
 .thinking-log-line:last-child{color:#dce3f8}
 
 @media(prefers-reduced-motion:reduce){
-  .composer,.msg-thinking,.thinking-ring circle,.thinking-dot,.thinking-log-line{animation:none!important}
+  .composer,.msg-thinking,.thinking-ring circle,.thinking-dot,.thinking-log-line,.welcome-emblem:before,.session-item.active,.chat-voice-bar,.nav.top-nav button.active:before,.top-meta .live:before,.composer .btn#btn-send{animation:none!important}
   .stat:hover,.quick-card:hover,.mcp-card:hover,.provider-card:hover,.local-cli-card:hover,.session-item:hover,.btn:hover,.icon-btn:hover{transform:none!important}
 }
 </style></head><body><a class="skip-link" href="#workspace">Pular para o conteúdo</a><div class="shell"><button class="sidebar-backdrop" id="sidebar-backdrop" aria-label="Fechar sessões" type="button"></button><header class="topbar" aria-label="Barra superior da dashboard"><div class="top-left"><button class="icon-btn mobile-toggle" id="mobile-menu" type="button" aria-label="Abrir sessões" aria-controls="sidebar" aria-expanded="false"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button><a class="brand" href="/" aria-label="AYVU Brain, página inicial"><img src="/icon.svg" width="28" height="28" alt=""><span class="brand-text"><strong>AYVU <em>Brain</em></strong></span></a></div><nav class="nav top-nav" aria-label="Módulos"><button type="button" data-view="overview" class="active" aria-label="Visão geral" aria-current="page"><svg class="ico lucide lucide-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" /></svg><span class="nav-text">Visão geral</span><span class="kbd">1</span></button><button type="button" data-view="vault" aria-label="Vault"><svg class="ico lucide lucide-book-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v16" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></svg><span class="nav-text">Vault</span><span class="kbd">2</span></button><button type="button" data-view="chat" aria-label="Multi-IA Chat"><svg class="ico lucide lucide-messages-square" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1" /></svg><span class="nav-text">Multi-IA Chat</span><span class="kbd">3</span></button><button type="button" data-view="mcp" aria-label="MCPs"><svg class="ico lucide lucide-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-5" /><path d="M9 8V2" /><path d="M15 8V2" /><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z" /></svg><span class="nav-text">MCPs</span><span class="kbd">4</span></button><button type="button" data-view="meetings" aria-label="Reuniões"><svg class="ico lucide lucide-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19v3" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><rect x="9" y="2" width="6" height="13" rx="3" /></svg><span class="nav-text">Reuniões</span><span class="kbd">5</span></button><button type="button" data-view="agents" aria-label="Agentes & Git"><svg class="ico lucide lucide-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6a9 9 0 0 0-9 9V3" /><circle cx="18" cy="6" r="3" /><circle cx="6" cy="18" r="3" /></svg><span class="nav-text">Agentes & Git</span><span class="kbd">6</span></button><button type="button" data-view="system" aria-label="Sistema"><svg class="ico lucide lucide-settings-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 17H5" /><path d="M19 7h-9" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" /></svg><span class="nav-text">Sistema</span><span class="kbd">7</span></button></nav><div class="top-right"><button class="top-search-btn" type="button" id="open-palette" aria-label="Buscar notas e ações"><svg class="ico lucide lucide-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg><span>Buscar</span><span class="kbd">Ctrl K</span></button><div class="top-meta"><span class="pill live" id="top-status">Conectando ao vault</span><span class="pill" id="top-version">v0.3.0</span></div></div></header><div class="workspace-body"><aside class="sidebar sessions-dock" id="sidebar" aria-label="Sessões conectadas ao vault"><div class="sessions-rail-bar"><button class="icon-btn" id="expand-sidebar" type="button" aria-label="Expandir barra de sessões" title="Expandir sessões"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button><button class="icon-btn" id="rail-new-session" type="button" aria-label="Nova sessão" title="Nova sessão"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg></button></div><div class="sessions-dock-head"><div class="sessions-dock-title"><strong>Sessões · Vault</strong><span class="badge" id="sessions-count">0</span></div><div class="sessions-dock-actions"><button class="icon-btn" id="btn-refresh-sessions" type="button" aria-label="Atualizar sessões" title="Atualizar sessões"><svg class="ico lucide lucide-refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></svg></button><button class="icon-btn" id="collapse-sidebar" type="button" aria-label="Recolher sessões" title="Recolher sessões"><svg class="ico lucide lucide-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 3v18" /></svg></button></div></div><button class="sessions-new-btn" id="btn-new-session" type="button"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Nova sessão CLI</button><input type="text" class="sessions-search" id="session-filter" placeholder="Filtrar sessões no vault..." aria-label="Filtrar sessões no vault"><div class="sessions-list" id="sessions-list"><div class="empty-state">Nenhuma sessão salva ainda.</div></div><div class="side-tree"><div class="tree-heading"><span>Fios recentes</span><span>↳</span></div><div class="tree-items" id="recent-threads"><span class="tree-empty">Conectando...</span></div></div><div class="side-foot"><div class="vault-chip"><span class="vault-avatar" aria-hidden="true">B</span><div class="vault-info"><b id="side-vault-name">Conectando...</b><span id="side-vault-path">Workspace local</span></div></div></div></aside><main class="main" id="workspace" tabindex="-1"><div class="subbar"><div class="breadcrumbs"><span class="workspace-crumb">Workspace</span><svg class="ico lucide lucide-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg><h1 id="view-title">Visão geral</h1></div></div><div class="viewport"><div id="preview-banner" class="callout preview-banner hidden" role="status"><p><b>Workspace desconectado.</b> Inicie o AYVU Brain no computador para acessar seus arquivos.</p><a class="btn sec sm" href="/#instalar">Ver instalação</a></div><section class="view active" id="view-overview"><div class="page-intro"><div><p class="eyebrow">Seu workspace</p><h2>Um lugar para continuar.</h2><p>Contexto, conversas e trabalho. Tudo no seu Brain.</p></div><button class="btn" type="button" data-go="chat"><svg class="ico lucide lucide-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /><path d="M12 5v14" /></svg>Nova conversa</button></div>
