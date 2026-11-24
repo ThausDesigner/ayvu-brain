@@ -23,7 +23,7 @@ const publicDir = join(projectRoot, 'public');
 
 const allowedVaultDirs = new Set([
   '_knowledge', '_memory', '_sync', '_decisions', '_learnings',
-  '_sessions', '_meetings', '_pipeline', '_research', '_references',
+  '_sessions', '_meetings', '_transcriptions', '_pipeline', '_research', '_references',
   '_inbox', '_projects', '_templates'
 ]);
 const allowedRootFiles = new Set(['AGENTS.md', 'CLAUDE.md', 'GEMINI.md', 'CODEX.md', 'START-HERE.md', 'README.md']);
