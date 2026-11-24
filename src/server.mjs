@@ -6,6 +6,8 @@ import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { defaultMcpPaths, scanInstalledMcps, connectMcpServer, disconnectMcpServer } from './mcp-catalog.mjs';
+import { createBrainRouter } from './router.mjs';
+import { createRouterOAuth } from './router-oauth.mjs';
 import {
   listSessions,
   getSession,
@@ -275,7 +277,7 @@ function stripAnsi(text) {
   return String(text || '').replace(/\x1b\[[0-9;]*[A-Za-z]/g, '').replace(/\r/g, '\n');
 }
 
-function runLocalCliAgent({ engine, prompt, cwd, continueSession = false, onProgress = null }) {
+function runLocalCliAgent({ engine, prompt, cwd, continueSession = false, onProgress = null, signal }) {
   return new Promise((resolveRun, rejectRun) => {
     const cleanPrompt = String(prompt || '').trim();
     if (!cleanPrompt) { rejectRun(new Error('Prompt cannot be empty.')); return; }
@@ -334,10 +336,14 @@ function runLocalCliAgent({ engine, prompt, cwd, continueSession = false, onProg
       stderr += str;
       emitLines('stderr', str);
     });
-    child.on('error', err => { clearTimeout(timer); rejectRun(new Error(`Could not start ${engine}: ${err.message}`)); });
+    const abort = () => { child.kill(); rejectRun(new Error('Execução cancelada. Confira o workspace antes de repetir.')); };
+    signal?.addEventListener('abort', abort, { once: true });
+    if (signal?.aborted) abort();
+    child.on('error', err => { clearTimeout(timer); signal?.removeEventListener('abort', abort); rejectRun(Object.assign(new Error(`Could not start ${engine}: ${err.message}`), { safeToRetry: err.code === 'ENOENT' })); });
     child.on('close', code => {
       clearTimeout(timer);
-      if (code !== 0 && !stdout.trim()) {
+      signal?.removeEventListener('abort', abort);
+      if (code !== 0) {
         rejectRun(new Error(stderr.trim() || `${engine} exited with code ${code}.`));
         return;
       }
@@ -451,10 +457,18 @@ export async function startAyvuBrainServer({
   vaultRoot = process.env.AYVU_BRAIN_VAULT || resolve(projectRoot, '../..'),
   worktreeRoot = resolve(process.env.SECOND_BRAIN_WORKTREE_ROOT || join(homedir(), '.second-brain-worktrees')),
   mcpPaths = defaultMcpPaths(),
+  routerAdapters = {},
+  routerOAuthFetch = fetch,
   port = Number(process.env.PORT || 4190)
 } = {}) {
   const layout = await detectVaultLayout(vaultRoot);
   const voiceHistory = [];
+  const router = createBrainRouter({
+    cliStatus: () => ['claude', 'codex', 'agy'].map(checkCliInstalled),
+    runCli: runLocalCliAgent,
+    ...routerAdapters
+  });
+  const routerOAuth = createRouterOAuth({ connect: router.connect, fetchImpl: routerOAuthFetch });
 
   const allowedOrigins = new Set([
     'https://brain.ayvu.org',
@@ -491,12 +505,101 @@ export async function startAyvuBrainServer({
 
     try {
       const url = new URL(req.url, 'http://127.0.0.1');
+      if (url.pathname.startsWith('/api/router/') || url.pathname.startsWith('/v1/')) {
+        const actualPort = req.socket.localPort;
+        const localHosts = new Set([`127.0.0.1:${actualPort}`, `localhost:${actualPort}`]);
+        const origin = String(req.headers.origin || '');
+        const originOk = !origin || allowedOrigins.has(origin) || origin === `http://${req.headers.host}`;
+        if (!localHosts.has(req.headers.host) || !originOk) { sendJson(403, { error: 'Origem não autorizada.' }); return; }
+        if (req.method === 'POST' && !String(req.headers['content-type'] || '').startsWith('application/json')) { sendJson(415, { error: 'Use application/json.' }); return; }
+        const gateway = url.pathname.startsWith('/v1/');
+        if (gateway && !router.validateToken(String(req.headers.authorization || '').replace(/^Bearer /, ''))) { sendJson(401, { error: { message: 'Token do gateway inválido.', type: 'authentication_error' } }); return; }
+        if (req.method === 'GET' && url.pathname === '/api/router/status') { sendJson(200, router.snapshot()); return; }
+        if (req.method === 'POST' && url.pathname === '/api/router/settings') { sendJson(200, router.configure(await readJson(req))); return; }
+        if (req.method === 'POST' && url.pathname === '/api/router/connections') { sendJson(201, router.connect(await readJson(req))); return; }
+        if (req.method === 'DELETE' && url.pathname.startsWith('/api/router/connections/')) { sendJson(200, router.disconnect(decodeURIComponent(url.pathname.split('/').pop()))); return; }
+        if (req.method === 'POST' && url.pathname === '/api/router/token') { const body = await readJson(req); sendJson(200, { token: router.token(body.rotate === true) }); return; }
+        if (req.method === 'POST' && url.pathname === '/api/router/oauth/start') {
+          const body = await readJson(req);
+          const started = routerOAuth.begin({ model: body.model, origin: `http://${req.headers.host}` });
+          res.setHeader('Set-Cookie', `ayvu-router-oauth=${started.nonce}; HttpOnly; SameSite=Lax; Path=/api/router/oauth/; Max-Age=600`);
+          sendJson(200, { url: started.url }); return;
+        }
+        if (req.method === 'GET' && url.pathname === '/api/router/oauth/callback') {
+          res.setHeader('Referrer-Policy', 'no-referrer');
+          res.setHeader('Cache-Control', 'no-store');
+          const nonce = String(req.headers.cookie || '').split(';').map(v => v.trim()).find(v => v.startsWith('ayvu-router-oauth='))?.slice('ayvu-router-oauth='.length);
+          try {
+            await routerOAuth.finish({ state: url.searchParams.get('state'), code: url.searchParams.get('code'), nonce });
+            res.writeHead(303, { Location: '/app#system', 'Set-Cookie': 'ayvu-router-oauth=; HttpOnly; SameSite=Lax; Path=/api/router/oauth/; Max-Age=0' }); res.end();
+          } catch {
+            res.writeHead(400, { 'Content-Type': 'text/html; charset=utf-8', 'Content-Security-Policy': "default-src 'none'; base-uri 'none'; frame-ancestors 'none'" });
+            res.end('<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>AYVU Brain · OAuth</title><h1>Conexão não concluída</h1><p>A autorização expirou, foi recusada ou não pertence a este navegador. Inicie novamente no aplicativo.</p><a href="/app#system" rel="noreferrer">Voltar ao AYVU Brain</a></html>');
+          }
+          return;
+        }
+        if (req.method === 'GET' && url.pathname === '/v1/models') {
+          sendJson(200, { object: 'list', data: ['auto', 'auto/fast', 'auto/cheap', 'auto/round-robin', ...router.snapshot().connections.filter(c => c.kind === 'api').map(c => c.id)].map(id => ({ id, object: 'model', owned_by: 'ayvu-brain' })) }); return;
+        }
+        if (req.method === 'POST' && ['/api/router/chat', '/v1/chat/completions'].includes(url.pathname)) {
+          const body = await readJson(req);
+          let input;
+          if (gateway) {
+            const supported = new Set(['model', 'messages', 'stream', 'max_tokens', 'max_completion_tokens']);
+            if (Object.keys(body).some(k => !supported.has(k)) || body.stream === true || !Array.isArray(body.messages) || body.messages.length > 1000 || body.messages.some(m => !['user', 'assistant', 'system'].includes(m?.role) || typeof m.content !== 'string')) {
+              sendJson(400, { error: { message: 'Gateway de texto: model, messages e max_tokens; tools, multimodal e stream não são suportados.', type: 'invalid_request_error' } }); return;
+            }
+            const messages = body.messages.filter(m => m.role !== 'system');
+            if (messages.at(-1)?.role !== 'user') throw new Error('A última mensagem deve ser do usuário.');
+            input = { apiOnly: true, route: body.model || 'auto', prompt: messages.at(-1).content, history: messages.slice(0, -1), system: body.messages.filter(m => m.role === 'system').map(m => m.content).join('\n\n'), maxOutputTokens: body.max_completion_tokens ?? body.max_tokens };
+          } else {
+            const cwd = body.cwd ? isAllowedRepoPath(body.cwd, layout.projectsDir, worktreeRoot) : layout.vaultRoot;
+            let context = '';
+            if (body.contextPath) {
+              const { full } = validateSafeRelPath(layout.vaultRoot, body.contextPath);
+              const real = await fs.realpath(full), root = await fs.realpath(layout.vaultRoot);
+              const rel = relative(root, real);
+              if (rel.startsWith('..') || isAbsolute(rel)) throw new Error('Contexto fora do vault.');
+              if ((await fs.stat(real)).size > 512 * 1024) throw new Error('Nota grande demais. Selecione uma nota de até 512 KB.');
+              context = await fs.readFile(real, 'utf8');
+            }
+            let prompt = String(body.prompt || '');
+            const attachments = Array.isArray(body.attachments) ? body.attachments : [];
+            if (attachments.length) {
+              if (!body.sessionId) throw new Error('Anexos precisam de uma sessão salva.');
+              const session = await getSession(layout.vaultRoot, body.sessionId);
+              const files = attachments.map(a => session.attachments.find(saved => saved.name === a.name));
+              if (files.some(f => !f)) throw new Error('Anexo não pertence à sessão.');
+              prompt += '\n\nArquivos da sessão no vault (consulte apenas se necessário):\n' + files.map(a => `- ${a.relPath}`).join('\n');
+            }
+            input = { route: body.route || 'auto', prompt, history: body.continueSession ? [] : body.history, context, cwd, sessionId: body.sessionId, continueSession: Boolean(body.continueSession), attachments };
+          }
+          const controller = new AbortController();
+          const abort = () => { if (!res.writableEnded) controller.abort(); };
+          res.on('close', abort);
+          const stream = !gateway && String(req.headers.accept || '').includes('text/event-stream');
+          if (stream) res.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-store', Connection: 'keep-alive' });
+          const sendEvent = (event, data) => { if (!res.destroyed && !res.writableEnded) res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`); };
+          try {
+            const result = await router.chat(input, { signal: controller.signal, onProgress: stream ? ev => sendEvent(ev.type || 'stage', ev) : undefined });
+            if (stream) sendEvent('done', result);
+            else if (gateway) sendJson(200, { id: `chatcmpl-${Date.now()}`, object: 'chat.completion', created: Math.floor(Date.now() / 1000), model: result.model || result.route, choices: [{ index: 0, message: { role: 'assistant', content: result.reply }, finish_reason: 'stop' }], usage: { prompt_tokens: result.usage.input, completion_tokens: result.usage.output, total_tokens: result.usage.input + result.usage.output }, ayvu: { economy: result.economy, cached: result.cached, estimated: result.usage.estimated } });
+            else sendJson(200, result);
+          } catch (err) {
+            if (stream) sendEvent('error', { error: err.message });
+            else sendJson(err.status || 400, gateway ? { error: { message: err.message, type: 'router_error' } } : { error: err.message });
+          } finally { res.removeListener('close', abort); if (stream && !res.writableEnded) res.end(); }
+          return;
+        }
+      }
       const staticMap = {
         '/': ['index.html', 'text/html; charset=utf-8'],
         '/index.html': ['index.html', 'text/html; charset=utf-8'],
         '/app': ['app.html', 'text/html; charset=utf-8'],
         '/app.html': ['app.html', 'text/html; charset=utf-8'],
         '/auth.js': ['auth.js', 'text/javascript; charset=utf-8'],
+        '/router-ui.js': ['router-ui.js', 'text/javascript; charset=utf-8'],
+        '/router-ui.css': ['router-ui.css', 'text/css; charset=utf-8'],
         '/icon.svg': ['icon.svg', 'image/svg+xml'],
         '/manifest.webmanifest': ['manifest.webmanifest', 'application/manifest+json']
       };
@@ -513,10 +616,10 @@ export async function startAyvuBrainServer({
         const tag = runGit(['describe', '--tags', '--abbrev=0'], projectRoot);
         sendJson(200, {
           app: 'AYVU Brain',
-          version: '0.3.0',
+          version: '0.4.0',
           domain: 'brain.ayvu.org',
           commit: git.ok ? git.stdout : 'dev',
-          tag: tag.ok ? tag.stdout : 'v0.3.0',
+          tag: tag.ok ? tag.stdout : 'v0.4.0',
           ...layout,
           appRoot: projectRoot,
           worktreeRoot,
@@ -880,7 +983,7 @@ export async function startAyvuBrainServer({
 
       sendJson(404, { error: 'Not found' });
     } catch (error) {
-      sendJson(400, { error: error.message || 'Request failed' });
+      sendJson(error.status || 400, { error: error.message || 'Request failed' });
     }
   });
 
