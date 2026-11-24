@@ -8,11 +8,23 @@ updated: 2026-11-24
 
 # Redesign do AYVU Brain
 
-GATE: OPEN 50 (rodada 3 de 3 da skill de design). O relatório completo está em `auditoria-taste.md`. Esse resultado não é aprovação visual automática; parte das verificações depende da estrutura do kit da skill. A última rodada ocorreu antes da mudança final do chat para CLIs. Os checks funcionais abaixo foram executados na implementação final.
+## Rodada atual: material prismático
+
+Em 24/11/2026, depois de revisar a primeira entrega, o Thaus pediu outra direção visual com 13 novas imagens e preservação dos ícones Lucide. A nova direção substitui a contenção monocromática/amber da primeira rodada na interface AYVU. A versão open source continua com a apresentação anterior.
+
+O app agora usa uma moldura escura arredondada, sidebar com relevo e indicador luminoso, cards independentes com reflexos suaves, controles em pílula, dropdowns de vidro escuro e composer com borda coral/azul e envio em gradiente. O símbolo decorativo facetado em SVG foi construído com a geometria de hastes e ponto da AYVU; não é uma substituição do logo oficial. O logo e os ícones Lucide foram preservados.
+
+A tipografia da apresentação passou a usar Geist sans nos títulos para acompanhar as referências. Os materiais são feitos com CSS e SVG inline, sem imagens raster, WebGL, bibliotecas novas ou chamadas remotas. O brilho fica nas bordas do composer para manter o campo legível. Movimento reduzido mantém todo o conteúdo disponível.
+
+Referências desta rodada: 01/02 composer e menus, 03 material da navegação, 04/05/06/07 vidro e reflexos, 08 sidebar, 09 símbolo facetado, 10 dashboard, 11/12/13 cards e luz ambiente. As imagens foram usadas como direção visual; nenhuma captura foi colocada na interface como produto.
+
+Validação desta rodada: `npm run check`, `npm test` e os 24 checks de `npm run test:ui` passaram. Revisão visual de todos os seis módulos, menu recolhido, Voice, dropdowns, apresentação e celular. Seis larguras, 320 a 1440 px, sem overflow horizontal. Evidências em `.local/prism-*.png`. Backend, endpoints, instalador, autenticação e lógica dos módulos não foram alterados. A nova área Workspace local abre a configuração em Sistema.
+
+O resultado `GATE: OPEN 50` em `auditoria-taste.md` pertence à primeira rodada, anterior à troca final para CLIs e ao material prismático. Não é uma auditoria desta rodada nem foi apresentado como PASS. Os checks funcionais e a revisão visual acima foram executados novamente para esta entrega.
 
 ## Direção
 
-Software local para operar um segundo cérebro. Ação principal: abrir o workspace. AYVU preto/branco, camadas `#09090b`, `#101012`, `#18181b`, separadores sutis e amber pontual, conforme o fio. Geist na interface, Geist Mono para dados e Geist Serif nos títulos da apresentação. Símbolo oficial preservado. Ícones de interface Lucide, embutidos como SVG, licença incluída.
+Software local para operar um segundo cérebro. Ação principal: abrir o workspace. Base escura `#0a0b0e`, superfícies grafite, reflexos azulados e coral/violeta pontuais conforme as novas referências. Geist na interface e nos títulos, Geist Mono para dados. Símbolo oficial preservado. Ícones de interface Lucide, embutidos como SVG, licença incluída.
 
 Os arquivos HTML permanecem independentes, compatíveis com o servidor e a distribuição existentes. Fontes incorporadas para funcionar sem Google Fonts. Nenhum framework ou dependência de execução foi adicionado. Não há imagens raster na interface; as 13 referências são material de consulta, não assets de produção.
 
